@@ -1481,12 +1481,12 @@
     "bookings": [
       {
         "request_id": "BR-01",
-        "status": "approved",
+        "status": "alternative_offered",
         "day": "MON",
-        "start_period": 4,
-        "end_period": 5,
+        "start_period": 1,
+        "end_period": 2,
         "room_id": "AUD",
-        "reason": "Approved in AUD during requested window (MON P4-P5)"
+        "reason": "Alternative offered for 'Spectra '27 Inauguration' (institute_event) in AUD on MON P1\u2013P2. Requested slot was occupied or unavailable; alternative satisfies capacity (500 seats) and required equipment without clashes."
       },
       {
         "request_id": "BR-11a",
@@ -1495,7 +1495,7 @@
         "start_period": 6,
         "end_period": 9,
         "room_id": "OAT",
-        "reason": "Approved in OAT during requested window (THU P6-P9)"
+        "reason": "Approved 'Robo-Wars arena (day 1)' (institute_event) in OAT on THU P6\u2013P9. Satisfies capacity (600 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-11b",
@@ -1504,16 +1504,16 @@
         "start_period": 6,
         "end_period": 9,
         "room_id": "OAT",
-        "reason": "Approved in OAT during requested window (FRI P6-P9)"
+        "reason": "Approved 'Robo-Wars arena (day 2)' (institute_event) in OAT on FRI P6\u2013P9. Satisfies capacity (600 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-20",
-        "status": "approved",
-        "day": "FRI",
-        "start_period": 4,
-        "end_period": 5,
+        "status": "alternative_offered",
+        "day": "MON",
+        "start_period": 8,
+        "end_period": 9,
         "room_id": "AUD",
-        "reason": "Approved in AUD during requested window (FRI P4-P5)"
+        "reason": "Alternative offered for 'Spectra closing ceremony' (institute_event) in AUD on MON P8\u2013P9. Requested slot was occupied or unavailable; alternative satisfies capacity (500 seats) and required equipment without clashes."
       },
       {
         "request_id": "BR-16",
@@ -1522,16 +1522,16 @@
         "start_period": 10,
         "end_period": 13,
         "room_id": "OAT",
-        "reason": "Approved in OAT during requested window (FRI P10-P13)"
+        "reason": "Approved 'Spectra Pro-Night' (institute_event) in OAT on FRI P10\u2013P13. Satisfies capacity (750 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-03",
         "status": "approved",
         "day": "WED",
-        "start_period": 6,
-        "end_period": 7,
+        "start_period": 8,
+        "end_period": 9,
         "room_id": "AUD",
-        "reason": "Approved in AUD during requested window (WED P6-P7)"
+        "reason": "Approved 'Talk: Building India's Navigation Satellites' (guest_lecture) in AUD on WED P8\u2013P9. Satisfies capacity (300 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-19",
@@ -1539,8 +1539,80 @@
         "day": "MON",
         "start_period": 9,
         "end_period": 9,
+        "room_id": "LH-1",
+        "reason": "Approved 'Industry talk: chip design careers' (guest_lecture) in LH-1 on MON P9\u2013P9. Satisfies capacity (65 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-026",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 3,
+        "end_period": 3,
+        "room_id": "CR-101",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-101 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-027",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 3,
+        "end_period": 3,
+        "room_id": "CR-102",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-102 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-028",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 2,
+        "end_period": 2,
+        "room_id": "CR-103",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-103 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-029",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 3,
+        "end_period": 3,
+        "room_id": "CR-103",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-103 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-030",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 2,
+        "end_period": 2,
+        "room_id": "CR-104",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-104 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-031",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 3,
+        "end_period": 3,
+        "room_id": "CR-104",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-104 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-032",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 2,
+        "end_period": 2,
         "room_id": "CR-105",
-        "reason": "Approved in CR-105 during requested window (MON P9-P9)"
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-105 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+      },
+      {
+        "request_id": "BR-NEW-033",
+        "status": "approved",
+        "day": "MON",
+        "start_period": 2,
+        "end_period": 2,
+        "room_id": "CR-201",
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-201 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-08",
@@ -1548,8 +1620,8 @@
         "day": "THU",
         "start_period": 8,
         "end_period": 8,
-        "room_id": "CR-103",
-        "reason": "Approved in CR-103 during requested window (THU P8-P8)"
+        "room_id": "LH-1",
+        "reason": "Approved 'ECE alumni seminar' (department_event) in LH-1 on THU P8\u2013P8. Satisfies capacity (65 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-13",
@@ -1557,8 +1629,8 @@
         "day": "WED",
         "start_period": 10,
         "end_period": 11,
-        "room_id": "CR-103",
-        "reason": "Approved in CR-103 during requested window (WED P10-P11)"
+        "room_id": "LH-1",
+        "reason": "Approved 'Pre-placement talk' (department_event) in LH-1 on WED P10\u2013P11. Satisfies capacity (75 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-18",
@@ -1566,8 +1638,8 @@
         "day": "THU",
         "start_period": 6,
         "end_period": 8,
-        "room_id": "CIVIL-LAB",
-        "reason": "Approved in CIVIL-LAB during requested window (THU P6-P8)"
+        "room_id": "MECH-WS",
+        "reason": "Approved 'Bridge-building contest' (department_event) in MECH-WS on THU P6\u2013P8. Satisfies capacity (45 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-02",
@@ -1576,7 +1648,7 @@
         "start_period": 6,
         "end_period": 11,
         "room_id": "CS-LAB-1",
-        "reason": "Approved in CS-LAB-1 during requested window (THU P6-P11)"
+        "reason": "Approved 'Spectra Code Sprint (8-hour hackathon)' (club_event) in CS-LAB-1 on THU P6\u2013P11. Satisfies capacity (70 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-06",
@@ -1585,7 +1657,7 @@
         "start_period": 10,
         "end_period": 11,
         "room_id": "SH-1",
-        "reason": "Approved in SH-1 during requested window (THU P10-P11)"
+        "reason": "Approved 'Spectra Quiz Prelims' (club_event) in SH-1 on THU P10\u2013P11. Satisfies capacity (140 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-05a",
@@ -1593,8 +1665,8 @@
         "day": "MON",
         "start_period": 11,
         "end_period": 12,
-        "room_id": "SH-2",
-        "reason": "Approved in SH-2 during requested window (MON P11-P12)"
+        "room_id": "OAT",
+        "reason": "Approved 'Spectra dance rehearsal (MON)' (club_event) in OAT on MON P11\u2013P12. Satisfies capacity (40 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-05b",
@@ -1602,8 +1674,8 @@
         "day": "TUE",
         "start_period": 11,
         "end_period": 12,
-        "room_id": "SH-2",
-        "reason": "Approved in SH-2 during requested window (TUE P11-P12)"
+        "room_id": "OAT",
+        "reason": "Approved 'Spectra dance rehearsal (TUE)' (club_event) in OAT on TUE P11\u2013P12. Satisfies capacity (40 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-05c",
@@ -1611,8 +1683,8 @@
         "day": "WED",
         "start_period": 11,
         "end_period": 12,
-        "room_id": "SH-2",
-        "reason": "Approved in SH-2 during requested window (WED P11-P12)"
+        "room_id": "OAT",
+        "reason": "Approved 'Spectra dance rehearsal (WED)' (club_event) in OAT on WED P11\u2013P12. Satisfies capacity (40 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-05d",
@@ -1620,8 +1692,8 @@
         "day": "THU",
         "start_period": 11,
         "end_period": 12,
-        "room_id": "SH-2",
-        "reason": "Approved in SH-2 during requested window (THU P11-P12)"
+        "room_id": "OAT",
+        "reason": "Approved 'Spectra dance rehearsal (THU)' (club_event) in OAT on THU P11\u2013P12. Satisfies capacity (40 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-05e",
@@ -1629,13 +1701,8 @@
         "day": "FRI",
         "start_period": 11,
         "end_period": 12,
-        "room_id": "SH-2",
-        "reason": "Approved in SH-2 during requested window (FRI P11-P12)"
-      },
-      {
-        "request_id": "BR-04",
-        "status": "rejected",
-        "reason": "Cancelled by requester (Robotics Club)"
+        "room_id": "SH-1",
+        "reason": "Approved 'Spectra dance rehearsal (FRI)' (club_event) in SH-1 on FRI P11\u2013P12. Satisfies capacity (40 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-07",
@@ -1644,21 +1711,21 @@
         "start_period": 10,
         "end_period": 12,
         "room_id": "AUD",
-        "reason": "Approved in AUD during requested window (THU P10-P12)"
+        "reason": "Approved 'Stage play: Andha Yug' (club_event) in AUD on THU P10\u2013P12. Satisfies capacity (130 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-09",
         "status": "rejected",
-        "reason": "Requested attendance 1200 exceeds maximum campus venue capacity (800)"
+        "reason": "Rejected 'Valorant LAN finals screening' (club_event): requested attendance exceeds venue capacity."
       },
       {
         "request_id": "BR-10",
-        "status": "approved",
-        "day": "FRI",
-        "start_period": 1,
-        "end_period": 9,
+        "status": "alternative_offered",
+        "day": "TUE",
+        "start_period": 5,
+        "end_period": 13,
         "room_id": "SH-1",
-        "reason": "Approved in SH-1 during requested window (FRI P1-P9)"
+        "reason": "Alternative offered for 'Spectra photo exhibition' (club_event) in SH-1 on TUE P5\u2013P13. Requested slot was occupied or unavailable; alternative satisfies capacity (150 seats) and required equipment without clashes."
       },
       {
         "request_id": "BR-12",
@@ -1666,8 +1733,8 @@
         "day": "TUE",
         "start_period": 9,
         "end_period": 9,
-        "room_id": "LH-1",
-        "reason": "Approved in LH-1 during requested window (TUE P9-P9)"
+        "room_id": "AUD",
+        "reason": "Approved 'Founder talk' (club_event) in AUD on TUE P9\u2013P9. Satisfies capacity (200 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-14",
@@ -1675,8 +1742,8 @@
         "day": "WED",
         "start_period": 11,
         "end_period": 12,
-        "room_id": "SH-1",
-        "reason": "Approved in SH-1 during requested window (WED P11-P12)"
+        "room_id": "LH-2",
+        "reason": "Approved 'Spectra Open Mic' (club_event) in LH-2 on WED P11\u2013P12. Satisfies capacity (90 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-15",
@@ -1685,16 +1752,21 @@
         "start_period": 10,
         "end_period": 12,
         "room_id": "AUD",
-        "reason": "Approved in AUD during requested window (FRI P10-P12)"
+        "reason": "Approved 'Spectra Jam Night' (club_event) in AUD on FRI P10\u2013P12. Satisfies capacity (300 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-17",
         "status": "alternative_offered",
         "day": "MON",
-        "start_period": 10,
-        "end_period": 11,
+        "start_period": 1,
+        "end_period": 2,
         "room_id": "OAT",
-        "reason": "Requested slot unavailable due to prior bookings; alternative offered in OAT on MON P10-P11"
+        "reason": "Alternative offered for 'Night sky watch' (club_event) in OAT on MON P1\u2013P2. Requested slot was occupied or unavailable; alternative satisfies capacity (800 seats) and required equipment without clashes."
+      },
+      {
+        "request_id": "BR-04",
+        "status": "cancelled",
+        "reason": "Cancelled by Robotics Club: Workshop moved to after Spectra"
       }
     ],
     "session_overrides": []

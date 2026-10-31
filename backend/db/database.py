@@ -152,8 +152,11 @@ def init_db(force_reset: bool = False):
 
         CREATE TABLE IF NOT EXISTS booking_requests (
             id TEXT PRIMARY KEY,
+            title TEXT,
+            requester TEXT,
             raw_text TEXT,
             role TEXT NOT NULL,
+            department TEXT,
             requested_category TEXT NOT NULL,
             effective_category TEXT NOT NULL,
             attendance INTEGER NOT NULL,
@@ -162,6 +165,8 @@ def init_db(force_reset: bool = False):
             windows_json TEXT NOT NULL,
             needs_json TEXT NOT NULL,
             mandatory_for_groups_json TEXT NOT NULL,
+            requested_room TEXT,
+            series_id TEXT,
             status TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'approved', 'rejected', 'alternative_offered', 'cancelled'
             submitted_at TEXT NOT NULL,
             created_by TEXT,
@@ -171,7 +176,83 @@ def init_db(force_reset: bool = False):
             assigned_end_period INTEGER,
             decision_reason TEXT,
             decision_by TEXT,
-            decision_at TIMESTAMP
+            decision_at TIMESTAMP,
+            is_cancelled INTEGER NOT NULL DEFAULT 0,
+            cancelled_at TEXT,
+            cancelled_by TEXT,
+            cancellation_note TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS booking_drafts (
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            raw_text TEXT NOT NULL,
+            parsed_json TEXT NOT NULL,
+            user_edits_json TEXT,
+            status TEXT DEFAULT 'draft',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS booking_alternatives (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            booking_id TEXT NOT NULL,
+            room_id TEXT NOT NULL,
+            day TEXT NOT NULL,
+            start_period INTEGER NOT NULL,
+            end_period INTEGER NOT NULL,
+            capacity INTEGER NOT NULL,
+            features_json TEXT,
+            reason TEXT NOT NULL,
+            status TEXT DEFAULT 'offered', -- 'offered', 'accepted', 'declined', 'expired'
+            offered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            accepted_at TIMESTAMP,
+            FOREIGN KEY (booking_id) REFERENCES booking_requests(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS booking_priority_configs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            version INTEGER NOT NULL UNIQUE,
+            priority_order_json TEXT NOT NULL,
+            role_caps_json TEXT NOT NULL,
+            updated_by TEXT NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            is_active INTEGER NOT NULL DEFAULT 1
+        );
+
+        CREATE TABLE IF NOT EXISTS booking_conflicts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            booking_id TEXT NOT NULL,
+            conflict_type TEXT NOT NULL,
+            conflicting_entity_id TEXT,
+            conflict_details TEXT NOT NULL,
+            detected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (booking_id) REFERENCES booking_requests(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS booking_audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            booking_id TEXT,
+            user_id TEXT NOT NULL,
+            user_role TEXT NOT NULL,
+            action TEXT NOT NULL,
+            details_json TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (booking_id) REFERENCES booking_requests(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS booking_decisions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            booking_id TEXT NOT NULL,
+            status TEXT NOT NULL,
+            room_id TEXT,
+            day TEXT,
+            start_period INTEGER,
+            end_period INTEGER,
+            decision_reason TEXT NOT NULL,
+            decided_by TEXT NOT NULL,
+            decided_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (booking_id) REFERENCES booking_requests(id) ON DELETE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS fest_overrides (

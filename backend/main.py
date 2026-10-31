@@ -19,6 +19,8 @@ from backend.services.validation_service import audit_all_constraints
 from CrunchWeek_StarterPack.validator import load, run as run_validator
 from backend.api.dashboard_routes import dashboard_router
 from backend.api.exam_routes import exam_router, export_exam_router
+from backend.api.booking_routes import router as booking_router, booking_export_router
+from backend.api.disruption_routes import router as disruption_router
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
 DISRUPTION_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "examples" / "sample_disruption.json"
@@ -33,6 +35,9 @@ app = FastAPI(
 app.include_router(dashboard_router)
 app.include_router(exam_router)
 app.include_router(export_exam_router)
+app.include_router(booking_router)
+app.include_router(booking_export_router)
+app.include_router(disruption_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -381,134 +386,8 @@ def generate_full_timetable(time_limit: int = 35):
 
 # Legacy exam endpoint superseded by exam_router
 
-# ----------------- Bookings & Spectra Week -----------------
-@app.get("/api/bookings")
-def get_bookings():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT id, raw_text, role, requested_category, effective_category,
-               attendance, duration_periods, room_types_json, windows_json,
-               needs_json, mandatory_for_groups_json, status, submitted_at,
-               assigned_room_id, assigned_day, assigned_start_period, assigned_end_period,
-               decision_reason, decision_by, decision_at
-        FROM booking_requests
-        ORDER BY submitted_at
-    """)
-    rows = cur.fetchall()
-    conn.close()
-    
-    bookings = []
-    for r in rows:
-        d = dict(r)
-        d["room_types"] = json.loads(d["room_types_json"])
-        d["windows"] = json.loads(d["windows_json"])
-        d["needs"] = json.loads(d["needs_json"])
-        d["mandatory_for_groups"] = json.loads(d["mandatory_for_groups_json"])
-        bookings.append(d)
-        
-    return {"bookings": bookings}
-
-class SubmitBookingRequest(BaseModel):
-    attendance: int
-    duration_periods: int
-    windows: List[Dict[str, Any]]
-    needs: List[str]
-    room_types: List[str]
-    mandatory_for_groups: List[str] = []
-    requested_category: str = "club_event"
-    raw_text: Optional[str] = None
-
-@app.post("/api/bookings/submit")
-def submit_booking(req: SubmitBookingRequest):
-    user = STATE["active_user"]
-    conn = get_connection()
-    cur = conn.cursor()
-    
-    # Priority order & caps
-    cur.execute("SELECT value FROM system_meta WHERE key = 'priority_order'")
-    priority_order = json.loads(cur.fetchone()[0])
-    cur.execute("SELECT value FROM system_meta WHERE key = 'role_category_cap'")
-    role_category_cap = json.loads(cur.fetchone()[0])
-    
-    eff_cat = calculate_effective_category(priority_order, role_category_cap, user["role"], req.requested_category)
-    new_id = f"BR-REQ-{int(time.time() * 1000) % 100000}"
-    submitted_at = time.strftime("%Y-%m-%dT%H:%M:%S+05:30")
-    
-    cur.execute("""
-        INSERT INTO booking_requests (
-            id, raw_text, role, requested_category, effective_category,
-            attendance, duration_periods, room_types_json, windows_json,
-            needs_json, mandatory_for_groups_json, status, submitted_at, created_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
-    """, (
-        new_id, req.raw_text or "", user["role"], req.requested_category, eff_cat,
-        req.attendance, req.duration_periods, json.dumps(req.room_types),
-        json.dumps(req.windows), json.dumps(req.needs),
-        json.dumps(req.mandatory_for_groups), submitted_at, user["id"]
-    ))
-    
-    # Audit log
-    cur.execute("""
-        INSERT INTO audit_logs (user_id, user_role, action, details_json)
-        VALUES (?, ?, 'booking_submitted', ?)
-    """, (user["id"], user["role"], json.dumps({"booking_id": new_id, "category": eff_cat})))
-    
-    conn.commit()
-    conn.close()
-    return {"status": "success", "booking_id": new_id, "effective_category": eff_cat}
-
-class BookingDecisionRequest(BaseModel):
-    booking_id: str
-    decision: str # "approved", "rejected", "alternative_offered"
-    room_id: Optional[str] = None
-    day: Optional[str] = None
-    start_period: Optional[int] = None
-    end_period: Optional[int] = None
-    reason: str
-
-@app.post("/api/bookings/decide")
-def decide_booking(req: BookingDecisionRequest):
-    user = STATE["active_user"]
-    
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT created_by, status FROM booking_requests WHERE id = ?", (req.booking_id,))
-    row = cur.fetchone()
-    if not row:
-        conn.close()
-        raise HTTPException(status_code=404, detail="Booking request not found")
-        
-    created_by = row["created_by"]
-    
-    # CRITICAL RULE: Nobody can approve their own request!
-    if created_by and created_by == user["id"]:
-        conn.close()
-        raise HTTPException(status_code=403, detail="Policy violation: You cannot approve/decide your own booking request.")
-        
-    if user["role"] not in ("admin", "dept_coordinator"):
-        conn.close()
-        raise HTTPException(status_code=403, detail="Unauthorized: Only Admin or Department Coordinator can decide bookings.")
-        
-    cur.execute("""
-        UPDATE booking_requests
-        SET status = ?, assigned_room_id = ?, assigned_day = ?,
-            assigned_start_period = ?, assigned_end_period = ?,
-            decision_reason = ?, decision_by = ?, decision_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-    """, (
-        req.decision, req.room_id, req.day, req.start_period, req.end_period,
-        req.reason, user["id"], req.booking_id
-    ))
-    
-    cur.execute("""
-        INSERT INTO audit_logs (user_id, user_role, action, details_json)
-        VALUES (?, ?, 'booking_decided', ?)
-    """, (user["id"], user["role"], json.dumps({"booking_id": req.booking_id, "decision": req.decision, "reason": req.reason})))
-    
-    conn.commit()
-    conn.close()
-    return {"status": "success", "booking_id": req.booking_id, "decision": req.decision}
+# ----------------- Bookings & Spectra Week (Superseded by booking_router) -----------------
+# Module 4 routes are fully mounted via booking_router (/api/bookings, /api/export/bookings)
 
 # ----------------- Disruptions & Rescheduling -----------------
 @app.get("/api/disruptions/default")
