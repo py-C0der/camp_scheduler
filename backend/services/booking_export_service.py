@@ -8,9 +8,10 @@ import json
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from backend.db.database import get_connection
+from backend.config import EXPORTS_DIR
 
-SCHEDULE_PATH = Path(__file__).resolve().parent.parent.parent / "exports" / "schedule.json"
-BOOKINGS_PATH = Path(__file__).resolve().parent.parent.parent / "exports" / "bookings.json"
+SCHEDULE_PATH = EXPORTS_DIR / "schedule.json"
+BOOKINGS_PATH = EXPORTS_DIR / "bookings.json"
 
 
 class BookingExportService:

@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+from backend.config import EXPORTS_DIR
 
-EXPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "exports"
 SCHEDULE_JSON_PATH = EXPORTS_DIR / "schedule.json"
 EXAMS_JSON_PATH = EXPORTS_DIR / "exams.json"
 

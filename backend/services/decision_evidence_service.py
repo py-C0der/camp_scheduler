@@ -13,9 +13,7 @@ from collections import defaultdict
 from typing import Dict, Any, List, Optional, Tuple
 
 from backend.db.database import get_connection
-
-DATA_PATH = Path(__file__).resolve().parent.parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
-EXPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "exports"
+from backend.config import DATA_PATH, EXPORTS_DIR
 
 
 class DecisionEvidenceService:

@@ -4,15 +4,17 @@ import os
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-DB_DIR = Path(__file__).resolve().parent.parent / "data_store"
-DB_PATH = DB_DIR / "cit_campus.db"
+from backend.config import DB_DIR, DB_PATH
 
 def get_connection() -> sqlite3.Connection:
     DB_DIR.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
-    conn.execute("PRAGMA journal_mode = WAL;")
+    try:
+        conn.execute("PRAGMA journal_mode = WAL;")
+    except Exception:
+        pass
     return conn
 
 def init_db(force_reset: bool = False):

@@ -23,10 +23,7 @@ from backend.api.booking_routes import router as booking_router, booking_export_
 from backend.api.disruption_routes import router as disruption_router
 from backend.api.notification_routes import router as notification_router, admin_router as notification_admin_router
 from backend.api.ai_routes import ai_router
-
-DATA_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
-DISRUPTION_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "examples" / "sample_disruption.json"
-EXPORTS_DIR = Path(__file__).resolve().parent.parent / "exports"
+from backend.config import DATA_PATH, DISRUPTION_PATH, EXPORTS_DIR, FRONTEND_DIR
 
 app = FastAPI(
     title="CIT Campus Scheduling & Venue Management Platform",
@@ -184,12 +181,11 @@ def download_schedule():
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 
-FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
-FRONTEND_DIR.mkdir(parents=True, exist_ok=True)
-
 @app.get("/", response_class=HTMLResponse)
 def serve_index():
     index_file = FRONTEND_DIR / "index.html"
+    if not index_file.exists():
+        index_file = Path(__file__).resolve().parent.parent / "public" / "index.html"
     if index_file.exists():
         return FileResponse(index_file)
     return HTMLResponse("<h1>CIT Campus Operations API is Live. Visit /docs for OpenAPI specs.</h1>")

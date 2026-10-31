@@ -25,8 +25,7 @@ from backend.services.dataset_service import DatasetService
 from backend.services.validation_service import audit_all_constraints
 from backend.services.export_service import export_schedules, run_official_validator
 
-DATA_PATH = Path(__file__).resolve().parent.parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
-EXPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "exports"
+from backend.config import DATA_PATH, EXPORTS_DIR
 STARTER_PACK = Path(__file__).resolve().parent.parent.parent / "CrunchWeek_StarterPack"
 
 dashboard_router = APIRouter(tags=["Module 7: Dashboard & Operations"])

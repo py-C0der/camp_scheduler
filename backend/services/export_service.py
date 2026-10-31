@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 from typing import Dict, Any, Optional
 from backend.db.database import get_connection
+from backend.config import EXPORTS_DIR
 
-EXPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "exports"
 STARTER_PACK = Path(__file__).resolve().parent.parent.parent / "CrunchWeek_StarterPack"
 
 def export_schedules(baseline_sched: Dict[str, Any], after_sched: Optional[Dict[str, Any]] = None):

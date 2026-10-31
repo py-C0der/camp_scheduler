@@ -2,9 +2,7 @@ import json
 from pathlib import Path
 from collections import defaultdict
 from CrunchWeek_StarterPack.validator import load, Ctx, check_timetable, soft_score
-
-DATA_PATH = Path(__file__).resolve().parent.parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
-EXPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "exports"
+from backend.config import DATA_PATH, EXPORTS_DIR
 
 def audit_all_constraints(data=None, schedule=None):
     if data is None:

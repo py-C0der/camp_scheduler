@@ -11,6 +11,7 @@ from typing import Dict, Any, List, Optional
 from fastapi import HTTPException
 
 from backend.db.database import get_connection
+from backend.config import EXPORTS_DIR
 from backend.disruptions.version_manager import TimetableVersionManager
 from backend.services.export_service import export_schedules
 
@@ -275,7 +276,7 @@ class ProposalManager:
         )
 
         # 5. Export schedule_after.json while preserving exams and fest_week
-        schedule_path = Path("exports/schedule.json")
+        schedule_path = EXPORTS_DIR / "schedule.json"
         existing_sched = {}
         if schedule_path.exists():
             try:
@@ -291,7 +292,7 @@ class ProposalManager:
             "exams": existing_sched.get("exams", []),
             "fest_week": existing_sched.get("fest_week", {})
         }
-        after_path = Path("exports/schedule_after.json")
+        after_path = EXPORTS_DIR / "schedule_after.json"
         after_path.parent.mkdir(parents=True, exist_ok=True)
         with open(after_path, "w", encoding="utf-8") as f:
             json.dump(after_sched, f, indent=2)
