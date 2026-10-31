@@ -69,7 +69,22 @@ def create_disruption(
     user: Dict[str, Any] = Depends(get_current_user),
     service: DisruptionService = Depends(get_disruption_service)
 ):
-    return service.create_disruption(payload.dict(), user)
+    res = service.create_disruption(payload.dict(), user)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.DISRUPTION_REPORTED,
+            category="disruption",
+            severity="critical",
+            related_module="module_5",
+            related_record_id=res.id,
+            published_by=user.get("id", "user"),
+            payload={"disruption_id": res.id, "description": res.description}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 4. GET /api/disruptions/{id}
@@ -100,12 +115,27 @@ def generate_rescheduling_proposal(
 ):
     t_limit = req.time_limit_seconds if req else 45
     t_name = req.target_version_name if req else None
-    return service.generate_rescheduling_proposal(
+    res = service.generate_rescheduling_proposal(
         disruption_id=disruption_id,
         user=user,
         time_limit_seconds=t_limit,
         target_version_name=t_name
     )
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.RESCHEDULING_PROPOSED,
+            category="disruption",
+            severity="high",
+            related_module="module_5",
+            related_record_id=res.proposal_id,
+            published_by=user.get("id", "user"),
+            payload={"proposal_id": res.proposal_id, "sessions_moved": res.sessions_moved, "disruption_id": disruption_id}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 7. GET /api/rescheduling-proposals
@@ -144,7 +174,22 @@ def approve_rescheduling_proposal(
     service: DisruptionService = Depends(get_disruption_service)
 ):
     reason = req.reason if req else "Approved by authorized administrator"
-    return service.approve_proposal(proposal_id, user, reason=reason)
+    res = service.approve_proposal(proposal_id, user, reason=reason)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.RESCHEDULING_APPROVED,
+            category="disruption",
+            severity="critical",
+            related_module="module_5",
+            related_record_id=proposal_id,
+            published_by=user.get("id", "admin"),
+            payload={"proposal_id": proposal_id, "sessions_moved": res.sessions_moved}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 11. POST /api/rescheduling-proposals/{id}/reject
@@ -156,7 +201,22 @@ def reject_rescheduling_proposal(
     service: DisruptionService = Depends(get_disruption_service)
 ):
     reason = req.reason if req else "Rejected by administrator"
-    return service.reject_proposal(proposal_id, user, reason=reason)
+    res = service.reject_proposal(proposal_id, user, reason=reason)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.RESCHEDULING_REJECTED,
+            category="disruption",
+            severity="medium",
+            related_module="module_5",
+            related_record_id=proposal_id,
+            published_by=user.get("id", "admin"),
+            payload={"proposal_id": proposal_id, "reason": reason}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 12. GET /api/timetable-versions

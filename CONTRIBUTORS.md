@@ -11,4 +11,6 @@
     - Module 3: Examination Management System with 50% Half-Capacity Room Packing
     - Module 4: Smart Venue Booking System with English/Hinglish NLP Parser & Deterministic Arbiter
     - Module 5: Disruption Management & Timetable Rescheduling Engine (Minimal Perturbation)
+    - Module 6: Centralized Notification, Alerts & Communication Management System with Real-Time WebSockets & Extensible Adapters
+    - Module 7: Admin Dashboard, 3-Way Timetable Viewers, Conflict Monitor, Room Utilisation & Dataset Management
     - Full-Stack UI/UX Integration, Modal System, and Official Tournament Validator Compliance

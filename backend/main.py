@@ -21,6 +21,7 @@ from backend.api.dashboard_routes import dashboard_router
 from backend.api.exam_routes import exam_router, export_exam_router
 from backend.api.booking_routes import router as booking_router, booking_export_router
 from backend.api.disruption_routes import router as disruption_router
+from backend.api.notification_routes import router as notification_router, admin_router as notification_admin_router
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
 DISRUPTION_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "examples" / "sample_disruption.json"
@@ -38,6 +39,8 @@ app.include_router(export_exam_router)
 app.include_router(booking_router)
 app.include_router(booking_export_router)
 app.include_router(disruption_router)
+app.include_router(notification_router)
+app.include_router(notification_admin_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -372,6 +375,22 @@ def generate_full_timetable(time_limit: int = 35):
     export_schedules(full_sched)
     
     STATE["active_timetable"] = full_sched
+
+    # Trigger Module 6 Notification Event
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.TIMETABLE_APPROVED,
+            category="timetable",
+            severity="medium",
+            related_module="module_2",
+            related_record_id="active",
+            published_by="admin_1",
+            payload={"version": "active", "sessions_count": len(sessions)}
+        ))
+    except Exception as ex:
+        print("[Notification Trigger Warning]", ex)
     
     return {
         "status": "success",
@@ -528,6 +547,22 @@ def apply_disruption_fix():
     
     baseline_sched = STATE.get("active_timetable") or after_sched
     export_schedules(baseline_sched, after_sched)
+
+    # Trigger Module 6 Notification Event
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.RESCHEDULING_APPROVED,
+            category="disruption",
+            severity="critical",
+            related_module="module_5",
+            related_record_id=dis.get("id", "disruption-1"),
+            published_by=user["id"],
+            payload={"version": "active", "sessions_moved": result["sessions_moved"]}
+        ))
+    except Exception as ex:
+        print("[Notification Trigger Warning]", ex)
     
     return {
         "status": "success",

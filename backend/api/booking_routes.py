@@ -163,7 +163,22 @@ def create_booking(
     user: Dict[str, Any] = Depends(get_current_user),
     service: BookingService = Depends(get_booking_service)
 ):
-    return service.create_booking(req.dict(), user)
+    res = service.create_booking(req.dict(), user)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.BOOKING_SUBMITTED,
+            category="venue_booking",
+            severity="medium",
+            related_module="module_4",
+            related_record_id=res.get("id"),
+            published_by=user.get("id", "user"),
+            payload={"booking_id": res.get("id"), "requester": res.get("requester"), "category": res.get("effective_category")}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 9. POST /api/bookings/decide-all (Batch process Spectra-week requests)
@@ -235,7 +250,22 @@ def approve_booking(
     d_str = req.day if req else None
     s_p = req.start_period if req else None
     reason = req.reason if req else None
-    return service.approve_booking(booking_id, user, room_id=r_id, day=d_str, start_period=s_p, reason=reason)
+    res = service.approve_booking(booking_id, user, room_id=r_id, day=d_str, start_period=s_p, reason=reason)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.BOOKING_APPROVED,
+            category="venue_booking",
+            severity="medium",
+            related_module="module_4",
+            related_record_id=booking_id,
+            published_by=user.get("id", "admin"),
+            payload={"booking_id": booking_id, "room_id": r_id or res.get("assigned_room_id"), "day": d_str or res.get("assigned_day"), "start_period": s_p or res.get("assigned_start_period"), "end_period": res.get("assigned_end_period"), "reason": reason or res.get("decision_reason")}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 15. POST /api/bookings/{booking_id}/reject
@@ -246,7 +276,22 @@ def reject_booking(
     user: Dict[str, Any] = Depends(get_current_user),
     service: BookingService = Depends(get_booking_service)
 ):
-    return service.reject_booking(booking_id, user, reason=req.reason)
+    res = service.reject_booking(booking_id, user, reason=req.reason)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.BOOKING_REJECTED,
+            category="venue_booking",
+            severity="medium",
+            related_module="module_4",
+            related_record_id=booking_id,
+            published_by=user.get("id", "admin"),
+            payload={"booking_id": booking_id, "reason": req.reason}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 16. POST /api/bookings/{booking_id}/alternatives
@@ -282,7 +327,22 @@ def cancel_booking(
     service: BookingService = Depends(get_booking_service)
 ):
     reason = req.reason if req else "Cancelled by user"
-    return service.cancel_booking(booking_id, user, reason=reason)
+    res = service.cancel_booking(booking_id, user, reason=reason)
+    try:
+        from backend.notifications.event_bus import event_bus
+        from backend.notifications.events import NotificationEvent, EventTypes
+        event_bus.publish(NotificationEvent(
+            event_type=EventTypes.BOOKING_CANCELLED,
+            category="venue_booking",
+            severity="low",
+            related_module="module_4",
+            related_record_id=booking_id,
+            published_by=user.get("id", "user"),
+            payload={"booking_id": booking_id, "reason": reason}
+        ))
+    except Exception:
+        pass
+    return res
 
 
 # 19. GET /api/export/bookings

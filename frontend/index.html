@@ -681,6 +681,12 @@
         <span class="nav-badge" style="background:#8b5cf6; color:#fff; font-weight:700;">Mod 5</span>
       </a>
     </li>
+    <li>
+      <a class="nav-item" id="navItemNotifications" onclick="switchNav('notifications')">
+        <span>&#128276;</span> Notifications &amp; Alerts
+        <span class="nav-badge" id="navNotifBadge" style="background:#ef4444; color:#fff; font-weight:700;">Mod 6</span>
+      </a>
+    </li>
   </ul>
 
   <div class="nav-section-title">Intelligence &amp; Operations</div>
@@ -733,6 +739,31 @@
     </div>
 
     <div class="topbar-right">
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.15s;" title="Notifications">
+          <span style="font-size: 1.15rem;">&#128276;</span>
+          <span id="notifBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">0</span>
+        </button>
+
+        <!-- Notification Dropdown Menu -->
+        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden; text-align: left;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <div>
+              <strong style="font-size: 0.92rem; color: #0f172a;">Notifications</strong>
+              <span id="notifDropdownCount" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 9999px; margin-left: 6px; font-weight: 700;">0 new</span>
+            </div>
+            <button onclick="markAllNotifsRead()" style="background: none; border: none; font-size: 0.75rem; color: #2563eb; cursor: pointer; font-weight: 600;">Mark all read</button>
+          </div>
+          <div id="notifDropdownList" style="max-height: 380px; overflow-y: auto;">
+            <div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No new notifications</div>
+          </div>
+          <div style="padding: 10px 16px; border-top: 1px solid #f1f5f9; text-align: center; background: #fafafa;">
+            <a href="javascript:void(0)" onclick="switchNav('notifications'); toggleNotifDropdown();" style="font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none;">Open Notification Center &rarr;</a>
+          </div>
+        </div>
+      </div>
+
       <div id="roleBadgeContainer">
         <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
       </div>
@@ -1781,6 +1812,220 @@
             </tbody>
           </table>
         </div>
+    </div>
+
+    <!-- VIEW 7: Notification, Alerts & Communication Management (Module 6) -->
+    <div id="view-notifications" class="view-panel">
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2 style="font-size:1.4rem; font-weight:800; color:#0f172a; margin:0 0 4px 0;">Notification, Alerts &amp; Communication Management</h2>
+          <p style="font-size:0.85rem; color:#64748b; margin:0;">Centralized event-driven notification hub for timetable updates, exams, venue booking decisions, and disruptions.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" onclick="loadNotificationModule()">
+            <span>&#8635;</span> Refresh
+          </button>
+          <button class="btn btn-primary" onclick="markAllNotifsRead()">
+            <span>&#10003;</span> Mark All as Read
+          </button>
+        </div>
+      </div>
+
+      <!-- Module 6 Sub-Navigation Tabs -->
+      <div style="display:flex; border-bottom:1px solid #cbd5e1; margin-bottom:24px; gap:8px;">
+        <button id="tabBtnNotifInbox" class="filter-pill active" onclick="switchNotifSubTab('inbox')" style="border-bottom: 2px solid #2563eb; border-radius: 6px 6px 0 0; padding: 10px 18px; font-weight: 700;">
+          <span>&#128236;</span> Notification Inbox (<span id="inboxBadgeCount">0</span>)
+        </button>
+        <button id="tabBtnNotifPrefs" class="filter-pill" onclick="switchNotifSubTab('preferences')" style="padding: 10px 18px; font-weight: 600;">
+          <span>&#9881;</span> User Preferences
+        </button>
+        <button id="tabBtnNotifAdmin" class="filter-pill" onclick="switchNotifSubTab('admin')" style="padding: 10px 18px; font-weight: 600;">
+          <span>&#128202;</span> Admin Delivery &amp; Gateways
+        </button>
+      </div>
+
+      <!-- SUBTAB 1: Notification Inbox -->
+      <div id="notifSubtabInbox">
+        <!-- Filter Toolbar -->
+        <div class="panel-card" style="padding: 14px 18px; margin-bottom: 18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Category:</span>
+              <button class="filter-pill active" onclick="filterNotifsCategory('', this)">All</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('timetable', this)">Timetable</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('examination', this)">Examination</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('venue_booking', this)">Bookings</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('disruption', this)">Disruptions</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('approval', this)">Approvals</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Status:</span>
+              <button class="filter-pill active" onclick="filterNotifsStatus('', this)">All</button>
+              <button class="filter-pill" onclick="filterNotifsStatus('unread', this)">Unread</button>
+              <button class="filter-pill" onclick="filterNotifsStatus('read', this)">Read</button>
+              <input type="text" id="notifSearchInput" oninput="searchNotifs(this.value)" placeholder="Search title or text..." style="border:1px solid #cbd5e1; border-radius:6px; padding:6px 12px; font-size:0.82rem; width:200px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification List -->
+        <div id="notifListContainer" style="display:flex; flex-direction:column; gap:12px;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- SUBTAB 2: User Preferences -->
+      <div id="notifSubtabPreferences" style="display:none;">
+        <div class="panel-card" style="max-width: 800px; margin: 0 auto;">
+          <h3 style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-bottom:8px;">Communication Channels &amp; Delivery Preferences</h3>
+          <p style="font-size:0.82rem; color:#64748b; margin-bottom:20px;">Control which channels you receive notifications on and select topics of interest.</p>
+
+          <div style="border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:16px;">
+            <h4 style="font-size:0.88rem; font-weight:700; color:#334155; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.04em;">Delivery Channels</h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefInApp" checked style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">In-App Center</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Instant bell badges and real-time popups</div>
+                </div>
+              </label>
+
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefEmail" checked style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">Email Notifications</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Official CIT branded email summaries</div>
+                </div>
+              </label>
+
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefWhatsApp" style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">WhatsApp Alerts</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Instant alerts via Meta Cloud API</div>
+                </div>
+              </label>
+
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefSMS" style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">SMS Gateway</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Urgent critical schedule broadcast</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div style="border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:16px;">
+            <h4 style="font-size:0.88rem; font-weight:700; color:#334155; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.04em;">Subscribed Event Categories</h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatTimetable" checked> Timetable Changes
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatExam" checked> Examination Updates
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatBooking" checked> Venue Bookings
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatDisruption" checked> Disruption Reschedules
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatApproval" checked> Approval Requests
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <h4 style="font-size:0.88rem; font-weight:700; color:#334155; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em;">Minimum Severity Threshold</h4>
+            <p style="font-size:0.78rem; color:#64748b; margin-bottom:8px;">Critical notifications always bypass category filters for safety policy compliance.</p>
+            <select id="prefMinSeverity" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 14px; font-size:0.85rem; width:220px;">
+              <option value="low">Low (Receive all notifications)</option>
+              <option value="medium">Medium (Important notices &amp; above)</option>
+              <option value="high">High (Exams and major changes)</option>
+              <option value="critical">Critical Only (Major disruptions only)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" onclick="saveNotificationPreferences()">
+            <span>&#128190;</span> Save Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- SUBTAB 3: Admin Delivery Analytics -->
+      <div id="notifSubtabAdmin" style="display:none;">
+        <!-- KPI Metrics -->
+        <div class="overview-grid" style="margin-bottom:20px;">
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Total Notifications</span><span class="metric-icon">&#128227;</span></div>
+            <div class="metric-val" id="adminMetricTotal">0</div>
+            <div class="metric-sub">Published campus events</div>
+          </div>
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Delivered Messages</span><span class="metric-icon">&#9989;</span></div>
+            <div class="metric-val" id="adminMetricDelivered" style="color:#15803d;">0</div>
+            <div class="metric-sub">Confirmed provider delivery</div>
+          </div>
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Failed Deliveries</span><span class="metric-icon">&#10060;</span></div>
+            <div class="metric-val" id="adminMetricFailed" style="color:#b91c1c;">0</div>
+            <div class="metric-sub">Network or address issues</div>
+          </div>
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Adapters Status</span><span class="metric-icon">&#128268;</span></div>
+            <div class="metric-val" style="font-size:1.1rem; color:#2563eb; margin-top:12px;">In-App &bull; SMTP &bull; Twilio &bull; Meta</div>
+            <div class="metric-sub">Multi-channel adapter matrix</div>
+          </div>
+        </div>
+
+        <!-- Gateway Probe Test Tool -->
+        <div class="panel-card" style="margin-bottom:20px;">
+          <h3 style="font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:6px;">Communication Gateway Live Testing Probe</h3>
+          <p style="font-size:0.8rem; color:#64748b; margin-bottom:14px;">Verify SMTP, WhatsApp Cloud API, and Twilio SMS configuration health directly from the server.</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <select id="probeChannelSelect" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; font-size:0.85rem;">
+              <option value="email">Email (SMTP)</option>
+              <option value="whatsapp">WhatsApp Business API</option>
+              <option value="sms">Twilio SMS Gateway</option>
+            </select>
+            <input type="text" id="probeTargetInput" placeholder="Target email or phone number (e.g. admin@cit.ac.in)..." style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; font-size:0.85rem; width:320px;">
+            <button class="btn btn-outline" onclick="testCommunicationGateway()">
+              <span>&#9889;</span> Send Test Probe
+            </button>
+          </div>
+          <div id="probeResultBox" style="display:none; margin-top:12px; padding:12px; border-radius:8px; font-family:'JetBrains Mono', monospace; font-size:0.8rem; background:#f8fafc; border:1px solid #e2e8f0;"></div>
+        </div>
+
+        <!-- Real Delivery Logs Table -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>Actual Communication Delivery Audit Logs</h3>
+            <button class="btn btn-outline btn-sm" onclick="loadAdminNotificationDashboard()">Refresh Logs</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Log ID</th>
+                  <th>Recipient</th>
+                  <th>Channel</th>
+                  <th>Status</th>
+                  <th>Event / Title</th>
+                  <th>Attempts</th>
+                  <th>Sent At</th>
+                  <th>Error / Response</th>
+                </tr>
+              </thead>
+              <tbody id="adminLogsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2002,6 +2247,8 @@
       const resEvents = await fetch('/api/timetable/grid');
       const evData = await resEvents.json();
       allTimetableEvents = evData.events;
+      fetchUnreadCount();
+      initNotificationWebSocket();
     } catch(err) {
       console.error("Dashboard load error", err);
     }
@@ -2177,6 +2424,12 @@
       if (exItem) exItem.classList.add('active');
       document.getElementById('pageTitle').textContent = "Examination Scheduling Management (Module 3)";
       loadExamModule();
+    } else if (viewName === 'notifications') {
+      document.getElementById('view-notifications').classList.add('active');
+      const notifItem = document.getElementById('navItemNotifications');
+      if (notifItem) notifItem.classList.add('active');
+      document.getElementById('pageTitle').textContent = "Notification, Alerts & Communication Management (Module 6)";
+      loadNotificationModule();
     }
   }
 
@@ -2232,6 +2485,11 @@
     });
 
     closeUserModal();
+    fetchUnreadCount();
+    initNotificationWebSocket();
+    if (document.getElementById('view-notifications').classList.contains('active')) {
+      loadNotificationModule();
+    }
     loadDashboard();
   }
 
@@ -3886,6 +4144,500 @@ Exam soft penalty: ${data.exam_soft_penalty}`);
       alert(`Error loading practice disruption: ${err.message}`);
     }
   }
+
+  // =========================================================================
+  // MODULE 6: NOTIFICATION, ALERTS & COMMUNICATION MANAGEMENT JAVASCRIPT
+  // =========================================================================
+  let currentNotifFilter = { category: '', status: '', search: '' };
+  let allUserNotifications = [];
+  let activeNotifSubTab = 'inbox';
+  let notifWs = null;
+
+  async function fetchUnreadCount() {
+    try {
+      const res = await fetch(`/api/notifications/unread-count?user_id=${currentUser.id}`, {
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const count = data.unread_count || 0;
+
+      const badge = document.getElementById('notifBadge');
+      if (badge) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+      }
+
+      const dropCount = document.getElementById('notifDropdownCount');
+      if (dropCount) {
+        dropCount.textContent = `${count} unread`;
+      }
+
+      const inboxCount = document.getElementById('inboxBadgeCount');
+      if (inboxCount) {
+        inboxCount.textContent = count;
+      }
+    } catch (err) {
+      console.warn("Unread count fetch error:", err);
+    }
+  }
+
+  function toggleNotifDropdown(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('notifDropdown');
+    if (!dropdown) return;
+    const isShowing = dropdown.style.display === 'block';
+    dropdown.style.display = isShowing ? 'none' : 'block';
+    if (!isShowing) {
+      loadDropdownNotifications();
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('notifDropdown');
+    const bellBtn = document.getElementById('notifBellBtn');
+    if (dropdown && dropdown.style.display === 'block') {
+      if (!dropdown.contains(e.target) && !bellBtn.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    }
+  });
+
+  async function loadDropdownNotifications() {
+    try {
+      const res = await fetch(`/api/notifications?limit=5`, {
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const listEl = document.getElementById('notifDropdownList');
+      if (!listEl) return;
+
+      if (!data.notifications || data.notifications.length === 0) {
+        listEl.innerHTML = '<div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No notifications found</div>';
+        return;
+      }
+
+      const sevDotColors = { critical: '#ef4444', high: '#f59e0b', medium: '#2563eb', low: '#94a3b8' };
+
+      listEl.innerHTML = data.notifications.map(n => `
+        <div onclick="openNotificationDetail('${n.id}', '${n.related_module}', '${n.related_record_id || ''}')" style="padding: 12px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.15s; background: ${n.is_read ? '#fff' : '#f0f9ff'};" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='${n.is_read ? '#fff' : '#f0f9ff'}'">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${sevDotColors[n.severity] || '#2563eb'};"></span>
+              <strong style="font-size:0.82rem; color:#0f172a; max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${n.title}</strong>
+            </div>
+            <span style="font-size:0.7rem; color:#94a3b8;">${n.created_at.substring(11, 16) || ''}</span>
+          </div>
+          <div style="font-size:0.78rem; color:#475569; line-height:1.3; max-height:2.6em; overflow:hidden; text-overflow:ellipsis;">${n.message}</div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.warn("Dropdown notif load error:", err);
+    }
+  }
+
+  async function loadNotificationModule() {
+    await fetchUnreadCount();
+    if (activeNotifSubTab === 'inbox') {
+      await loadNotificationsInbox();
+    } else if (activeNotifSubTab === 'preferences') {
+      await loadNotificationPreferences();
+    } else if (activeNotifSubTab === 'admin') {
+      await loadAdminNotificationDashboard();
+    }
+  }
+
+  function switchNotifSubTab(tabName) {
+    activeNotifSubTab = tabName;
+    ['inbox', 'preferences', 'admin'].forEach(t => {
+      const btn = document.getElementById(`tabBtnNotif${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      const panel = document.getElementById(`notifSubtab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      if (btn) {
+        if (t === tabName) {
+          btn.classList.add('active');
+          btn.style.borderBottom = '2px solid #2563eb';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.classList.remove('active');
+          btn.style.borderBottom = 'none';
+          btn.style.fontWeight = '500';
+        }
+      }
+      if (panel) panel.style.display = t === tabName ? 'block' : 'none';
+    });
+
+    if (tabName === 'inbox') loadNotificationsInbox();
+    else if (tabName === 'preferences') loadNotificationPreferences();
+    else if (tabName === 'admin') loadAdminNotificationDashboard();
+  }
+
+  async function loadNotificationsInbox() {
+    try {
+      let url = `/api/notifications?limit=100`;
+      if (currentNotifFilter.category) url += `&category=${encodeURIComponent(currentNotifFilter.category)}`;
+      if (currentNotifFilter.status === 'unread') url += `&is_read=false`;
+      if (currentNotifFilter.status === 'read') url += `&is_read=true`;
+      if (currentNotifFilter.search) url += `&search=${encodeURIComponent(currentNotifFilter.search)}`;
+
+      const res = await fetch(url, {
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (!res.ok) throw new Error("Failed to load notifications");
+      const data = await res.json();
+      allUserNotifications = data.notifications || [];
+      renderNotificationList(allUserNotifications);
+    } catch (err) {
+      const listEl = document.getElementById('notifListContainer');
+      if (listEl) listEl.innerHTML = `<div class="panel-card" style="padding:24px; text-align:center; color:#ef4444;">Error loading notifications: ${err.message}</div>`;
+    }
+  }
+
+  function filterNotifsCategory(cat, btn) {
+    currentNotifFilter.category = cat;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    loadNotificationsInbox();
+  }
+
+  function filterNotifsStatus(st, btn) {
+    currentNotifFilter.status = st;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    loadNotificationsInbox();
+  }
+
+  let searchTimeout = null;
+  function searchNotifs(q) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      currentNotifFilter.search = q.trim();
+      loadNotificationsInbox();
+    }, 250);
+  }
+
+  function renderNotificationList(items) {
+    const listEl = document.getElementById('notifListContainer');
+    if (!listEl) return;
+
+    if (!items || items.length === 0) {
+      listEl.innerHTML = `
+        <div class="panel-card" style="padding:48px 24px; text-align:center;">
+          <div style="font-size:2.5rem; margin-bottom:12px;">&#128236;</div>
+          <h3 style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-bottom:6px;">No Notifications</h3>
+          <p style="font-size:0.85rem; color:#64748b; margin:0;">There are no alerts matching the active category or status filter.</p>
+        </div>`;
+      return;
+    }
+
+    const sevStyles = {
+      critical: { bg: '#fee2e2', color: '#b91c1c', border: '#fca5a5', label: 'CRITICAL' },
+      high: { bg: '#fef3c7', color: '#b45309', border: '#fcd34d', label: 'HIGH' },
+      medium: { bg: '#e0e7ff', color: '#4338ca', border: '#a5b4fc', label: 'MEDIUM' },
+      low: { bg: '#f1f5f9', color: '#475569', border: '#cbd5e1', label: 'LOW' }
+    };
+
+    listEl.innerHTML = items.map(n => {
+      const s = sevStyles[n.severity.toLowerCase()] || sevStyles.medium;
+      const catLabel = n.category.replace('_', ' ').toUpperCase();
+
+      return `
+        <div class="panel-card" style="margin-bottom:0; border-left: 4px solid ${s.color}; background:${n.is_read ? '#fff' : '#f8fafc'}; transition: transform 0.15s;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span class="badge" style="background:${s.bg}; color:${s.color}; border:1px solid ${s.border};">${s.label}</span>
+              <span class="badge badge-neutral">${catLabel}</span>
+              ${n.related_record_id ? `<span class="badge badge-info" style="font-family:'JetBrains Mono', monospace;">ID: ${n.related_record_id}</span>` : ''}
+              ${!n.is_read ? `<span class="badge" style="background:#3b82f6; color:#fff;">UNREAD</span>` : ''}
+            </div>
+            <div style="font-size:0.75rem; color:#64748b; font-weight:500;">
+              ${n.created_at}
+            </div>
+          </div>
+
+          <h3 style="font-size:1.02rem; font-weight:700; color:#0f172a; margin-bottom:6px;">${n.title}</h3>
+          <p style="font-size:0.86rem; color:#334155; line-height:1.5; margin-bottom:14px; white-space:pre-line;">${n.message}</p>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f1f5f9; padding-top:10px; flex-wrap:wrap; gap:8px;">
+            <div>
+              ${getActionNavButton(n.related_module, n.related_record_id)}
+            </div>
+            <div style="display:flex; gap:8px;">
+              ${!n.is_read ? `
+                <button class="btn btn-outline btn-sm" onclick="markNotificationRead('${n.id}')">
+                  <span>&#10003;</span> Mark Read
+                </button>
+              ` : ''}
+              <button class="btn btn-outline btn-sm" style="color:#64748b;" onclick="archiveNotification('${n.id}')" title="Archive / Dismiss">
+                <span>&#128465;</span> Archive
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function getActionNavButton(moduleName, recordId) {
+    if (!moduleName) return '';
+    const m = moduleName.toLowerCase();
+    if (m === 'module_2' || m === 'timetable') {
+      return `<button class="btn btn-primary btn-sm" onclick="switchNav('timetable')"><span>&#9776;</span> View Master Timetable &rarr;</button>`;
+    } else if (m === 'module_3' || m === 'examinations') {
+      return `<button class="btn btn-primary btn-sm" onclick="switchNav('examinations')"><span>&#128197;</span> View Exam Timetable &rarr;</button>`;
+    } else if (m === 'module_4' || m === 'venue_bookings' || m === 'bookings') {
+      return `<button class="btn btn-primary btn-sm" onclick="switchNav('bookings')"><span>&#127970;</span> View Venue Bookings &rarr;</button>`;
+    } else if (m === 'module_5' || m === 'disruptions') {
+      return `<button class="btn btn-primary btn-sm" onclick="switchNav('disruptions')"><span>&#8644;</span> Inspect Disruption Engine &rarr;</button>`;
+    }
+    return '';
+  }
+
+  async function openNotificationDetail(id, relatedModule, recordId) {
+    await markNotificationRead(id);
+    toggleNotifDropdown();
+    if (relatedModule === 'module_2') switchNav('timetable');
+    else if (relatedModule === 'module_3') switchNav('examinations');
+    else if (relatedModule === 'module_4') switchNav('bookings');
+    else if (relatedModule === 'module_5') switchNav('disruptions');
+    else switchNav('notifications');
+  }
+
+  async function markNotificationRead(id) {
+    try {
+      const res = await fetch(`/api/notifications/${id}/read`, {
+        method: 'PATCH',
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (res.ok) {
+        await fetchUnreadCount();
+        if (activeNotifSubTab === 'inbox') loadNotificationsInbox();
+      }
+    } catch (err) {
+      console.warn("Mark read error:", err);
+    }
+  }
+
+  async function markAllNotifsRead() {
+    try {
+      const res = await fetch(`/api/notifications/mark-all-read`, {
+        method: 'POST',
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (res.ok) {
+        await fetchUnreadCount();
+        if (activeNotifSubTab === 'inbox') loadNotificationsInbox();
+      }
+    } catch (err) {
+      console.warn("Mark all read error:", err);
+    }
+  }
+
+  async function archiveNotification(id) {
+    try {
+      const res = await fetch(`/api/notifications/${id}`, {
+        method: 'DELETE',
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (res.ok) {
+        await fetchUnreadCount();
+        if (activeNotifSubTab === 'inbox') loadNotificationsInbox();
+      }
+    } catch (err) {
+      console.warn("Archive error:", err);
+    }
+  }
+
+  async function loadNotificationPreferences() {
+    try {
+      const res = await fetch('/api/notifications/preferences', {
+        headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+      });
+      if (!res.ok) return;
+      const p = await res.json();
+
+      document.getElementById('prefInApp').checked = !!p.in_app_enabled;
+      document.getElementById('prefEmail').checked = !!p.email_enabled;
+      document.getElementById('prefWhatsApp').checked = !!p.whatsapp_enabled;
+      document.getElementById('prefSMS').checked = !!p.sms_enabled;
+
+      const cats = p.categories || {};
+      document.getElementById('prefCatTimetable').checked = cats.timetable !== false;
+      document.getElementById('prefCatExam').checked = cats.examination !== false;
+      document.getElementById('prefCatBooking').checked = cats.venue_booking !== false;
+      document.getElementById('prefCatDisruption').checked = cats.disruption !== false;
+      document.getElementById('prefCatApproval').checked = cats.approval !== false;
+
+      document.getElementById('prefMinSeverity').value = p.min_severity || 'low';
+    } catch (err) {
+      console.warn("Preferences load error:", err);
+    }
+  }
+
+  async function saveNotificationPreferences() {
+    const payload = {
+      in_app_enabled: document.getElementById('prefInApp').checked,
+      email_enabled: document.getElementById('prefEmail').checked,
+      whatsapp_enabled: document.getElementById('prefWhatsApp').checked,
+      sms_enabled: document.getElementById('prefSMS').checked,
+      categories: {
+        timetable: document.getElementById('prefCatTimetable').checked,
+        examination: document.getElementById('prefCatExam').checked,
+        venue_booking: document.getElementById('prefCatBooking').checked,
+        disruption: document.getElementById('prefCatDisruption').checked,
+        approval: document.getElementById('prefCatApproval').checked
+      },
+      min_severity: document.getElementById('prefMinSeverity').value
+    };
+
+    try {
+      const res = await fetch('/api/notifications/preferences', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': currentUser.id,
+          'X-User-Role': currentUser.role
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("Failed to save preferences");
+      alert("Notification preferences successfully updated!");
+    } catch (err) {
+      alert(`Error saving preferences: ${err.message}`);
+    }
+  }
+
+  async function loadAdminNotificationDashboard() {
+    if (currentUser.role !== 'admin') {
+      const adminSub = document.getElementById('notifSubtabAdmin');
+      if (adminSub) adminSub.innerHTML = `<div class="panel-card" style="padding:32px; text-align:center; color:#dc2626;">Access Restricted: Only Dean Academics (Admin) can inspect delivery logs and gateway health.</div>`;
+      return;
+    }
+
+    try {
+      const [sumRes, logsRes] = await Promise.all([
+        fetch('/api/admin/notifications/summary', {
+          headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+        }),
+        fetch('/api/admin/notifications/delivery-logs?limit=50', {
+          headers: { 'X-User-Id': currentUser.id, 'X-User-Role': currentUser.role }
+        })
+      ]);
+
+      if (sumRes.ok) {
+        const sumData = await sumRes.json();
+        document.getElementById('adminMetricTotal').textContent = sumData.total_notifications || 0;
+        document.getElementById('adminMetricDelivered').textContent = sumData.total_delivered || 0;
+        document.getElementById('adminMetricFailed').textContent = sumData.total_failed || 0;
+      }
+
+      if (logsRes.ok) {
+        const logs = await logsRes.json();
+        const tbody = document.getElementById('adminLogsTableBody');
+        if (!tbody) return;
+
+        if (!logs || logs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:24px; color:#94a3b8;">No delivery attempts logged yet.</td></tr>';
+          return;
+        }
+
+        const statusBadges = {
+          delivered: '<span class="badge badge-success">DELIVERED</span>',
+          failed: '<span class="badge badge-danger">FAILED</span>',
+          skipped: '<span class="badge badge-neutral">SKIPPED (OPT-OUT)</span>',
+          not_configured: '<span class="badge badge-warning">NOT CONFIGURED</span>',
+          pending: '<span class="badge badge-info">PENDING</span>'
+        };
+
+        tbody.innerHTML = logs.map(l => `
+          <tr>
+            <td style="font-family:'JetBrains Mono', monospace; font-weight:600;">#${l.id}</td>
+            <td><strong>${l.recipient_name}</strong><br><small style="color:#64748b;">${l.recipient_id}</small></td>
+            <td><span class="badge badge-neutral">${l.channel.toUpperCase()}</span></td>
+            <td>${statusBadges[l.status] || l.status}</td>
+            <td>${l.title || l.notification_id}</td>
+            <td>${l.attempt_count}</td>
+            <td style="font-size:0.75rem; color:#64748b;">${l.sent_at}</td>
+            <td style="font-size:0.75rem; color:${l.error_message ? '#dc2626' : '#64748b'};">${l.error_message || 'OK / Dispatched'}</td>
+          </tr>
+        `).join('');
+      }
+    } catch (err) {
+      console.warn("Admin dashboard load error:", err);
+    }
+  }
+
+  async function testCommunicationGateway() {
+    const channel = document.getElementById('probeChannelSelect').value;
+    const target = document.getElementById('probeTargetInput').value.trim();
+    if (!target) {
+      alert("Please enter a target email address or phone number.");
+      return;
+    }
+
+    const resBox = document.getElementById('probeResultBox');
+    resBox.style.display = 'block';
+    resBox.textContent = `Dispatching live probe to ${channel} gateway (${target})...`;
+
+    try {
+      const res = await fetch('/api/admin/notifications/test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': currentUser.id,
+          'X-User-Role': currentUser.role
+        },
+        body: JSON.stringify({ channel, target })
+      });
+      const data = await res.json();
+      resBox.innerHTML = `<strong>Result:</strong> ${data.status.toUpperCase()}<br><strong>Configured:</strong> ${data.configured}<br><strong>Details:</strong> ${data.details}`;
+      resBox.style.color = data.status === 'delivered' ? '#15803d' : (data.status === 'not_configured' ? '#b45309' : '#dc2626');
+      loadAdminNotificationDashboard();
+    } catch (err) {
+      resBox.textContent = `Error testing gateway: ${err.message}`;
+      resBox.style.color = '#dc2626';
+    }
+  }
+
+  function initNotificationWebSocket() {
+    try {
+      if (notifWs) {
+        notifWs.close();
+      }
+      const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${proto}//${window.location.host}/api/notifications/ws?user_id=${currentUser.id}`;
+      notifWs = new WebSocket(wsUrl);
+
+      notifWs.onopen = function() {
+        console.log("CIT Real-Time Notification Socket Connected.");
+      };
+
+      notifWs.onmessage = function(event) {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === 'NEW_NOTIFICATION') {
+            fetchUnreadCount();
+            if (activeNotifSubTab === 'inbox') loadNotificationsInbox();
+          }
+        } catch (e) {}
+      };
+
+      notifWs.onclose = function() {
+        // Auto-reconnect after 8s
+        setTimeout(initNotificationWebSocket, 8000);
+      };
+    } catch (e) {
+      console.warn("WebSocket init error:", e);
+    }
+  }
+
+  // Poll fallback every 12 seconds
+  setInterval(fetchUnreadCount, 12000);
+
 
 </script>
 

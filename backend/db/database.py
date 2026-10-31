@@ -21,6 +21,16 @@ def init_db(force_reset: bool = False):
 
     if force_reset:
         cur.executescript("""
+            DROP TABLE IF EXISTS notification_audit_logs;
+            DROP TABLE IF EXISTS notification_deliveries;
+            DROP TABLE IF EXISTS notification_recipients;
+            DROP TABLE IF EXISTS notification_preferences;
+            DROP TABLE IF EXISTS notification_events;
+            DROP TABLE IF EXISTS notification_templates;
+            DROP TABLE IF EXISTS rescheduling_proposal_assignments;
+            DROP TABLE IF EXISTS rescheduling_audit_logs;
+            DROP TABLE IF EXISTS rescheduling_proposals;
+            DROP TABLE IF EXISTS notifications;
             DROP TABLE IF EXISTS audit_logs;
             DROP TABLE IF EXISTS disruptions;
             DROP TABLE IF EXISTS exam_schedules;
@@ -321,13 +331,76 @@ def init_db(force_reset: bool = False):
 
         CREATE TABLE IF NOT EXISTS disruptions (
             id TEXT PRIMARY KEY,
+            title TEXT,
             description TEXT NOT NULL,
+            dataset_id TEXT DEFAULT 'cit-public-v1',
             raw_json TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'uploaded', -- 'uploaded', 'applied', 'reverted'
+            changes_json TEXT,
+            status TEXT NOT NULL DEFAULT 'reported',
+            reported_by TEXT DEFAULT 'admin',
+            reported_at TIMESTAMP,
+            impact_summary_json TEXT,
             changes_summary_json TEXT,
             sessions_moved INTEGER DEFAULT 0,
             applied_at TIMESTAMP,
             applied_by TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS rescheduling_proposals (
+            id TEXT PRIMARY KEY,
+            disruption_id TEXT NOT NULL,
+            baseline_timetable_id TEXT NOT NULL DEFAULT 'baseline',
+            target_timetable_version TEXT NOT NULL,
+            status TEXT DEFAULT 'proposed',
+            solver_status TEXT NOT NULL,
+            solve_time_seconds REAL DEFAULT 0.0,
+            sessions_moved INTEGER DEFAULT 0,
+            time_changed INTEGER DEFAULT 0,
+            room_only_changed INTEGER DEFAULT 0,
+            unchanged_sessions INTEGER DEFAULT 0,
+            hard_violations_count INTEGER DEFAULT 0,
+            hard_violations_json TEXT,
+            soft_penalty INTEGER DEFAULT 0,
+            diff_json TEXT NOT NULL,
+            created_by TEXT,
+            created_at TIMESTAMP,
+            decided_by TEXT,
+            decided_at TIMESTAMP,
+            decision_reason TEXT,
+            approved_by TEXT,
+            approved_at TIMESTAMP,
+            rejection_reason TEXT,
+            FOREIGN KEY (disruption_id) REFERENCES disruptions(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS rescheduling_proposal_assignments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            proposal_id TEXT NOT NULL,
+            session_id TEXT NOT NULL,
+            course_id TEXT,
+            faculty_id TEXT,
+            groups_json TEXT,
+            original_day TEXT,
+            original_start_period INTEGER,
+            original_room_id TEXT,
+            proposed_day TEXT,
+            proposed_start_period INTEGER,
+            proposed_room_id TEXT,
+            is_moved INTEGER DEFAULT 0,
+            change_type TEXT DEFAULT 'unchanged',
+            change_reason TEXT,
+            FOREIGN KEY (proposal_id) REFERENCES rescheduling_proposals(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS rescheduling_audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            disruption_id TEXT NOT NULL,
+            proposal_id TEXT,
+            user_id TEXT NOT NULL,
+            user_role TEXT NOT NULL,
+            action TEXT NOT NULL,
+            details_json TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
         CREATE TABLE IF NOT EXISTS audit_logs (
@@ -338,6 +411,92 @@ def init_db(force_reset: bool = False):
             details_json TEXT,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+
+        -- Module 6: Centralized Notification, Alerts and Communication Tables
+        CREATE TABLE IF NOT EXISTS notifications (
+            id TEXT PRIMARY KEY,
+            event_type TEXT NOT NULL,
+            category TEXT NOT NULL, -- 'timetable', 'examination', 'venue_booking', 'disruption', 'approval'
+            severity TEXT NOT NULL, -- 'critical', 'high', 'medium', 'low'
+            title TEXT NOT NULL,
+            message TEXT NOT NULL,
+            related_module TEXT NOT NULL, -- 'module_1', 'module_2', 'module_3', 'module_4', 'module_5'
+            related_record_id TEXT,
+            metadata_json TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_recipients (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            notification_id TEXT NOT NULL,
+            recipient_id TEXT NOT NULL,
+            role TEXT NOT NULL,
+            is_read INTEGER NOT NULL DEFAULT 0,
+            read_at TIMESTAMP,
+            is_archived INTEGER NOT NULL DEFAULT 0,
+            archived_at TIMESTAMP,
+            FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE,
+            FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_preferences (
+            user_id TEXT PRIMARY KEY,
+            in_app_enabled INTEGER NOT NULL DEFAULT 1,
+            email_enabled INTEGER NOT NULL DEFAULT 1,
+            whatsapp_enabled INTEGER NOT NULL DEFAULT 0,
+            sms_enabled INTEGER NOT NULL DEFAULT 0,
+            categories_json TEXT NOT NULL,
+            min_severity TEXT NOT NULL DEFAULT 'low',
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_deliveries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            notification_id TEXT NOT NULL,
+            recipient_id TEXT NOT NULL,
+            channel TEXT NOT NULL, -- 'in_app', 'email', 'whatsapp', 'sms'
+            status TEXT NOT NULL, -- 'delivered', 'failed', 'skipped', 'pending', 'not_configured'
+            attempt_count INTEGER NOT NULL DEFAULT 1,
+            error_message TEXT,
+            provider_response TEXT,
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE,
+            FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_events (
+            id TEXT PRIMARY KEY,
+            event_type TEXT NOT NULL,
+            payload_json TEXT NOT NULL,
+            published_by TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_templates (
+            id TEXT PRIMARY KEY,
+            event_type TEXT UNIQUE NOT NULL,
+            title_template TEXT NOT NULL,
+            message_template TEXT NOT NULL,
+            email_subject_template TEXT,
+            email_body_template TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS notification_audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
+            action TEXT NOT NULL,
+            details_json TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        -- Performance Indexes
+        CREATE INDEX IF NOT EXISTS idx_notif_recip_user_read ON notification_recipients(recipient_id, is_read);
+        CREATE INDEX IF NOT EXISTS idx_notif_category ON notifications(category);
+        CREATE INDEX IF NOT EXISTS idx_notif_created_at ON notifications(created_at);
+        CREATE INDEX IF NOT EXISTS idx_notif_delivery_status ON notification_deliveries(channel, status);
+        CREATE INDEX IF NOT EXISTS idx_notif_events_type ON notification_events(event_type, created_at);
+
     """)
 
     # Seed Demo Users if not present
@@ -353,6 +512,16 @@ def init_db(force_reset: bool = False):
             INSERT INTO users (id, name, email, role, department, faculty_id)
             VALUES (?, ?, ?, ?, ?, ?)
         """, demo_users)
+
+    # Seed Default Notification Preferences for all users
+    cur.execute("SELECT id FROM users")
+    all_users = cur.fetchall()
+    default_cats = json.dumps({"timetable": True, "examination": True, "venue_booking": True, "disruption": True, "approval": True})
+    for u in all_users:
+        cur.execute("""
+            INSERT OR IGNORE INTO notification_preferences (user_id, in_app_enabled, email_enabled, whatsapp_enabled, sms_enabled, categories_json, min_severity)
+            VALUES (?, 1, 1, 0, 0, ?, 'low')
+        """, (u[0], default_cats))
 
     conn.commit()
     conn.close()

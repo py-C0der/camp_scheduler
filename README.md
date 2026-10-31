@@ -17,6 +17,7 @@ The system is organized into 5 fully integrated modules:
 | **Module 3: Examination Scheduling** | Mid-semester exam scheduling with 50% half-capacity seating rule across multiple rooms | CP-SAT & First-Fit Decreasing Room Packing |
 | **Module 4: Smart Venue Booking System** | Natural-language (English/Hinglish) + manual booking with deterministic priority arbitration | Gemini 2.5 Flash / Rule NLP + Deterministic Arbiter |
 | **Module 5: Disruption & Rescheduling Engine** | Live blast-radius impact analysis and minimal-perturbation rescheduling | CP-SAT Perturbation Minimizer + Version Ledger |
+| **Module 6: Notification & Communication Hub** | Centralized real-time alerts, user preferences, and multi-channel adapters | WebSockets, SQLite Ledger, SMTP / Twilio / Meta Adapters |
 
 ---
 
@@ -54,6 +55,25 @@ The system is organized into 5 fully integrated modules:
 - **Human-in-the-Loop Approval Workflow**: Rescheduling generates a proposal (`PROP-...`). Baseline schedule is never overwritten automatically. Approval requires authorized roles (`admin` or `head_of_timetabling`) and enforces a self-approval ban.
 - **Immutable Timetable Version Ledger**: Tracks version history (`baseline`, `v2_sample_disruption`, etc.) with atomic activations.
 - **Cross-Module Festival Protection**: Rescheduling respects approved fest-week events and examinations, eliminating cross-module hard violations ($H_{13}$).
+
+### Module 6: Notification, Alerts & Communication Management
+- **Event-Driven Architecture**: Centralized in-memory `EventBus` listening to domain lifecycle triggers across Modules 2–5.
+- **Role-Based Targeting & Recipient Resolver**: Dynamic routing to affected users (`admin`, `dept_coordinator`, `faculty`, `club_representative`).
+- **User Notification Preferences**: Granular opt-in/opt-out matrix across channels (in-app, email, whatsapp, sms) and categories.
+- **Real-Time Delivery & Tracking**: WebSocket live broadcast, unread badge counters, delivery logs with retry counters.
+- **CIT Branded Templates**: Responsive HTML email notifications with fallback text formats.
+
+### Module 7: Admin Dashboard, Reports, Timetable Views & Dataset Management
+- **7 Authoritative KPI Cards**: Real-time DB counts for teaching sessions, exams, bookings, pending approvals, unresolved conflicts, available rooms, and average room utilisation.
+- **3-Way Weekly Timetable Viewers**:
+  - **Student Group View**: 5-day $\times$ 9-period grid with free periods, combined cohorts, and elective baskets.
+  - **Faculty View**: Daily teaching loads ($\le 4\text{h}$ cap), assigned cohorts, rooms, and unavailable blocks.
+  - **Room View**: Distinguishes scheduled classes vs. venue bookings vs. maintenance with unused period detection.
+- **Unified Pending Approvals**: Single hub for venue bookings (Mod 4) and disruption proposals (Mod 5) with role verification.
+- **Live Conflict Monitor**: Real-time auditing of $H_1 - H_{14}$ hard constraints and $S_1 - S_6$ soft rules.
+- **Room Utilisation Report**: Computed using the exact formula:
+  $$\text{Utilisation Percentage} = \frac{\text{Occupied Available Periods}}{\text{Total Available Periods}} \times 100$$
+- **Dataset Management & Official Validator**: Structural & relational foreign key validation, atomic transactional import with full rollback, clean demo reset, and direct execution of official `validator.py`.
 
 ---
 

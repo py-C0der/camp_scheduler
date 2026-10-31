@@ -201,6 +201,22 @@ def approve_schedule(
             approved_by=req.approved_by or role,
             note=req.note,
         )
+
+        try:
+            from backend.notifications.event_bus import event_bus
+            from backend.notifications.events import NotificationEvent, EventTypes
+            event_bus.publish(NotificationEvent(
+                event_type=EventTypes.EXAM_SCHEDULE_APPROVED,
+                category="examination",
+                severity="high",
+                related_module="module_3",
+                related_record_id=schedule_id,
+                published_by=req.approved_by or role,
+                payload={"version": schedule_id, "approved_by": req.approved_by or role}
+            ))
+        except Exception:
+            pass
+
         return res
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
