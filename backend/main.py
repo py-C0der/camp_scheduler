@@ -18,6 +18,7 @@ from backend.services.export_service import export_schedules, run_official_valid
 from backend.services.validation_service import audit_all_constraints
 from CrunchWeek_StarterPack.validator import load, run as run_validator
 from backend.api.dashboard_routes import dashboard_router
+from backend.api.exam_routes import exam_router, export_exam_router
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
 DISRUPTION_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "examples" / "sample_disruption.json"
@@ -30,6 +31,8 @@ app = FastAPI(
 )
 
 app.include_router(dashboard_router)
+app.include_router(exam_router)
+app.include_router(export_exam_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -376,23 +379,7 @@ def generate_full_timetable(time_limit: int = 35):
         "exam_soft_penalty": report.get("exam_soft_penalty", 0)
     }
 
-# ----------------- Exams Endpoint -----------------
-@app.get("/api/exams")
-def get_exams():
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT exam_id, course_ids_json, day, session, rooms_json, groups_json, size FROM exam_schedules")
-    rows = cur.fetchall()
-    conn.close()
-    
-    exams = []
-    for r in rows:
-        d = dict(r)
-        d["course_ids"] = json.loads(d["course_ids_json"])
-        d["rooms"] = json.loads(d["rooms_json"])
-        d["groups"] = json.loads(d["groups_json"])
-        exams.append(d)
-    return {"exams": exams}
+# Legacy exam endpoint superseded by exam_router
 
 # ----------------- Bookings & Spectra Week -----------------
 @app.get("/api/bookings")

@@ -187,11 +187,55 @@ def init_db(force_reset: bool = False):
             exam_id TEXT PRIMARY KEY,
             course_ids_json TEXT NOT NULL,
             day TEXT,
-            session TEXT, -- 'morning', 'afternoon'
+            session TEXT, -- 'AM', 'PM'
             rooms_json TEXT NOT NULL, -- JSON array
             groups_json TEXT NOT NULL,
             size INTEGER NOT NULL,
             duration_hours INTEGER NOT NULL DEFAULT 2
+        );
+
+        CREATE TABLE IF NOT EXISTS exam_schedule_versions (
+            id TEXT PRIMARY KEY,
+            version_number INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT 'proposed', -- 'proposed', 'approved', 'archived'
+            is_active INTEGER NOT NULL DEFAULT 0,
+            solver_status TEXT NOT NULL,
+            solve_time_seconds REAL DEFAULT 0,
+            soft_penalty INTEGER DEFAULT 0,
+            created_by TEXT DEFAULT 'admin',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS exam_assignments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            version_id TEXT NOT NULL,
+            exam_id TEXT NOT NULL,
+            day TEXT NOT NULL,
+            session TEXT NOT NULL,
+            rooms_json TEXT NOT NULL,
+            total_effective_seats INTEGER NOT NULL,
+            is_multi_room INTEGER NOT NULL DEFAULT 0,
+            FOREIGN KEY (version_id) REFERENCES exam_schedule_versions(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS exam_validation_reports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            version_id TEXT NOT NULL,
+            is_valid INTEGER NOT NULL,
+            hard_violation_count INTEGER NOT NULL DEFAULT 0,
+            hard_violations_json TEXT,
+            soft_penalty INTEGER NOT NULL DEFAULT 0,
+            validated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (version_id) REFERENCES exam_schedule_versions(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS exam_approvals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            version_id TEXT NOT NULL,
+            approved_by TEXT NOT NULL,
+            approval_notes TEXT,
+            approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (version_id) REFERENCES exam_schedule_versions(id) ON DELETE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS disruptions (
