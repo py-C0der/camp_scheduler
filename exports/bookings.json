@@ -70,10 +70,10 @@
         "request_id": "BR-NEW-026",
         "status": "approved",
         "day": "MON",
-        "start_period": 2,
-        "end_period": 2,
+        "start_period": 3,
+        "end_period": 3,
         "room_id": "CR-101",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-101 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
+        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-101 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-08",

@@ -22,6 +22,7 @@ from backend.api.exam_routes import exam_router, export_exam_router
 from backend.api.booking_routes import router as booking_router, booking_export_router
 from backend.api.disruption_routes import router as disruption_router
 from backend.api.notification_routes import router as notification_router, admin_router as notification_admin_router
+from backend.api.ai_routes import ai_router
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "data" / "cit_public.json"
 DISRUPTION_PATH = Path(__file__).resolve().parent.parent / "CrunchWeek_StarterPack" / "examples" / "sample_disruption.json"
@@ -41,6 +42,7 @@ app.include_router(booking_export_router)
 app.include_router(disruption_router)
 app.include_router(notification_router)
 app.include_router(notification_admin_router)
+app.include_router(ai_router)
 
 app.add_middleware(
     CORSMiddleware,

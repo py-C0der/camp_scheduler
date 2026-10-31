@@ -48,13 +48,13 @@
       "session_id": "PH101-A-L1",
       "day": "MON",
       "start_period": 2,
-      "room_id": "LH-3"
+      "room_id": "AUD"
     },
     {
       "session_id": "PH101-A-L2",
       "day": "MON",
       "start_period": 1,
-      "room_id": "LH-1"
+      "room_id": "LH-4"
     },
     {
       "session_id": "PH101-A-L3",
@@ -126,7 +126,7 @@
       "session_id": "PH101-B-L3",
       "day": "WED",
       "start_period": 8,
-      "room_id": "LH-2"
+      "room_id": "LH-1"
     },
     {
       "session_id": "PH191-B-P1",
@@ -144,7 +144,7 @@
       "session_id": "CS101-B-L2",
       "day": "THU",
       "start_period": 6,
-      "room_id": "LH-5"
+      "room_id": "CR-101"
     },
     {
       "session_id": "CS191-B-P1",
@@ -168,13 +168,13 @@
       "session_id": "HS101-B-L2",
       "day": "TUE",
       "start_period": 2,
-      "room_id": "CR-201"
+      "room_id": "AUD"
     },
     {
       "session_id": "MA101-C-T1",
       "day": "TUE",
       "start_period": 5,
-      "room_id": "CR-201"
+      "room_id": "LH-1"
     },
     {
       "session_id": "PH101-C-L1",
@@ -353,20 +353,20 @@
     {
       "session_id": "CS203-L1",
       "day": "FRI",
-      "start_period": 5,
-      "room_id": "CR-101"
+      "start_period": 9,
+      "room_id": "CR-203"
     },
     {
       "session_id": "CS203-L2",
-      "day": "WED",
-      "start_period": 1,
+      "day": "FRI",
+      "start_period": 7,
       "room_id": "CR-203"
     },
     {
       "session_id": "CS203-L3",
-      "day": "WED",
+      "day": "FRI",
       "start_period": 6,
-      "room_id": "CR-103"
+      "room_id": "CR-203"
     },
     {
       "session_id": "CS204-L1",
@@ -400,27 +400,27 @@
     },
     {
       "session_id": "EC201-L1",
-      "day": "THU",
-      "start_period": 8,
+      "day": "FRI",
+      "start_period": 9,
       "room_id": "CR-204"
     },
     {
       "session_id": "EC201-L2",
       "day": "THU",
       "start_period": 3,
-      "room_id": "LH-3"
+      "room_id": "CR-101"
     },
     {
       "session_id": "EC201-L3",
       "day": "THU",
       "start_period": 2,
-      "room_id": "LH-5"
+      "room_id": "CR-204"
     },
     {
       "session_id": "EC201-T1",
-      "day": "TUE",
-      "start_period": 5,
-      "room_id": "CR-101"
+      "day": "FRI",
+      "start_period": 6,
+      "room_id": "CR-204"
     },
     {
       "session_id": "EC202-L1",
@@ -436,9 +436,9 @@
     },
     {
       "session_id": "EC202-L3",
-      "day": "TUE",
-      "start_period": 1,
-      "room_id": "CR-104"
+      "day": "FRI",
+      "start_period": 5,
+      "room_id": "CR-204"
     },
     {
       "session_id": "EC203-L1",
@@ -448,9 +448,9 @@
     },
     {
       "session_id": "EC203-L2",
-      "day": "WED",
-      "start_period": 1,
-      "room_id": "CR-103"
+      "day": "FRI",
+      "start_period": 4,
+      "room_id": "CR-204"
     },
     {
       "session_id": "EC203-L3",
@@ -490,27 +490,27 @@
     },
     {
       "session_id": "EE201-L1",
-      "day": "THU",
-      "start_period": 6,
+      "day": "FRI",
+      "start_period": 9,
       "room_id": "CR-205"
     },
     {
       "session_id": "EE201-L2",
-      "day": "MON",
-      "start_period": 3,
-      "room_id": "CR-204"
+      "day": "FRI",
+      "start_period": 8,
+      "room_id": "CR-205"
     },
     {
       "session_id": "EE201-L3",
-      "day": "MON",
-      "start_period": 4,
-      "room_id": "CR-101"
+      "day": "FRI",
+      "start_period": 7,
+      "room_id": "CR-205"
     },
     {
       "session_id": "EE201-T1",
-      "day": "TUE",
-      "start_period": 2,
-      "room_id": "LH-5"
+      "day": "FRI",
+      "start_period": 6,
+      "room_id": "CR-205"
     },
     {
       "session_id": "EE202-L1",
@@ -688,27 +688,27 @@
     },
     {
       "session_id": "CE202-L1",
-      "day": "WED",
-      "start_period": 1,
-      "room_id": "LH-3"
+      "day": "FRI",
+      "start_period": 9,
+      "room_id": "CR-202"
     },
     {
       "session_id": "CE202-L2",
-      "day": "WED",
-      "start_period": 2,
-      "room_id": "LH-3"
+      "day": "FRI",
+      "start_period": 8,
+      "room_id": "CR-203"
     },
     {
       "session_id": "CE202-L3",
       "day": "FRI",
-      "start_period": 1,
-      "room_id": "LH-3"
+      "start_period": 7,
+      "room_id": "CR-202"
     },
     {
       "session_id": "CE202-T1",
-      "day": "THU",
-      "start_period": 1,
-      "room_id": "CR-105"
+      "day": "FRI",
+      "start_period": 6,
+      "room_id": "CR-202"
     },
     {
       "session_id": "CE203-L1",
@@ -844,15 +844,15 @@
     },
     {
       "session_id": "EC301-L1",
-      "day": "WED",
-      "start_period": 5,
-      "room_id": "LH-3"
+      "day": "THU",
+      "start_period": 9,
+      "room_id": "CR-204"
     },
     {
       "session_id": "EC301-L2",
-      "day": "WED",
-      "start_period": 4,
-      "room_id": "LH-5"
+      "day": "THU",
+      "start_period": 8,
+      "room_id": "CR-204"
     },
     {
       "session_id": "EC301-L3",
@@ -904,21 +904,21 @@
     },
     {
       "session_id": "EE301-L1",
-      "day": "WED",
-      "start_period": 4,
-      "room_id": "LH-4"
+      "day": "THU",
+      "start_period": 9,
+      "room_id": "CR-205"
     },
     {
       "session_id": "EE301-L2",
       "day": "WED",
       "start_period": 2,
-      "room_id": "LH-5"
+      "room_id": "CR-205"
     },
     {
       "session_id": "EE301-L3",
       "day": "WED",
       "start_period": 1,
-      "room_id": "LH-5"
+      "room_id": "CR-205"
     },
     {
       "session_id": "EE302-L1",
@@ -1138,9 +1138,9 @@
     },
     {
       "session_id": "CS202-T2",
-      "day": "THU",
-      "start_period": 7,
-      "room_id": "CR-104"
+      "day": "FRI",
+      "start_period": 8,
+      "room_id": "CR-202"
     }
   ],
   "exams": [
@@ -1531,15 +1531,6 @@
         "reason": "Approved 'Spectra Pro-Night' (institute_event) in OAT on FRI P10\u2013P13. Satisfies capacity (750 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
-        "request_id": "BR-NEW-034",
-        "status": "approved",
-        "day": "TUE",
-        "start_period": 4,
-        "end_period": 5,
-        "room_id": "SH-2",
-        "reason": "Approved 'Guest Lecture' (guest_lecture) in SH-2 on TUE P4\u2013P5. Satisfies capacity (80 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
         "request_id": "BR-03",
         "status": "approved",
         "day": "WED",
@@ -1565,96 +1556,6 @@
         "end_period": 3,
         "room_id": "CR-101",
         "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-101 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-027",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 3,
-        "end_period": 3,
-        "room_id": "CR-102",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-102 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-028",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 2,
-        "end_period": 2,
-        "room_id": "CR-103",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-103 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-029",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 3,
-        "end_period": 3,
-        "room_id": "CR-103",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-103 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-030",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 2,
-        "end_period": 2,
-        "room_id": "CR-104",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-104 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-031",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 3,
-        "end_period": 3,
-        "room_id": "CR-104",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-104 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-032",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 2,
-        "end_period": 2,
-        "room_id": "CR-105",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-105 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-033",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 2,
-        "end_period": 2,
-        "room_id": "CR-201",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-201 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-035",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 3,
-        "end_period": 3,
-        "room_id": "CR-201",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-201 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-036",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 2,
-        "end_period": 2,
-        "room_id": "CR-202",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-202 on MON P2\u2013P2. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
-      },
-      {
-        "request_id": "BR-NEW-037",
-        "status": "approved",
-        "day": "MON",
-        "start_period": 3,
-        "end_period": 3,
-        "room_id": "CR-202",
-        "reason": "Approved 'Faculty Department Seminar' (department_event) in CR-202 on MON P3\u2013P3. Satisfies capacity (30 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-08",

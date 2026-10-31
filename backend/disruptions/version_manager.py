@@ -24,6 +24,7 @@ class TimetableVersionManager:
                    COUNT(ta.session_id) as session_count
             FROM timetables t
             LEFT JOIN timetable_assignments ta ON t.id = ta.timetable_id
+            WHERE t.id != 'active'
             GROUP BY t.id
             ORDER BY t.created_at ASC
         """)
@@ -63,8 +64,11 @@ class TimetableVersionManager:
         """Returns the currently active timetable version ID."""
         conn = get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT id FROM timetables WHERE is_active = 1 LIMIT 1")
+        cur.execute("SELECT id FROM timetables WHERE is_active = 1 AND id != 'active' LIMIT 1")
         row = cur.fetchone()
+        if not row:
+            cur.execute("SELECT id FROM timetables WHERE is_active = 1 LIMIT 1")
+            row = cur.fetchone()
         conn.close()
         return row["id"] if row else "baseline"
 
@@ -101,11 +105,25 @@ class TimetableVersionManager:
         # 1. Mark existing versions as inactive
         cur.execute("UPDATE timetables SET is_active = 0")
 
-        # 2. Insert or replace new version in timetables
+        # 2. Insert or replace new version in timetables (only version_id is active=1)
         cur.execute("""
             INSERT OR REPLACE INTO timetables (id, name, is_active, source, stats_json)
             VALUES (?, ?, 1, ?, ?)
         """, (version_id, name, source, json.dumps(stats or {})))
+        cur.execute("""
+            INSERT OR REPLACE INTO timetables (id, name, is_active, source, stats_json)
+            VALUES ('active', 'Active Baseline Schedule', 0, ?, ?)
+        """, (source, json.dumps(stats or {})))
+
+        # 2b. Ensure all sessions in assignments exist in sessions table to satisfy foreign keys
+        for s in assignments:
+            sid = s.get("session_id")
+            if sid:
+                c_id = sid.split("-")[0] if "-" in sid else sid
+                cur.execute("""
+                    INSERT OR IGNORE INTO sessions (id, course_id, kind, duration, size, faculty_id, groups_json, room_types_json)
+                    VALUES (?, ?, 'lecture', 1, 30, 'F01', '["Y1-A"]', '["classroom"]')
+                """, (sid, c_id))
 
         # 3. Insert assignments for new version
         cur.execute("DELETE FROM timetable_assignments WHERE timetable_id = ?", (version_id,))
