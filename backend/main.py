@@ -23,6 +23,7 @@ from backend.api.booking_routes import router as booking_router, booking_export_
 from backend.api.disruption_routes import router as disruption_router
 from backend.api.notification_routes import router as notification_router, admin_router as notification_admin_router
 from backend.api.ai_routes import ai_router
+from backend.api.auth_routes import router as auth_router
 from backend.config import DATA_PATH, DISRUPTION_PATH, EXPORTS_DIR, FRONTEND_DIR
 
 app = FastAPI(
@@ -40,6 +41,7 @@ app.include_router(disruption_router)
 app.include_router(notification_router)
 app.include_router(notification_admin_router)
 app.include_router(ai_router)
+app.include_router(auth_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -65,6 +67,7 @@ STATE = {
 }
 
 # ----------------- Blueprint MVP Endpoints -----------------
+@app.get("/health")
 @app.get("/api/health")
 def health_check():
     return {"status": "healthy", "service": "CIT Campus Scheduling API"}
@@ -226,9 +229,14 @@ def switch_user(req: SwitchUserRequest):
     STATE["active_user"] = dict(row)
     return {"status": "success", "active_user": STATE["active_user"]}
 
-# ----------------- Timetable & Metadata -----------------
+# ----------------- Timetable & Metadata (In-Memory Cached) -----------------
+_FILTER_CACHE = None
+
 @app.get("/api/meta/filters")
-def get_filter_options():
+def get_filter_options(bypass_cache: bool = False):
+    global _FILTER_CACHE
+    if _FILTER_CACHE and not bypass_cache:
+        return _FILTER_CACHE
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT id, name, year, department, size FROM student_groups ORDER BY id")
@@ -238,7 +246,8 @@ def get_filter_options():
     cur.execute("SELECT id, name, building, type, capacity FROM rooms ORDER BY id")
     rooms = [dict(r) for r in cur.fetchall()]
     conn.close()
-    return {"groups": groups, "faculty": faculty, "rooms": rooms}
+    _FILTER_CACHE = {"groups": groups, "faculty": faculty, "rooms": rooms}
+    return _FILTER_CACHE
 
 @app.get("/api/timetable/grid")
 def get_timetable_grid(view_type: str = "group", target_id: Optional[str] = None):

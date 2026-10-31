@@ -30,7 +30,8 @@ class TestBookingModule(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        init_db(force_reset=False)
+        from backend.services.dataset_service import DatasetService
+        DatasetService.reset_demo_data(user_id="admin_1")
         cls.service = BookingService()
         cls.service.initialize_and_sync()
 

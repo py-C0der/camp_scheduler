@@ -95,12 +95,12 @@
       },
       {
         "request_id": "BR-18",
-        "status": "approved",
-        "day": "THU",
-        "start_period": 6,
-        "end_period": 8,
-        "room_id": "MECH-WS",
-        "reason": "Approved 'Bridge-building contest' (department_event) in MECH-WS on THU P6\u2013P8. Satisfies capacity (45 attendees), required features, and official priority hierarchy with 0 conflicts."
+        "status": "alternative_offered",
+        "day": "MON",
+        "start_period": 9,
+        "end_period": 11,
+        "room_id": "CIVIL-LAB",
+        "reason": "Alternative offered for 'Bridge-building contest' (department_event) in CIVIL-LAB on MON P9\u2013P11. Requested slot was occupied or unavailable; alternative satisfies capacity (60 seats) and required equipment without clashes."
       },
       {
         "request_id": "BR-02",
@@ -108,8 +108,8 @@
         "day": "THU",
         "start_period": 6,
         "end_period": 11,
-        "room_id": "CS-LAB-1",
-        "reason": "Approved 'Spectra Code Sprint (8-hour hackathon)' (club_event) in CS-LAB-1 on THU P6\u2013P11. Satisfies capacity (70 attendees), required features, and official priority hierarchy with 0 conflicts."
+        "room_id": "CS-LAB-2",
+        "reason": "Approved 'Spectra Code Sprint (8-hour hackathon)' (club_event) in CS-LAB-2 on THU P6\u2013P11. Satisfies capacity (70 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-06",
