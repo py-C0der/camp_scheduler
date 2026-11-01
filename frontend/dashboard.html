@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Operations Dashboard - Chilika Institute of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- CIT Campus Platform Modular Stylesheet -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="mobileDrawerBackdrop" onclick="toggleMobileSidebar()"></div>
+
+<!-- Left Sidebar Navigation -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CIT</div>
+    <div class="brand-info">
+      <h2>Chilika Inst. of Tech.</h2>
+      <span>Campus Operations</span>
+    </div>
+  </div>
+
+  <div class="nav-section-title">Main Navigation</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item active" id="navItemDashboard" href="dashboard.html" onclick="if(window.switchNav){switchNav('dashboard'); return false;}">
+        <span>&#9632;</span> Dashboard
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemTimetable" href="timetable.html" onclick="if(window.switchNav){switchNav('timetable'); return false;}">
+        <span>&#9776;</span> Timetable
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemValidations" href="validations.html" onclick="if(window.switchNav){switchNav('validations'); return false;}">
+        <span>&#10004;</span> Validations Audit
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemExaminations" href="examinations.html" onclick="if(window.switchNav){switchNav('examinations'); return false;}">
+        <span>&#128197;</span> Examinations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemBookings" href="bookings.html" onclick="if(window.switchNav){switchNav('bookings'); return false;}">
+        <span>&#127970;</span> Smart Venue Bookings
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemDisruptions" href="disruptions.html" onclick="if(window.switchNav){switchNav('disruptions'); return false;}">
+        <span>&#8644;</span> Disruption &amp; Reschedule
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemNotifications" href="notifications.html" onclick="if(window.switchNav){switchNav('notifications'); return false;}">
+        <span>&#128276;</span> Notifications &amp; Alerts
+        <span class="nav-badge" id="navNotifBadge" style="background:#ef4444; color:#fff; font-weight:700; display:none; border-radius:10px; padding:2px 7px; font-size:0.7rem;">0</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="nav-section-title">Intelligence &amp; Operations</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemAiAssistant" href="ai-assistant.html" onclick="if(window.switchNav){switchNav('ai-assistant'); return false;}">
+        <span>&#10024;</span> AI Assistant
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="scrollToUtilization()">
+        <span>&#9680;</span> Room Utilization
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="switchNav('validations')">
+        <span>&#128190;</span> Dataset &amp; Validations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}">
+        <span>&#128101;</span> Login &amp; Role Management
+      </a>
+    </li>
+    <li>
+      <a href="/api/export/schedule" download="schedule.json" class="nav-item">
+        <span>&#8681;</span> Reports &amp; Exports
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="resetDemo()">
+        <span>&#9881;</span> Reset Demo Data
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="main-wrap">
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="mobileMenuToggle" onclick="toggleMobileSidebar()" title="Toggle Navigation Menu">
+        &#9776;
+      </button>
+      <div class="page-title" id="pageTitle">Campus Operations Dashboard</div>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" placeholder="Search sessions, rooms, faculty...">
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.15s;" title="Notifications">
+          <span style="font-size: 1.15rem;">&#128276;</span>
+          <span id="notifBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">0</span>
+        </button>
+
+        <!-- Notification Dropdown Menu -->
+        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden; text-align: left;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <div>
+              <strong style="font-size: 0.92rem; color: #0f172a;">Notifications</strong>
+              <span id="notifDropdownCount" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 9999px; margin-left: 6px; font-weight: 700;">0 new</span>
+            </div>
+            <button onclick="markAllNotifsRead()" style="background: none; border: none; font-size: 0.75rem; color: #2563eb; cursor: pointer; font-weight: 600;">Mark all read</button>
+          </div>
+          <div id="notifDropdownList" style="max-height: 380px; overflow-y: auto;">
+            <div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No new notifications</div>
+          </div>
+          <div style="padding: 10px 16px; border-top: 1px solid #f1f5f9; text-align: center; background: #fafafa;">
+            <a href="javascript:void(0)" onclick="switchNav('notifications'); toggleNotifDropdown();" style="font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none;">Open Notification Center &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="roleBadgeContainer">
+        <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
+      </div>
+
+      <button class="btn btn-outline btn-sm" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" style="display:flex; align-items:center; gap:6px; font-weight:700; background:#f8fafc; border-color:#cbd5e1;">
+        <span>&#128273;</span> Login / Switch User
+      </button>
+
+      <div class="user-dropdown" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" title="Switch User Role">
+        <div class="user-avatar" id="userAvatar">DA</div>
+        <div class="user-name-role">
+          <div class="user-name" id="topUserName">Dean Academics</div>
+          <div class="user-role-label" id="topUserRole">Dean's Office (Admin)</div>
+        </div>
+        <span style="font-size: 0.75rem; color: #94a3b8;">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Body -->
+  <main class="content-body">
+
+    <!-- DYNAMIC ROLE-BASED WORKSPACE BANNER -->
+    <div id="roleWorkspaceBanner" style="display:none; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.25); border: 1px solid rgba(255,255,255,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div id="roleBannerAvatar" style="width: 46px; height: 46px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+            &#128081;
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 id="roleBannerTitle" style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #fff;">Dean Academics Executive Console</h2>
+              <span id="roleBannerPill" class="badge badge-danger" style="font-size: 0.68rem; padding: 3px 8px;">ADMIN</span>
+            </div>
+            <p id="roleBannerSub" style="font-size: 0.8rem; color: #cbd5e1; margin: 3px 0 0 0;">
+              Master Optimization Solvers &bull; Disruption Sign-Offs &bull; System Health Monitoring
+            </p>
+          </div>
+        </div>
+        <div id="roleBannerActions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- Dynamically populated by applyRolePermissions -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VIEW 1: Central Operations Dashboard -->
+    
+<div id="view-dashboard" class="view-panel active">
+
+      <!-- 8 Dynamic Overview Cards -->
+      <div class="overview-grid">
+        <!-- Card 1: Total Rooms -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Total Rooms</span>
+            <span class="metric-icon">&#127970;</span>
+          </div>
+          <div class="metric-val" id="cardRooms">27</div>
+          <div class="metric-sub" id="cardRoomsSub">Classrooms, Labs, AUD, OAT</div>
+          <a href="#" class="metric-link" onclick="scrollToUtilization()">View Room Details &rarr;</a>
+        </div>
+
+        <!-- Card 2: Faculty Members -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Faculty Members</span>
+            <span class="metric-icon">&#128104;&#8205;&#127979;</span>
+          </div>
+          <div class="metric-val" id="cardFaculty">40</div>
+          <div class="metric-sub">Max 4h daily teaching cap</div>
+          <a href="#" class="metric-link" onclick="switchNav('timetable')">View Faculty Schedules &rarr;</a>
+        </div>
+
+        <!-- Card 3: Student Groups -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Student Groups</span>
+            <span class="metric-icon">&#127891;</span>
+          </div>
+          <div class="metric-val" id="cardGroups">14</div>
+          <div class="metric-sub">Years 1–3, 5 engineering depts</div>
+          <a href="#" class="metric-link" onclick="switchNav('timetable')">View Cohort Grids &rarr;</a>
+        </div>
+
+        <!-- Card 4: Courses -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Total Courses</span>
+            <span class="metric-icon">&#128218;</span>
+          </div>
+          <div class="metric-val" id="cardCourses">62</div>
+          <div class="metric-sub">Core &amp; Open Electives</div>
+          <span class="metric-sub" style="font-weight:600; color:#2563eb;">1 Teacher / Course Policy</span>
+        </div>
+
+        <!-- Card 5: Teaching Sessions -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Teaching Sessions</span>
+            <span class="metric-icon">&#9201;</span>
+          </div>
+          <div class="metric-val" id="cardSessions">189</div>
+          <div class="metric-sub" id="cardTeachingHours">243 teaching hours / week</div>
+          <span class="metric-sub" style="color:#059669; font-weight:600;">100% Scheduled</span>
+        </div>
+
+        <!-- Card 6: Examinations -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Examinations</span>
+            <span class="metric-icon">&#128221;</span>
+          </div>
+          <div class="metric-val" id="cardExams">41</div>
+          <div class="metric-sub" id="cardExamStatus">Week 8 Midsem Exams</div>
+          <a href="#" class="metric-link" onclick="switchNav('examinations')">Open Examination Portal &rarr;</a>
+        </div>
+
+        <!-- Card 7: Venue Requests -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Booking Requests</span>
+            <span class="metric-icon">&#128197;</span>
+          </div>
+          <div class="metric-val" id="cardBookings">25</div>
+          <div class="metric-sub" id="cardBookingsSub">21 Appr, 2 Alt, 2 Rej, 1 Canc</div>
+          <a href="#recentBookingsSection" class="metric-link">Manage Bookings &rarr;</a>
+        </div>
+
+        <!-- Card 8: Conflicts -->
+        <div class="card-metric">
+          <div class="metric-head">
+            <span class="metric-label">Scheduling Conflicts</span>
+            <span class="metric-icon">&#9888;</span>
+          </div>
+          <div class="metric-val" style="color: #10b981;" id="cardConflicts">0</div>
+          <div class="metric-sub" id="cardConflictSub">Verified by CP-SAT solver</div>
+          <a href="#conflictsSection" class="metric-link">Inspect Verification &rarr;</a>
+        </div>
+      </div>
+
+      <!-- 2-Column Main Section -->
+      <div class="dashboard-layout">
+        <!-- Left Column: Timetable Status & Recent Bookings -->
+        <div>
+          <!-- Timetable Status Panel (Section 4) -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3>Timetable Generation &amp; Solver Status</h3>
+              <button class="btn btn-primary" id="btnAdminGenerate" onclick="generateTimetableAction()">
+                <span>&#9654;</span> Generate Timetable
+              </button>
+            </div>
+            
+            <div class="kv-grid">
+              <div class="kv-item">
+                <div class="kv-label">Schedule Version</div>
+                <div class="kv-val" id="ttVersion">v1.0 (Optimal Baseline)</div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Dataset ID</div>
+                <div class="kv-val" id="ttDataset">cit-public-v1</div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Solver State</div>
+                <div class="kv-val"><span class="badge badge-success" id="ttSolverStatus">OPTIMAL</span></div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Validation State</div>
+                <div class="kv-val"><span class="badge badge-success" id="ttValidationStatus">VALIDATED</span></div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Assigned Sessions</div>
+                <div class="kv-val" id="ttAssigned">189 / 189</div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Hard Violations</div>
+                <div class="kv-val" style="color: #10b981;" id="ttHardViolations">0</div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Soft Penalty Score</div>
+                <div class="kv-val" id="ttSoftPenalty">229</div>
+              </div>
+              <div class="kv-item">
+                <div class="kv-label">Last Generated</div>
+                <div class="kv-val" style="font-size: 0.8rem; font-weight: 600;" id="ttTimestamp">Today, Optimal Run</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Venue Booking Overview (Section 6) -->
+          <div class="panel-card" id="recentBookingsSection">
+            <div class="panel-header">
+              <h3>Spectra Week Venue Bookings</h3>
+              <div class="filter-btn-group">
+                <button class="filter-pill active" onclick="filterBookings('all', this)">All (25)</button>
+                <button class="filter-pill" onclick="filterBookings('approved', this)">Approved</button>
+                <button class="filter-pill" onclick="filterBookings('alternative_offered', this)">Alternatives</button>
+                <button class="filter-pill" onclick="filterBookings('rejected', this)">Rejected</button>
+                <button class="filter-pill" onclick="filterBookings('cancelled', this)">Cancelled</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Category</th>
+                    <th>Attendance</th>
+                    <th>Requested Window</th>
+                    <th>Status</th>
+                    <th>Allocated Venue</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pending Approvals Section (Section 7) -->
+          <div class="panel-card" id="pendingApprovalsSection">
+            <div class="panel-header">
+              <h3>Pending Approvals &amp; Priority Decisions</h3>
+              <span class="badge badge-warning" id="pendingCountBadge">0 Pending</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Role &bull; Category</th>
+                    <th>Requested Venue</th>
+                    <th>Responsibility</th>
+                    <th>Current Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingApprovalsBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Conflicts, Utilization & Audit Activity -->
+        <div>
+          <!-- Current Conflicts Panel (Section 8) -->
+          <div class="panel-card" id="conflictsSection">
+            <div class="panel-header">
+              <h3>Current Conflicts Panel</h3>
+              <span class="badge badge-success" id="conflictStatusBadge">0 Conflicts</span>
+            </div>
+            <div id="conflictsContainer">
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; color: #166534; font-size: 0.82rem; display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 1.1rem;">&#10003;</span>
+                <div>
+                  <strong>All hard constraints verified:</strong><br>
+                  Zero room clashes, zero faculty overlaps, zero cohort double-bookings.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Examination Overview Panel (Section 5) -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3>Week 8 Examination Status</h3>
+              <span class="badge badge-success">41 Scheduled</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 12px;">
+              Midsem exams allocated with effective capacity strictly halved across 10 AM/PM exam slots.
+            </p>
+            <div id="upcomingExamsList" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Filled dynamically -->
+            </div>
+            <div style="margin-top: 14px; text-align: right;">
+              <button class="btn btn-outline btn-sm" onclick="switchNav('examinations')">Manage Examinations &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Recent Activity Timeline (Section 10) -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3>Recent System Activity</h3>
+              <span style="font-size: 0.75rem; color: #64748b;">Live Audit Log</span>
+            </div>
+            <div class="activity-timeline" id="activityList">
+              <!-- Filled dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Utilization Section (Section 9) -->
+      <div class="panel-card" id="roomUtilizationSection">
+        <div class="panel-header">
+          <div>
+            <h3>Campus Room Utilization Overview</h3>
+            <p style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">
+              Calculated across 45 teaching periods per room per week (Mon–Fri, P1–P9)
+            </p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: #2563eb;">Campus Average: <span id="avgUtilText">45.8%</span></span>
+            <select id="roomTypeFilter" onchange="filterRoomUtilization(this.value)">
+              <option value="all">All Room Types (27)</option>
+              <option value="classroom">Classrooms</option>
+              <option value="lecture_hall">Lecture Halls</option>
+              <option value="lab">Laboratories (7)</option>
+              <option value="auditorium">Auditorium / OAT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Room ID</th>
+                <th>Venue Name</th>
+                <th>Building</th>
+                <th>Type</th>
+                <th>Capacity</th>
+                <th>Occupied / Available</th>
+                <th style="width: 200px;">Weekly Utilization</th>
+              </tr>
+            </thead>
+            <tbody id="roomUtilBody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VIEW 2: Timetable Management View (from System 1) -->
+<div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" style="color:#dc2626; border-color:#fca5a5;" onclick="triggerRejectProposal()" id="btnCmpReject">
+            Reject Proposal
+          </button>
+          <button class="btn btn-primary" onclick="triggerApproveProposal()" id="btnCmpApprove">
+            <span>&#10004;</span> Approve &amp; Activate Revision
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          try {
+            loadDashboard();
+          } catch(e) {
+            console.warn('Auto-init warning for dashboard.html:', e);
+          }
+        }, 100);
+      });
+    </script>
+  <script src="/dist/app.bundle.js" defer></script>
+
+<script>
+async function triggerResetDemoDataAction() {
+  if (!confirm("Are you sure you want to reset all campus demo datasets, timetables, and bookings to official baseline?")) return;
+  const btn = document.getElementById('btnHeaderResetDemo');
+  if (btn) btn.innerHTML = '<span>&#8987;</span> Resetting...';
+  try {
+    const res = await fetch('/api/admin/reset-demo', { method: 'POST' });
+    const data = await res.json();
+    alert("Campus dataset and timetable restored to official baseline!");
+    window.location.reload();
+  } catch(e) {
+    alert("Reset error: " + e.message);
+  } finally {
+    if (btn) btn.innerHTML = '<span>&#8634;</span> Reset Demo Data';
+  }
+}
+</script>
+
+</body>
+
+</html>

@@ -309,6 +309,7 @@ class DecisionEvidenceService:
         s = self.sessions.get(session_id)
         if not s:
             return {
+                "session_id": session_id,
                 "is_feasible": False,
                 "violations": [f"Session {session_id} does not exist in CIT dataset."],
                 "rules": ["H1"]

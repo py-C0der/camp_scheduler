@@ -39,3 +39,7 @@ dist/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local reference and imported assets
+iit bhubanaswar/
+

@@ -304,7 +304,7 @@ class AIAssistantService:
             target_day = day or "TUE"
             cf = self.evidence_service.test_reschedule_feasibility(session_id or "MA101-A-L1", target_day=target_day, target_period=3)
             reasons = cf["violations"]
-            msg = f"Analysis for moving session {cf['session_id']} to {target_day}:\n\n"
+            msg = f"Analysis for moving session {cf.get('session_id', session_id)} to {target_day}:\n\n"
             if not cf["is_feasible"]:
                 msg += "Cannot be moved due to the following binding constraints:\n"
                 for v in reasons:

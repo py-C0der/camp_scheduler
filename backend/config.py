@@ -44,3 +44,9 @@ else:
     DB_DIR = DEFAULT_DB_DIR
     DB_PATH = DEFAULT_DB_PATH
     EXPORTS_DIR = DEFAULT_EXPORTS_DIR
+
+# Security Configuration
+SECRET_KEY = os.environ.get("CIT_SECRET_KEY", "cit_campus_secure_master_secret_key_2026_production")
+TOKEN_EXPIRY_HOURS = int(os.environ.get("TOKEN_EXPIRY_HOURS", 12))
+MAX_FAILED_LOGIN_ATTEMPTS = int(os.environ.get("MAX_FAILED_LOGIN_ATTEMPTS", 5))
+LOCKOUT_MINUTES = int(os.environ.get("LOCKOUT_MINUTES", 15))

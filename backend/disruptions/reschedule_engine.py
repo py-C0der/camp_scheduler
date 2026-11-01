@@ -84,7 +84,7 @@ class TimetableReschedulingEngine:
 
         fest_busy_slots = set()
         for b in fest_bookings:
-            if b.get("status") == "approved" and b.get("room_id") and b.get("day") in day_to_idx:
+            if b.get("status") in ("approved", "alternative_offered") and b.get("room_id") and b.get("day") in day_to_idx:
                 d_idx = day_to_idx[b["day"]]
                 for p in range(b.get("start_period", 1), b.get("end_period", 1) + 1):
                     fest_busy_slots.add((b["room_id"], d_idx, p))

@@ -1,0 +1,366 @@
+<!-- Published: 2026-10-27 07:44:55 UTC | 2026-10-27 13:14:55 IST (commit 745ea67) -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    
+    <title>Chilika Institute of Technology — Human Infrastructure to Get Hired</title>
+    <meta
+      name="description"
+      content="Chilika Institute of Technology is building human infrastructure for the AI era. Learn, build, and get hired through immersive, AI-native experiences designed by reverse-engineering real jobs."
+    />
+    <link rel="canonical" href="/" />
+    <meta name="theme-color" content="#000000" />
+
+    
+    <meta name="color-scheme" content="light only" />
+    <meta name="supported-color-schemes" content="light" />
+    <meta name="darkreader-lock" />
+
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
+    <meta
+      property="og:title"
+      content="Chilika Institute of Technology — Human Infrastructure to Get Hired"
+    />
+    <meta
+      property="og:description"
+      content="Chilika Institute of Technology is building human infrastructure for the AI era. Learn, build, and get hired through immersive, AI-native experiences designed by reverse-engineering real jobs."
+    />
+    <meta
+      property="og:image"
+      content="/assets/brand/og_image.jpg"
+    />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="1080" />
+
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Chilika Institute of Technology — Human Infrastructure to Get Hired"
+    />
+    <meta
+      name="twitter:description"
+      content="Chilika Institute of Technology is building human infrastructure for the AI era. Learn, build, and get hired through immersive, AI-native experiences designed by reverse-engineering real jobs."
+    />
+    <meta
+      name="twitter:image"
+      content="/assets/brand/og_image.jpg"
+    />
+
+    
+    <link rel="icon" type="image/svg+xml" href="./assets/brand/favicon.svg" />
+    <link rel="icon" type="image/png" href="./assets/brand/favicon.png" />
+    <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png" />
+
+    
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-N4VGV4H4EN"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-N4VGV4H4EN');
+    </script>
+
+    
+    <link rel="dns-prefetch" href="https://www.gstatic.com" />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Google+Sans+Code:wght@400;700&family=Google+Sans+Flex:wght@500&family=Inter:wght@400;500;600&family=Newsreader:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow: hidden;
+        background-color: rgb(28, 72, 57); /* base — never a white pre-paint */
+      }
+      /* Background gradient on a dedicated fixed div BEHIND the canvas (z 0 <
+         canvas z 1). It mirrors the procedural loaderGradient (see main.js
+         loaderGradient stops / center / radii) and shows through the
+         transparent canvas during the loader (renderer clearAlpha=0). Once the
+         WebGL bgPass renders its matching gradient, the opaque canvas covers
+         this div — seamless.
+
+         Why a fixed div and not the body background: position:fixed inset:0 is
+         sized to the viewport from the very first layout, independent of
+         document flow, so the gradient paints on the first frame. Painting it
+         on <body> let the solid background-color flash through while the body
+         box was momentarily unsized. Radii in vw/vh size the ellipse to the
+         viewport; no background-attachment:fixed. */
+      #bg-gradient {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-color: rgb(28, 72, 57);
+        background-image: radial-gradient(
+          ellipse 126.7vw 143.4vh at 50% 130%,
+          rgb(212, 246, 235) 15.855%,
+          rgb(179, 222, 209) 26.169%,
+          rgb(145, 199, 183) 36.483%,
+          rgb(112, 175, 156) 46.797%,
+          rgb(78, 151, 130) 57.111%,
+          rgb(53, 111, 94) 78.555%,
+          rgb(28, 72, 57) 100%
+        );
+      }
+      /* Dummy pre-canvas placeholder: a "99" in the bottom-left that paints
+         on the very first layout and shows through the transparent canvas
+         alongside #bg-gradient while WebGL boots. Same z-index 0 as the
+         gradient but later in DOM order, so it paints above it; the opaque
+         canvas (z 1) covers it once the first frame renders. Purely
+         decorative — no behavior, no pointer events.
+
+         Styled to mirror the real loader counter (LoaderTextOverlay.js):
+         700 'Supply Sans' (same stack, monospace fallback pre-font-load),
+         white, left-aligned at the same reference ratios — desktop font
+         180/1080 of viewport height with a 40/1920 left margin, phone
+         (<768px) 110/1080 with an 80/1920 margin, baseline ~40/1080 up
+         from the bottom. */
+      /* svh (small-viewport) units, NOT vh: the canvas counter sizes itself
+         from window.innerHeight, which on phones equals the SMALL viewport
+         while the URL bar is visible — i.e. exactly at page load, when this
+         placeholder shows. Plain vh measures the LARGE (bar-retracted)
+         viewport there, so the DOM 99 rendered bigger/lower than the canvas
+         99 drawn over it — the mismatched fringes read as the number being
+         "cut" at the top and bottom. Desktop viewports are static, where
+         svh === vh, so nothing changes there. */
+      #pre-canvas-99 {
+        position: fixed;
+        left: 2.0833vw; /* 40 / 1920 */
+        bottom: 3.7037vh; /* 40 / 1080 (fallback) */
+        bottom: 3.7037svh;
+        z-index: 0;
+        pointer-events: none;
+        user-select: none;
+        font:
+          700 16.667vh/1 'Supply Sans',
+          monospace; /* 180 / 1080 (fallback) */
+        font-size: 16.667svh;
+        color: #ffffff;
+      }
+      @media (max-width: 767px) {
+        #pre-canvas-99 {
+          left: 4.1667vw; /* 80 / 1920 */
+          font-size: 10.185vh; /* 110 / 1080 (fallback) */
+          font-size: 10.185svh;
+        }
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: transparent;
+      }
+      #webgl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: auto;
+        touch-action: none;
+      }
+      #ui-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/main-BYq3OzcY.js?v=1793485059"></script>
+    <link rel="stylesheet" crossorigin href="/assets/main-yeWZtezw.css">
+  
+    <style>
+      /* User requested removal of top HUD: chevron button, ruler (-25 BZ), XP counter */
+      .next-stage-trigger,
+      .next-stage-btn,
+      .scroll-ruler,
+      .scroll-ruler-track,
+      .hud-xp,
+      .hud-left-group,
+      .hud-right-group {
+        display: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+      }
+    </style>
+
+  </head>
+  
+  <body class="webgl-loader-overlay">
+    <div id="bg-gradient" aria-hidden="true"></div>
+    <div id="pre-canvas-99" aria-hidden="true">99</div>
+    <canvas
+      id="webgl"
+      role="img"
+      aria-label="Chilika Institute of Technology interactive 3D experience"
+    ></canvas>
+    <div id="ui-container" role="region" aria-label="Interface controls"></div>
+  
+    <!-- Dynamic Island: Apple-style expandable capsule navigating to CampScheduler -->
+<style>
+  .dynamic-island-wrapper {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000000;
+    pointer-events: auto;
+  }
+  .dynamic-island {
+    display: flex;
+    align-items: center;
+    background: rgba(14, 20, 17, 0.90);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(66, 255, 183, 0.2), 0 0 25px rgba(66, 255, 183, 0.12);
+    border-radius: 9999px;
+    padding: 6px 14px 6px 16px;
+    color: #FFFFFF;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    gap: 12px;
+    user-select: none;
+    overflow: hidden;
+    max-width: 92vw;
+  }
+  .dynamic-island:hover {
+    background: rgba(14, 24, 20, 0.96);
+    border-color: rgba(66, 255, 183, 0.5);
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 0 1.5px rgba(66, 255, 183, 0.45), 0 0 35px rgba(66, 255, 183, 0.25);
+    transform: scale(1.03);
+  }
+  .di-pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: #42FFB7;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #42FFB7;
+    animation: diPulse 2s infinite ease-in-out;
+    flex-shrink: 0;
+  }
+  @keyframes diPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.35); opacity: 0.65; box-shadow: 0 0 18px #42FFB7; }
+  }
+  .di-title {
+    font-family: 'Supply Sans', 'Inter', -apple-system, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+  .di-divider {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .di-sync-wave {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    height: 12px;
+  }
+  .di-bar {
+    width: 2.5px;
+    height: 100%;
+    background: #42FFB7;
+    border-radius: 2px;
+    animation: diWave 1.2s infinite ease-in-out alternate;
+  }
+  .di-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
+  .di-bar:nth-child(3) { animation-delay: 0.4s; height: 85%; }
+  @keyframes diWave {
+    0% { height: 30%; opacity: 0.5; }
+    100% { height: 100%; opacity: 1; }
+  }
+  .di-status {
+    font-family: 'PP Supply Mono', 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #AFCDEB;
+    white-space: nowrap;
+  }
+  .di-badge {
+    background: linear-gradient(135deg, #1A6E48 0%, #268C5E 100%);
+    color: #FFFFFF;
+    border: 1px solid rgba(66, 255, 183, 0.5);
+    font-family: 'Supply Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 10px rgba(26, 110, 72, 0.35);
+  }
+
+  </style>
+
+
+
+<!-- Dynamic Island Floating Control -->
+<div class="dynamic-island-wrapper">
+  <a href="/planner" class="dynamic-island" id="camp-dynamic-island" title="Enter CampScheduler">
+    <span class="di-pulse-dot"></span>
+    <span class="di-title">CIT &bull; CampScheduler</span>
+    <span class="di-divider"></span>
+    <div class="di-sync-wave">
+      <span class="di-bar"></span>
+      <span class="di-bar"></span>
+      <span class="di-bar"></span>
+    </div>
+    <span class="di-status">189 Sessions Synced</span>
+    <span class="di-badge">ENTER &nearr;</span>
+  </a>
+</div>
+
+<script>
+  
+</script>
+
+  
+    <!-- Direct link to CAMP SCHEDULER Planner & Workspace -->
+    <div style="position:fixed; top:24px; right:24px; z-index:99999; display:flex; gap:12px; align-items:center;">
+      <a href="/planner" style="background:#1A6E48; color:#FFFFFF; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:800; letter-spacing:0.06em; padding:10px 20px; border-radius:30px; text-decoration:none; border:1.5px solid #42FFB7; box-shadow:0 4px 18px rgba(0,0,0,0.45); display:inline-flex; align-items:center; gap:8px; transition:transform 0.15s, background 0.15s;" onmouseover="this.style.background='#145738'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#1A6E48'; this.style.transform='translateY(0)';">
+        <span>ENTER CAMP SCHEDULER</span>
+        <span>&rarr;</span>
+      </a>
+    </div>
+
+</body>
+</html>

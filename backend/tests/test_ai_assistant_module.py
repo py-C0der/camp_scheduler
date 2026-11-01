@@ -101,8 +101,8 @@ class TestAIAssistantModule(unittest.TestCase):
 
     # Scenario 8: Faculty clash detection in counterfactual testing
     def test_08_faculty_clash_detection(self):
-        # Test moving session to slot where faculty F01 is already teaching (WED P1)
-        cf = self.evidence.test_reschedule_feasibility("CS101-A-L1", target_day="WED", target_period=1)
+        # Test moving session to slot where faculty F01 is already teaching (WED P2)
+        cf = self.evidence.test_reschedule_feasibility("CS101-A-L1", target_day="WED", target_period=2)
         self.assertIn("H2", cf["rules"])
 
     # Scenario 9: Student-group clash detection

@@ -3,7 +3,7 @@ Booking Cancellation and Permissions Management.
 Enforces cancellation rules and role permissions according to Section 11 of the Problem Statement.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from fastapi import HTTPException
 from backend.db.database import get_connection
@@ -74,7 +74,7 @@ class BookingCancellationService:
                 detail=f"Unauthorized: Role '{user_role}' cannot cancel booking '{booking_id}' submitted by '{row['requester']}'."
             )
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         cancel_note = reason or f"Cancelled by {user.get('name', user_id)}"
 
         # Update database: status -> cancelled, clear assigned room

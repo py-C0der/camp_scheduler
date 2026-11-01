@@ -5,7 +5,7 @@ approval workflows, version history, and dashboard metrics.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from fastapi import HTTPException
@@ -91,11 +91,11 @@ class DisruptionService:
             if t == "remove_session" and not ch.get("session_id"):
                 raise HTTPException(status_code=400, detail=f"Change #{idx+1} (remove_session) requires 'session_id'")
 
-        dis_id = payload.get("id") or f"DIS-{int(datetime.utcnow().timestamp()*1000)}"
+        dis_id = payload.get("id") or f"DIS-{int(datetime.now(timezone.utc).timestamp()*1000)}"
         title = payload.get("title") or f"Disruption Report ({dis_id})"
         description = payload.get("description", "Campus schedule disruption")
         dataset_id = payload.get("dataset_id", "cit-public-v1")
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         conn = get_connection()
         cur = conn.cursor()

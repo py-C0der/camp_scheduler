@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIT CampScheduler — The Campus, In Sync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest-dark: #1F3626;
+      --forest-mid: #2A4733;
+      --forest-mat: #25402E;
+      --grid-line: rgba(74, 118, 88, 0.38);
+      --grid-line-subtle: rgba(74, 118, 88, 0.2);
+      --cream-paper: #F6F1E7;
+      --cream-pure: #FFFDF9;
+      --cream-text: #F3EBDD;
+      --ink: #222222;
+      --ink-charcoal: #262424;
+      --graphite: #353133;
+      --kraft: #A88665;
+      --kraft-dark: #8C6D4F;
+      --kraft-light: #C4A787;
+      --pencil-yellow: #E5A83B;
+      --pencil-wood: #D8B282;
+      --sticky-yellow: #F6D96B;
+      --emerald: #1A6E48;
+      --jade-glow: #42FFB7;
+      --neon-lime: #4DFF4D;
+      --frosted-sage: #D9E5DF;
+      --border-ink: #292929;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-hand: 'Caveat', cursive;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--forest-dark);
+      color: var(--cream-text);
+      font-family: var(--font-sans);
+    }
+
+    body {
+      overflow-x: hidden;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* Fixed Spine Right Edge */
+    .edge-spine {
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 44px;
+      background: var(--cream-paper);
+      border-left: 2px solid var(--border-ink);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      color: var(--ink);
+    }
+
+    .spine-title {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #555;
+    }
+
+    .spine-numbers {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .spine-num {
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .spine-num.active {
+      background: var(--forest-dark);
+      color: var(--cream-paper);
+    }
+
+    .spine-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--border-ink);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    /* Floating Translucent Navigation */
+    .nav-bar-container {
+      position: fixed;
+      top: 24px;
+      left: 0;
+      right: 44px;
+      display: flex;
+      justify-content: center;
+      z-index: 90;
+      pointer-events: none;
+    }
+
+    nav.floating-nav {
+      pointer-events: auto;
+      width: 90%;
+      max-width: 1240px;
+      padding: 10px 20px;
+      background: rgba(31, 54, 38, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      transition: all 0.3s ease;
+    }
+
+    nav.floating-nav.scrolled {
+      background: rgba(25, 43, 31, 0.95);
+      border-color: rgba(66, 255, 183, 0.3);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px #fff;
+    }
+
+    .brand-text {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .brand-text span {
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-left: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--jade-glow);
+    }
+
+    .btn-enter-workspace {
+      background: var(--cream-pure);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 8px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1.5px solid var(--border-ink);
+      box-shadow: 2px 2px 0px var(--border-ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-enter-workspace:hover {
+      background: var(--neon-lime);
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 3.5px 3.5px 0px var(--border-ink);
+    }
+    .btn-enter-workspace:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--border-ink);
+    }
+
+    /* ========================================================
+       SECTION 1: HERO CUTTING MAT & 3D DIGITAL PLANNER
+       ======================================================== */
+    section.hero-mat {
+      min-height: 100vh;
+      position: relative;
+      background-color: var(--forest-mat);
+      background-image: 
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(var(--grid-line-subtle) 0.5px, transparent 0.5px),
+        linear-gradient(90deg, var(--grid-line-subtle) 0.5px, transparent 0.5px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      padding: 100px 60px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      margin-right: 44px;
+    }
+
+    /* Kraft Paper & Wood desk layered strips on the left */
+    .desk-strip-1 {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 140px;
+      background: var(--kraft-dark);
+      opacity: 0.65;
+      border-right: 2px solid rgba(0,0,0,0.3);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .desk-strip-2 {
+      position: absolute;
+      left: 120px;
+      top: 0;
+      bottom: 0;
+      width: 130px;
+      background: var(--kraft);
+      opacity: 0.75;
+      border-right: 2px solid rgba(0,0,0,0.25);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Metallic paperclip graphic */
+    .paperclip-graphic {
+      position: absolute;
+      left: 110px;
+      top: 290px;
+      width: 42px;
+      height: 95px;
+      border: 4px solid #D6D1C7;
+      border-radius: 20px;
+      transform: rotate(-18deg);
+      z-index: 3;
+      box-shadow: 3px 5px 10px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    .paperclip-graphic::after {
+      content: '';
+      position: absolute;
+      inset: 8px 6px;
+      border: 3px solid #D6D1C7;
+      border-radius: 12px;
+    }
+
+    /* Yellow pencil placed at 45 deg */
+    .pencil-item {
+      position: absolute;
+      right: 180px;
+      top: 220px;
+      width: 16px;
+      height: 280px;
+      background: linear-gradient(90deg, #D49B2F 0%, #F5BA42 50%, #BD8521 100%);
+      transform: rotate(48deg);
+      border-radius: 2px;
+      box-shadow: 12px 14px 20px rgba(0,0,0,0.35);
+      z-index: 20;
+      pointer-events: auto;
+      cursor: grab;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pencil-item:hover {
+      transform: rotate(45deg) translateY(-8px) scale(1.03);
+    }
+    .pencil-tip {
+      position: absolute;
+      top: -24px;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 24px solid var(--pencil-wood);
+    }
+    .pencil-lead {
+      position: absolute;
+      top: -24px;
+      left: 4px;
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 10px solid #222;
+    }
+    .pencil-label {
+      position: absolute;
+      bottom: -22px;
+      left: -20px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.7);
+      white-space: nowrap;
+      transform: rotate(-48deg);
+    }
+
+    /* Top Hero Headlines */
+    .hero-top-meta {
+      position: relative;
+      z-index: 10;
+      margin-bottom: 4px;
+    }
+    .hero-pretitle {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .hero-title-giant {
+      font-family: var(--font-sans);
+      font-size: clamp(4.5rem, 11.5vw, 12rem);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--cream-text);
+      text-transform: uppercase;
+      text-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+
+    .hero-subtitle-sync {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Main Hero Stage */
+    .hero-center-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 15;
+      width: 100%;
+    }
+    .hero-mid-row {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      align-items: center;
+      gap: 40px;
+      width: 100%;
+      max-width: 1180px;
+    }
+    .left-info-card {
+      width: 100%;
+      max-width: 1100px;
+      background: #1B3523;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 24px 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    /* Left Info Card */
+    .left-info-card {
+      background: rgba(31, 54, 38, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 24px 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .left-info-card h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .card-dotted-divider {
+      border-bottom: 1.5px dotted rgba(255, 255, 255, 0.3);
+      margin-bottom: 14px;
+    }
+    .left-info-card p {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+    .btn-open-centre {
+      color: var(--jade-glow);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-open-centre:hover {
+      color: var(--neon-lime);
+      transform: translateX(3px);
+    }
+
+    /* Center 3D Digital Planner */
+    .planner-3d-viewport {
+      perspective: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .planner-desk-book {
+      width: 100%;
+      max-width: 530px;
+      background: var(--cream-pure);
+      border-radius: 12px;
+      border: 2px solid #2A2A2A;
+      box-shadow: 
+        -15px 25px 50px rgba(0, 0, 0, 0.45),
+        0 10px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 3px rgba(255,255,255,0.8);
+      transform: rotateX(16deg) rotateZ(-9deg);
+      transform-style: preserve-3d;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      padding: 18px 22px 20px 42px;
+      color: var(--ink);
+    }
+    .planner-desk-book:hover {
+      transform: rotateX(10deg) rotateZ(-4deg) translateY(-6px);
+      box-shadow: -20px 35px 65px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Spiral binding coils on the left */
+    .spiral-spine {
+      position: absolute;
+      left: 10px;
+      top: 24px;
+      bottom: 24px;
+      width: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .spiral-ring {
+      width: 24px;
+      height: 8px;
+      background: linear-gradient(180deg, #EFEFEF 0%, #A2A2A2 50%, #444 100%);
+      border-radius: 4px;
+      box-shadow: 1px 2px 3px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .spiral-ring::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 1px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #111;
+    }
+
+    /* Inside the planner */
+    .planner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--border-ink);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .planner-brand-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .planner-cit-pill {
+      background: var(--border-ink);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .planner-week-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .planner-big-week {
+      font-family: var(--font-sans);
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 0.9;
+      color: var(--ink);
+    }
+
+    /* Weekly Grid Inside Planner */
+    .planner-grid-columns {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      min-height: 220px;
+    }
+    .planner-day-col {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .day-col-header {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+      color: #777;
+      border-bottom: 1px solid #DDD;
+      padding-bottom: 3px;
+    }
+
+    .plan-block {
+      border: 1.5px solid var(--border-ink);
+      border-radius: 4px;
+      padding: 6px 5px;
+      font-size: 0.64rem;
+      box-shadow: 1.5px 1.5px 0px var(--border-ink);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .plan-block:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 2.5px 2.5px 0px var(--border-ink);
+    }
+    .block-title {
+      font-weight: 800;
+      font-size: 0.65rem;
+      line-height: 1.1;
+    }
+    .block-sub {
+      font-size: 0.55rem;
+      color: #333;
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    .blk-blue { background: #AFCDEB; }
+    .blk-amber { background: #F6D96B; }
+    .blk-green { background: #B8D8BE; }
+    .blk-purple { background: #C9B8E8; }
+    .blk-coral { background: #F28B82; }
+
+    /* Lunch barrier */
+    .planner-lunch-banner {
+      grid-column: 1 / -1;
+      background: repeating-linear-gradient(45deg, #EFE9DC, #EFE9DC 6px, #E5DEC9 6px, #E5DEC9 12px);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 4px;
+      padding: 4px 8px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #444;
+      margin: 4px 0;
+    }
+
+    /* Evening Tech Fest Slot */
+    .planner-spectra-banner {
+      grid-column: 1 / -1;
+      background: #1A6E48;
+      color: #fff;
+      border: 1.5px solid var(--border-ink);
+      border-radius: 4px;
+      padding: 5px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 800;
+      box-shadow: 1.5px 1.5px 0px var(--border-ink);
+    }
+
+    /* Week Switcher Dock */
+    .planner-week-dock {
+      margin-top: 20px;
+      background: rgba(31, 54, 38, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 4px;
+      display: inline-flex;
+      gap: 4px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .dock-tab {
+      padding: 6px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.7);
+      background: transparent;
+      transition: all 0.2s;
+    }
+    .dock-tab.active {
+      background: var(--cream-pure);
+      color: var(--ink);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .planner-explore-caption {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    /* Right Storytelling & Sticky Note */
+    .right-story-col {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      position: relative;
+    }
+    .story-tag {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .story-heading {
+      font-family: var(--font-sans);
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .story-heading em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: #EFE9DC;
+    }
+    .story-desc {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.82);
+      line-height: 1.55;
+    }
+    .link-discover-rules {
+      color: var(--jade-glow);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .link-discover-rules:hover {
+      color: var(--neon-lime);
+      transform: translateY(2px);
+    }
+
+    /* Realistic Yellow Sticky Note */
+    .sticky-note-realistic {
+      background: var(--sticky-yellow);
+      color: var(--ink);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 4px;
+      padding: 18px 20px;
+      box-shadow: 4px 6px 14px rgba(0,0,0,0.25);
+      transform: rotate(3.5deg);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+      max-width: 250px;
+    }
+    .sticky-note-realistic:hover {
+      transform: rotate(1deg) scale(1.04) translateY(-4px);
+      box-shadow: 6px 12px 22px rgba(0,0,0,0.35);
+    }
+    .sticky-tape {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px dashed rgba(41, 41, 41, 0.3);
+      backdrop-filter: blur(2px);
+    }
+    .sticky-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .sticky-sub {
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: #333;
+    }
+
+    /* Bottom Campus Stats Strip */
+    .hero-bottom-bar {
+      position: relative;
+      z-index: 10;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .stats-group {
+      display: flex;
+      align-items: baseline;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .stat-number {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .scroll-indicator {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .scroll-indicator:hover { color: var(--jade-glow); }
+
+    /* ========================================================
+       SECTION 2: CAMPUS RULES / CONSTRAINT EXPLORER (Image 2)
+       ======================================================== */
+    section.rules-section {
+      background: var(--cream-paper);
+      color: var(--ink);
+      min-height: 100vh;
+      margin-right: 44px;
+      padding: 100px 60px 50px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .rules-header {
+      margin-bottom: 30px;
+    }
+    .rules-pretitle {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .rules-subtitle-desc {
+      font-size: 0.95rem;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .rules-main-heading {
+      font-family: var(--font-sans);
+      font-size: clamp(3rem, 6.5vw, 6.8rem);
+      font-weight: 800;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      color: var(--ink-charcoal);
+    }
+    .rules-main-heading em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: #2F4F38;
+      display: block;
+    }
+
+    /* Rules Interactive Center Stage */
+    .rules-center-stage {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      margin: 30px 0;
+    }
+
+    /* 3D Green Calendar Tile Block */
+    .rule-3d-tile-viewport {
+      perspective: 1000px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rule-green-block {
+      width: 100%;
+      max-width: 420px;
+      background: #244630;
+      border-radius: 20px;
+      border: 3px solid #162B1E;
+      box-shadow: 
+        -20px 30px 50px rgba(0, 0, 0, 0.35),
+        inset 0 2px 4px rgba(255, 255, 255, 0.25);
+      transform: rotateY(-14deg) rotateX(8deg);
+      transform-style: preserve-3d;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 34px 30px;
+      color: #fff;
+      position: relative;
+    }
+    .rule-green-block:hover {
+      transform: rotateY(-6deg) rotateX(4deg) translateY(-8px);
+      box-shadow: -25px 40px 65px rgba(0, 0, 0, 0.45);
+    }
+    .block-top-brand {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 14px;
+    }
+    .block-huge-num {
+      font-family: var(--font-sans);
+      font-size: 6.5rem;
+      font-weight: 900;
+      line-height: 0.85;
+      color: #F6F1E7;
+      margin-bottom: 24px;
+    }
+    .block-status-bar {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .status-text-line {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--neon-lime);
+      margin-bottom: 4px;
+    }
+    .period-chips-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .p-chip {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .block-bottom-caption {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Right Rule Details */
+    .rule-details-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .rule-hard-tag {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .rule-detail-title {
+      font-family: var(--font-sans);
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--ink-charcoal);
+      letter-spacing: -0.02em;
+    }
+    .rule-detail-desc {
+      font-size: 1.05rem;
+      color: #444;
+      line-height: 1.55;
+      max-width: 480px;
+    }
+    .rule-bullet-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 10px 0 16px 0;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #333;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-glyph {
+      font-size: 1rem;
+      color: var(--emerald);
+      width: 18px;
+    }
+
+    .btn-see-workspace {
+      background: #244630;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 2px solid var(--border-ink);
+      box-shadow: 3px 3px 0px var(--border-ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      transition: all 0.15s ease;
+    }
+    .btn-see-workspace:hover {
+      background: var(--emerald);
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 4.5px 4.5px 0px var(--border-ink);
+    }
+    .btn-see-workspace:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--border-ink);
+    }
+
+    /* 14 Interactive Rule Cards Grid at bottom */
+    .rules-grid-14 {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 30px;
+    }
+    .rule-pill-btn {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(41, 41, 41, 0.25);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #444;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+    }
+    .rule-pill-btn:hover {
+      background: #fff;
+      border-color: var(--border-ink);
+      color: var(--ink);
+      transform: translateY(-2px);
+    }
+    .rule-pill-btn.active {
+      background: #244630;
+      color: #fff;
+      border-color: var(--border-ink);
+      font-weight: 800;
+      box-shadow: 2px 2px 0px var(--border-ink);
+    }
+
+    /* Rules Bottom Footer Bar */
+    .rules-bottom-bar {
+      border-top: 1.5px solid #DDD;
+      padding-top: 18px;
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #666;
+    }
+    .link-enter-bottom {
+      color: var(--emerald);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .link-enter-bottom:hover { text-decoration: underline; }
+
+    /* ========================================================
+       SECTION 3: HOW IT WORKS & FINAL CTA
+       ======================================================== */
+    section.how-it-works-section {
+      background: #1B2F21;
+      color: #fff;
+      margin-right: 44px;
+      padding: 90px 60px;
+      border-top: 2px solid var(--border-ink);
+    }
+    .how-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 50px auto;
+    }
+    .how-header h2 {
+      font-family: var(--font-sans);
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .how-header p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .how-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto 70px auto;
+    }
+    .how-step-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .how-step-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-4px);
+    }
+    .step-badge {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--neon-lime);
+      letter-spacing: 0.1em;
+    }
+    .step-title {
+      font-family: var(--font-sans);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .step-desc {
+      font-size: 0.84rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+
+    /* Final CTA */
+    .final-cta-box {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--cream-paper);
+      color: var(--ink);
+      border: 2px solid var(--border-ink);
+      border-radius: 12px;
+      padding: 48px;
+      box-shadow: 8px 8px 0px var(--border-ink);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .final-cta-box h3 {
+      font-family: var(--font-sans);
+      font-size: 2.6rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .final-cta-box p {
+      font-size: 1rem;
+      color: #555;
+      max-width: 520px;
+    }
+    .btn-final-enter {
+      background: #1A6E48;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      padding: 14px 34px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 2px solid var(--border-ink);
+      box-shadow: 4px 4px 0px var(--border-ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .btn-final-enter:hover {
+      background: #145738;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px var(--border-ink), 0 0 15px rgba(66, 255, 183, 0.5);
+    }
+
+    /* Footer */
+    footer.editorial-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 30px 60px;
+      margin-right: 44px;
+      background: #132418;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.55);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1080px) {
+      .hero-center-stage { grid-template-columns: 1fr; }
+      .rules-center-stage { grid-template-columns: 1fr; }
+      .rules-grid-14 { grid-template-columns: repeat(4, 1fr); }
+      .edge-spine { display: none; }
+      section.hero-mat, section.rules-section, section.how-it-works-section, footer.editorial-footer { margin-right: 0; padding: 80px 24px 30px; }
+      .nav-bar-container { right: 0; }
+    }
+    @media (max-width: 650px) {
+      .rules-grid-14 { grid-template-columns: repeat(2, 1fr); }
+      .stats-group { gap: 16px; }
+      .hero-title-giant { font-size: 3.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed Spine Right Edge -->
+  <aside class="edge-spine">
+    <div class="spine-badge">C</div>
+    <div class="spine-title">CIT / CAMP SCHEDULER OPERATIONS</div>
+    <div class="spine-numbers">
+      <div class="spine-num active" onclick="scrollToSection('hero')">01</div>
+      <div class="spine-num" onclick="scrollToSection('rules')">02</div>
+    </div>
+  </aside>
+
+  <!-- Floating Translucent Navigation -->
+  <div class="nav-bar-container">
+    <nav class="floating-nav" id="topNav">
+      <a href="/" class="nav-brand">
+        <span class="brand-dot"></span>
+        <div class="brand-text">CIT <span>CAMP SCHEDULER</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#hero" class="nav-link">01 / THE CAMPUS</a>
+        <a href="#rules" class="nav-link">02 / THE RULES</a>
+        <a href="/login" class="btn-enter-workspace">ENTER WORKSPACE ↗</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- SECTION 1: HERO CUTTING MAT & 3D DIGITAL PLANNER -->
+  <section class="hero-mat" id="hero">
+    <div class="desk-strip-1"></div>
+    <div class="desk-strip-2"></div>
+    <div class="paperclip-graphic"></div>
+
+    <div class="pencil-item" id="pencilObj" title="Click or drag the pencil">
+      <div class="pencil-tip"></div>
+      <div class="pencil-lead"></div>
+      <div class="pencil-label">DRAG PENCIL ↗</div>
+    </div>
+
+    <!-- Top Headline -->
+    <div class="hero-top-meta">
+      <div class="hero-pretitle">FOR EVERY CLASS. FOR EVERY CAMPUS MOMENT.</div>
+      <h1 class="hero-title-giant">CAMP SCHEDULER</h1>
+      <div class="hero-subtitle-sync">
+        <span>THE CAMPUS, IN SYNC.</span>
+      </div>
+    </div>
+
+    <!-- Center Stage Composition -->
+    <div class="hero-center-stage">
+
+      <!-- Left Info Panel -->
+      <div class="left-info-card">
+        <h3>CHILIKA INSTITUTE OF TECHNOLOGY</h3>
+        <div class="card-dotted-divider"></div>
+        <p>Classes, exams &amp; venue requests. English / Hinglish. Admin approval.</p>
+        <a href="/login" class="btn-open-centre">OPEN THE COMMAND CENTRE ↗</a>
+      </div>
+
+      <!-- Centerpiece 3D Interactive Digital Planner -->
+      <div class="planner-3d-viewport" id="plannerViewport">
+        <div class="planner-desk-book" id="plannerBook">
+          <!-- Spiral binding on the left -->
+          <div class="spiral-spine">
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+            <div class="spiral-ring"></div>
+          </div>
+
+          <!-- Planner header -->
+          <div class="planner-header">
+            <div>
+              <div class="planner-brand-tag">
+                <span class="planner-cit-pill">CIT</span>
+                <span class="planner-week-title" id="plannerWeekTitle">THE ACADEMIC WEEK</span>
+              </div>
+            </div>
+            <div class="planner-big-week" id="plannerBigWeekNum">07</div>
+          </div>
+
+          <!-- Weekly columns container -->
+          <div class="planner-grid-columns" id="plannerGridContent">
+            <!-- Dynamically populated based on week 7 / week 8 -->
+          </div>
+
+          <!-- Lunch barrier -->
+          <div class="planner-lunch-banner">
+            13:00 - 14:00 / LUNCH BARRIER (H9)
+          </div>
+
+          <!-- Spectra tech fest slot -->
+          <div class="planner-spectra-banner" id="plannerEventBanner">
+            <span>SPECTRA / 18:00 - 22:00</span>
+            <span>AUDITORIUM &bull; CR-101</span>
+          </div>
+        </div>
+
+        <!-- Week Switcher Dock -->
+        <div class="planner-week-dock">
+          <button class="dock-tab active" id="btnWeek07" onclick="switchPlannerWeek(7)">WEEK 07</button>
+          <button class="dock-tab" id="btnWeek08" onclick="switchPlannerWeek(8)">WEEK 08</button>
+        </div>
+
+        <div class="planner-explore-caption">
+          MOVE YOUR POINTER TO EXPLORE &bull; ILLUSTRATIVE PLANNER
+        </div>
+      </div>
+
+      <!-- Right Storytelling Column -->
+      <div class="right-story-col">
+        <div class="story-tag">01 / THE WEEK EVERYTHING MEETS</div>
+        <h2 class="story-heading">Classes. Spectra.<br>Midsems.<br><em>Room for it all.</em></h2>
+        <p class="story-desc">
+          Week 7 brings regular classes and the annual tech fest into the same campus spaces. Week 8 brings exams. ChronoGrid brings the calendar together.
+        </p>
+        <a href="#rules" class="link-discover-rules">DISCOVER THE RULES &darr;</a>
+
+        <!-- Yellow Sticky Note -->
+        <div class="sticky-note-realistic" onclick="alert('Auditorium is booked for Spectra Inauguration (FRI 18:00-22:00).')">
+          <div class="sticky-tape"></div>
+          <div class="sticky-title">Spectra</div>
+          <div class="sticky-sub">is almost here.<br><br>Don't double-book the auditorium.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Campus Stats Bar -->
+    <div class="hero-bottom-bar">
+      <div class="stats-group">
+        <div class="stat-item">
+          <div class="stat-number" id="statStudents">980</div>
+          <div class="stat-label">Students</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statRooms">27</div>
+          <div class="stat-label">Campus Spaces</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statSessions">189</div>
+          <div class="stat-label">Teaching Sessions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statExams">41</div>
+          <div class="stat-label">Midsem Exams</div>
+        </div>
+      </div>
+
+      <a href="#rules" class="scroll-indicator">
+        <span>SCROLL TO EXPLORE</span>
+        <span>&darr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION 2: CAMPUS RULES / CONSTRAINT EXPLORER (Image 2) -->
+  <section class="rules-section" id="rules">
+    <div class="rules-header">
+      <div class="rules-pretitle">02 / THE RULES THAT MAKE ROOM</div>
+      <div class="rules-subtitle-desc">A campus is more than a grid. Every slot belongs to people.</div>
+      <h2 class="rules-main-heading">
+        A little order.
+        <em>A lot of possibility.</em>
+      </h2>
+    </div>
+
+    <!-- Center Stage 3D Tile and Rule Details -->
+    <div class="rules-center-stage">
+
+      <!-- 3D Green Tile Calendar Plaque -->
+      <div class="rule-3d-tile-viewport">
+        <div class="rule-green-block" id="ruleGreenBlock">
+          <div class="block-top-brand">CIT / THE CONSTRAINT SYSTEM</div>
+          <div class="block-huge-num" id="ruleTileNum">09</div>
+          <div class="block-status-bar">
+            <div class="status-text-line" id="ruleTileStatus">13:00 - 14:00 LUNCH STAYS FREE</div>
+            <div class="period-chips-row" id="ruleTileChips">
+              <span class="p-chip">P2</span>
+              <span class="p-chip">P3</span>
+              <span class="p-chip">P4</span>
+              <span style="color:rgba(255,255,255,0.4);">/</span>
+              <span class="p-chip">P6</span>
+              <span class="p-chip">P7</span>
+              <span class="p-chip">P8</span>
+            </div>
+          </div>
+          <div class="block-bottom-caption">ILLUSTRATIVE RULE &bull; CP-SAT OR-TOOLS CONSTRAINT</div>
+        </div>
+      </div>
+
+      <!-- Right Detail Panel -->
+      <div class="rule-details-panel">
+        <div class="rule-hard-tag" id="ruleHardTag">HARD CONSTRAINT 09 / 14</div>
+        <h3 class="rule-detail-title" id="ruleDetailTitle">Protect the pause.</h3>
+        <p class="rule-detail-desc" id="ruleDetailDesc">
+          Lunch is 13:00–14:00. Three-hour teaching labs run only P2–P4 or P6–P8. No student cohort or instructor may have academic commitments scheduled during the lunch hour.
+        </p>
+
+        <div class="rule-bullet-steps">
+          <div class="step-item">
+            <span class="step-glyph">&plus;</span>
+            <span>AI INTERPRETS REQUESTS</span>
+          </div>
+          <div class="step-item">
+            <span class="step-glyph">&#9632;</span>
+            <span>PYTHON VALIDATES CONSTRAINTS</span>
+          </div>
+          <div class="step-item">
+            <span class="step-glyph">&#47;</span>
+            <span>PEOPLE APPROVE DECISIONS</span>
+          </div>
+        </div>
+
+        <a href="/login" class="btn-see-workspace">SEE IT IN THE WORKSPACE ↗</a>
+      </div>
+
+    </div>
+
+    <!-- 14 Interactive Rule Buttons Grid -->
+    <div class="rules-grid-14" id="rulesGrid14">
+      <!-- Generated via JavaScript for all 14 official rules -->
+    </div>
+
+    <!-- Rules Footer Strip -->
+    <div class="rules-bottom-bar">
+      <div>MON-FRI / P1-P9 ACADEMIC / P10-P13 EVENTS</div>
+      <div>14 HARD RULES &bull; 6 SOFT OBJECTIVES</div>
+      <a href="/login" class="link-enter-bottom">ENTER CAMP SCHEDULER ↗</a>
+    </div>
+  </section>
+
+  <!-- SECTION 3: HOW IT WORKS & FINAL CTA -->
+  <section class="how-it-works-section" id="how-it-works">
+    <div class="how-header">
+      <h2>How ChronoGrid Works</h2>
+      <p>A deterministic, verifiable campus optimization engine paired with human approval.</p>
+    </div>
+
+    <div class="how-steps-grid">
+      <div class="how-step-card">
+        <div class="step-badge">STEP 01</div>
+        <div class="step-title">AI Interprets</div>
+        <div class="step-desc">Faculty and students describe room bookings or schedule adjustments in plain English or Hinglish without learning complex code.</div>
+      </div>
+      <div class="how-step-card">
+        <div class="step-badge">STEP 02</div>
+        <div class="step-title">Python Validates</div>
+        <div class="step-desc">Deterministic rule validation verifies all 14 hard constraints: room capacity, equipment, lunch hour, cohort overlaps, and faculty leaves.</div>
+      </div>
+      <div class="how-step-card">
+        <div class="step-badge">STEP 03</div>
+        <div class="step-title">CP-SAT Solves</div>
+        <div class="step-desc">Google OR-Tools minimal perturbation engine generates conflict-free proposals while preserving as many original assignments as possible.</div>
+      </div>
+      <div class="how-step-card">
+        <div class="step-badge">STEP 04</div>
+        <div class="step-title">People Approve</div>
+        <div class="step-desc">Single source of truth governance: Dean Academics, Department Coordinators, and Venue Incharges review diffs and activate revisions.</div>
+      </div>
+    </div>
+
+    <div class="final-cta-box">
+      <h3>Your campus. One synchronized system.</h3>
+      <p>Experience the operational platform coordinating classes, midsem examinations, and tech fest venue requests.</p>
+      <a href="/login" class="btn-final-enter">ENTER CAMP SCHEDULER ↗</a>
+    </div>
+  </section>
+
+  <!-- Editorial Footer -->
+  <footer class="editorial-footer">
+    <div>&copy; 2027 Chilika Institute of Technology &bull; CIT ChronoGrid Platform</div>
+    <div>Built with Google OR-Tools CP-SAT &bull; FastAPI Backend</div>
+    <div><a href="/login" style="color:var(--jade-glow); text-decoration:none;">Command Centre Login ↗</a></div>
+  </footer>
+
+  <script>
+    // 14 Official Rules Data Dictionary
+    const RULES_DATA = [
+      {
+        id: "01",
+        label: "01 Exactly once",
+        title: "Every session meets.",
+        hardTag: "HARD CONSTRAINT 01 / 14",
+        status: "ALL SESSIONS SCHEDULED EXACTLY ONCE",
+        chips: ["H1", "LECTURE", "LAB", "TUTORIAL"],
+        desc: "Each teaching session required by the academic curriculum must be assigned to exactly one valid weekday and timeslot without omissions or accidental duplications."
+      },
+      {
+        id: "02",
+        label: "02 Faculty",
+        title: "No professor in two places.",
+        hardTag: "HARD CONSTRAINT 02 / 14",
+        status: "ZERO FACULTY TIME CLASHES",
+        chips: ["H2", "MAX 1 CLASS / SLOT", "F01-F40"],
+        desc: "An instructor cannot be scheduled to teach two different sessions at the same time. Every faculty member's schedule is guaranteed clash-free across departments."
+      },
+      {
+        id: "03",
+        label: "03 Student groups",
+        title: "Cohorts learn together.",
+        hardTag: "HARD CONSTRAINT 03 / 14",
+        status: "ZERO STUDENT COHORT OVERLAPS",
+        chips: ["H3", "Y1-CSE", "Y2-ECE", "Y3-MECH"],
+        desc: "A student group or section can attend at most one teaching session per timeslot. Core lectures and mandatory tutorials never conflict with each other."
+      },
+      {
+        id: "04",
+        label: "04 Rooms",
+        title: "One venue per class.",
+        hardTag: "HARD CONSTRAINT 04 / 14",
+        status: "ZERO ROOM DOUBLE-BOOKINGS",
+        chips: ["H4", "CR-101", "LH-1", "AUDITORIUM"],
+        desc: "A physical room or laboratory can host at most one session at any given time. Physical venue exclusivity is strictly enforced across all 27 campus spaces."
+      },
+      {
+        id: "05",
+        label: "05 Capacity",
+        title: "Room for every mind.",
+        hardTag: "HARD CONSTRAINT 05 / 14",
+        status: "ROOM CAPACITY >= ENROLLED STUDENTS",
+        chips: ["H5", "SEATING COMPLIANCE", "OVERFLOW = 0"],
+        desc: "The assigned room capacity must comfortably accommodate the student count of the enrolled cohort. Combined multi-batch lectures are assigned only to large lecture halls."
+      },
+      {
+        id: "06",
+        label: "06 Room type",
+        title: "The right tools for learning.",
+        hardTag: "HARD CONSTRAINT 06 / 14",
+        status: "LABS IN LABS • LECTURES IN HALLS",
+        chips: ["H6", "COMP LAB", "PHYSICS LAB", "WORKSHOP"],
+        desc: "Sessions requiring specialized equipment (Computer Lab, Electrical Lab, Chemistry, Workshop) must only be scheduled into spaces with matching facility features."
+      },
+      {
+        id: "07",
+        label: "07 Faculty leave",
+        title: "Respect personal time.",
+        hardTag: "HARD CONSTRAINT 07 / 14",
+        status: "UNAVAILABILITY BLACKOUT HONORED",
+        chips: ["H7", "CONFERENCE", "LEAVE", "MEDICAL"],
+        desc: "Approved faculty leaves, medical leaves, and conference travel create strict exclusion windows where no classes or examination duties may be assigned."
+      },
+      {
+        id: "08",
+        label: "08 Maintenance",
+        title: "Care for the campus.",
+        hardTag: "HARD CONSTRAINT 08 / 14",
+        status: "MAINTENANCE SHUTDOWNS PROTECTED",
+        chips: ["H8", "LAB UPGRADES", "AV REPAIR"],
+        desc: "Scheduled electrical overhauls, projector installations, and laboratory cleaning periods prevent bookings and academic sessions from occupying that space."
+      },
+      {
+        id: "09",
+        label: "09 Lunch & labs",
+        title: "Protect the pause.",
+        hardTag: "HARD CONSTRAINT 09 / 14",
+        status: "13:00 - 14:00 LUNCH STAYS FREE",
+        chips: ["P2", "P3", "P4", "/", "P6", "P7", "P8"],
+        desc: "Lunch is 13:00–14:00 (Period 5). Three-hour teaching labs run only P2–P4 or P6–P8 so students and professors always have uninterrupted rest."
+      },
+      {
+        id: "10",
+        label: "10 Accessibility",
+        title: "Access for all students.",
+        hardTag: "HARD CONSTRAINT 10 / 14",
+        status: "WHEELCHAIR & ELEVATOR VERIFIED",
+        chips: ["H10", "GROUND FLOOR", "ELEVATOR ACCESS"],
+        desc: "Courses with mobility-impaired students or faculty must be allocated to ground floor spaces or venues with guaranteed operational elevator accessibility."
+      },
+      {
+        id: "11",
+        label: "11 Electives",
+        title: "Cross-disciplinary harmony.",
+        hardTag: "HARD CONSTRAINT 11 / 14",
+        status: "ELECTIVE BASKETS PARALLELIZED",
+        chips: ["H11", "OPEN ELECTIVES", "MINOR COURSES"],
+        desc: "Elective courses within the same elective basket run concurrently in distinct rooms, enabling students to select diverse minors without timetable clashes."
+      },
+      {
+        id: "12",
+        label: "12 Daily load",
+        title: "Balanced student days.",
+        hardTag: "HARD CONSTRAINT 12 / 14",
+        status: "MAX 6 HOURS / DAY PER COHORT",
+        chips: ["H12", "NO BURNOUT", "MAX 3 CONSECUTIVE"],
+        desc: "Students are protected from cognitive exhaustion: maximum 6 academic hours per day, and at most 3 consecutive lecture hours before a recess."
+      },
+      {
+        id: "13",
+        label: "13 Venue bookings",
+        title: "Spectra & celebrations.",
+        hardTag: "HARD CONSTRAINT 13 / 14",
+        status: "ACADEMICS > OFFICIAL > CLUB EVENTS",
+        chips: ["H13", "TECH FEST", "GUEST LECTURE", "HACKATHON"],
+        desc: "Campus spaces can be reserved for workshops, club events, and the Spectra Tech Fest, verified through priority scoring and single-click administrative approval."
+      },
+      {
+        id: "14",
+        label: "14 Fixed slots",
+        title: "Dean-mandated anchors.",
+        hardTag: "HARD CONSTRAINT 14 / 14",
+        status: "IMMUTABLE ADMINISTRATIVE SESSIONS",
+        chips: ["H14", "INSTITUTE COLLOQUIUM", "SPORTS"],
+        desc: "University-wide convocations, weekly colloquiums, and institute seminars are assigned designated fixed slots that the CP-SAT engine will never move."
+      }
+    ];
+
+    // Render 14 Rule Buttons
+    const grid14 = document.getElementById('rulesGrid14');
+    RULES_DATA.forEach((rule, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `rule-pill-btn ${idx === 8 ? 'active' : ''}`;
+      btn.textContent = rule.label;
+      btn.onclick = () => selectRule(idx);
+      grid14.appendChild(btn);
+    });
+
+    function selectRule(index) {
+      const rule = RULES_DATA[index];
+      document.querySelectorAll('.rule-pill-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === index);
+      });
+
+      document.getElementById('ruleTileNum').textContent = rule.id;
+      document.getElementById('ruleTileStatus').textContent = rule.status;
+      document.getElementById('ruleHardTag').textContent = rule.hardTag;
+      document.getElementById('ruleDetailTitle').textContent = rule.title;
+      document.getElementById('ruleDetailDesc').textContent = rule.desc;
+
+      const chipsBox = document.getElementById('ruleTileChips');
+      chipsBox.innerHTML = '';
+      rule.chips.forEach(c => {
+        const span = document.createElement('span');
+        if (c === '/') {
+          span.style.color = 'rgba(255,255,255,0.4)';
+          span.textContent = '/';
+        } else {
+          span.className = 'p-chip';
+          span.textContent = c;
+        }
+        chipsBox.appendChild(span);
+      });
+
+      // Animate 3D tile
+      const block = document.getElementById('ruleGreenBlock');
+      block.style.transform = 'rotateY(0deg) rotateX(0deg) scale(0.96)';
+      setTimeout(() => {
+        block.style.transform = 'rotateY(-14deg) rotateX(8deg) scale(1)';
+      }, 120);
+    }
+
+    // Weekly Planner Schedule Data (Week 7: Classes + Spectra, Week 8: Midsem Exams)
+    const WEEK_7_SCHEDULE = [
+      { day: "MON", blocks: [{ title: "LECTURE", sub: "CS101 / CR-101", cls: "blk-blue" }, { title: "PHYSICS", sub: "PH101 / LAB-PHY", cls: "blk-purple" }, { title: "PROJECT", sub: "CS301 / CR-102", cls: "blk-amber" }] },
+      { day: "TUE", blocks: [{ title: "TUTORIAL", sub: "MA101 / CR-103", cls: "blk-amber" }, { title: "WORKSHOP", sub: "ME102 / WS-1", cls: "blk-green" }] },
+      { day: "WED", blocks: [{ title: "ELECTIVE", sub: "EC201 / LH-2", cls: "blk-green" }, { title: "COMPUTING", sub: "CS102 / LAB-CS", cls: "blk-blue" }] },
+      { day: "THU", blocks: [{ title: "DATABASE", sub: "CS201 / CR-205", cls: "blk-green" }, { title: "MECHANICS", sub: "ME101 / LH-3", cls: "blk-purple" }] },
+      { day: "FRI", blocks: [{ title: "CIRCUITS", sub: "EE101 / LH-4", cls: "blk-coral" }, { title: "SPECTRA FEST", sub: "AUDITORIUM", cls: "blk-amber" }] }
+    ];
+
+    const WEEK_8_SCHEDULE = [
+      { day: "MON", blocks: [{ title: "EXAM: CS101", sub: "09:00 - 11:00", cls: "blk-coral" }, { title: "EXAM: ME101", sub: "14:00 - 16:00", cls: "blk-purple" }] },
+      { day: "TUE", blocks: [{ title: "EXAM: MA101", sub: "09:00 - 11:00", cls: "blk-coral" }, { title: "EXAM: EE101", sub: "14:00 - 16:00", cls: "blk-amber" }] },
+      { day: "WED", blocks: [{ title: "EXAM: PH101", sub: "09:00 - 11:00", cls: "blk-blue" }, { title: "EXAM: CE101", sub: "14:00 - 16:00", cls: "blk-green" }] },
+      { day: "THU", blocks: [{ title: "EXAM: CS201", sub: "09:00 - 11:00", cls: "blk-purple" }, { title: "EXAM: HS101", sub: "14:00 - 16:00", cls: "blk-blue" }] },
+      { day: "FRI", blocks: [{ title: "EXAM: ELECTIVE", sub: "09:00 - 11:00", cls: "blk-amber" }, { title: "PAPER REVIEW", sub: "FACULTY DESK", cls: "blk-green" }] }
+    ];
+
+    function renderPlannerSchedule(sched) {
+      const container = document.getElementById('plannerGridContent');
+      container.innerHTML = '';
+      sched.forEach(col => {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'planner-day-col';
+        dayDiv.innerHTML = `<div class="day-col-header">${col.day}</div>`;
+        col.blocks.forEach(blk => {
+          const b = document.createElement('div');
+          b.className = `plan-block ${blk.cls}`;
+          b.innerHTML = `<div class="block-title">${blk.title}</div><div class="block-sub">${blk.sub}</div>`;
+          dayDiv.appendChild(b);
+        });
+        container.appendChild(dayDiv);
+      });
+    }
+
+    function switchPlannerWeek(week) {
+      document.getElementById('btnWeek07').classList.toggle('active', week === 7);
+      document.getElementById('btnWeek08').classList.toggle('active', week === 8);
+      document.getElementById('plannerBigWeekNum').textContent = week === 7 ? '07' : '08';
+      document.getElementById('plannerWeekTitle').textContent = week === 7 ? 'THE ACADEMIC WEEK' : 'MIDSEM EXAMINATION WEEK';
+
+      const banner = document.getElementById('plannerEventBanner');
+      if (week === 7) {
+        banner.style.background = '#1A6E48';
+        banner.innerHTML = '<span>SPECTRA / 18:00 - 22:00</span><span>AUDITORIUM &bull; CR-101</span>';
+        renderPlannerSchedule(WEEK_7_SCHEDULE);
+      } else {
+        banner.style.background = '#F28B82';
+        banner.style.color = '#242424';
+        banner.innerHTML = '<span>HALF-CAPACITY SEATING ENFORCED</span><span>20 STUDENTS / ROOM</span>';
+        renderPlannerSchedule(WEEK_8_SCHEDULE);
+      }
+
+      // Quick 3D flip animation
+      const book = document.getElementById('plannerBook');
+      book.style.transform = 'rotateX(25deg) rotateZ(-14deg) scale(0.95)';
+      setTimeout(() => {
+        book.style.transform = 'rotateX(16deg) rotateZ(-9deg) scale(1)';
+      }, 180);
+    }
+
+    // Interactive 3D tilt tracking with cursor
+    const viewport = document.getElementById('plannerViewport');
+    const book = document.getElementById('plannerBook');
+    viewport.addEventListener('mousemove', (e) => {
+      const rect = viewport.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      book.style.transform = `rotateX(${16 - y * 18}deg) rotateZ(${-9 + x * 14}deg) translateY(${y * 10}px)`;
+    });
+    viewport.addEventListener('mouseleave', () => {
+      book.style.transform = 'rotateX(16deg) rotateZ(-9deg)';
+    });
+
+    // Draggable pencil interaction
+    const pencil = document.getElementById('pencilObj');
+    let isDraggingPencil = false;
+    pencil.addEventListener('mousedown', () => isDraggingPencil = true);
+    window.addEventListener('mouseup', () => isDraggingPencil = false);
+    window.addEventListener('mousemove', (e) => {
+      if (isDraggingPencil) {
+        pencil.style.left = `${e.clientX - 10}px`;
+        pencil.style.top = `${e.clientY - 140}px`;
+        pencil.style.right = 'auto';
+      }
+    });
+
+    // Scroll Navbar effect
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('topNav');
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Fetch live campus statistics from backend if online
+    async function fetchCampusStats() {
+      try {
+        const res = await fetch('/api/dashboard/summary');
+        if (res.ok) {
+          const d = await res.json();
+          if (d.kpis) {
+            if (d.kpis.total_available_rooms) document.getElementById('statRooms').textContent = d.kpis.total_available_rooms;
+            if (d.kpis.scheduled_teaching_sessions) document.getElementById('statSessions').textContent = d.kpis.scheduled_teaching_sessions;
+            if (d.kpis.scheduled_examinations) document.getElementById('statExams').textContent = d.kpis.scheduled_examinations;
+          }
+        }
+      } catch(e) {
+        // Fallback to static starter-pack verified numbers
+      }
+    }
+
+    // Initial render
+    renderPlannerSchedule(WEEK_7_SCHEDULE);
+    fetchCampusStats();
+  </script>
+</body>
+</html>

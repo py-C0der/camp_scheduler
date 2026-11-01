@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Venue Booking & Approval Management - Chilika Institute of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- CIT Campus Platform Modular Stylesheet -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="mobileDrawerBackdrop" onclick="toggleMobileSidebar()"></div>
+
+<!-- Left Sidebar Navigation -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CIT</div>
+    <div class="brand-info">
+      <h2>Chilika Inst. of Tech.</h2>
+      <span>Campus Operations</span>
+    </div>
+  </div>
+
+  <div class="nav-section-title">Main Navigation</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemDashboard" href="dashboard.html" onclick="if(window.switchNav){switchNav('dashboard'); return false;}">
+        <span>&#9632;</span> Dashboard
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemTimetable" href="timetable.html" onclick="if(window.switchNav){switchNav('timetable'); return false;}">
+        <span>&#9776;</span> Timetable
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemValidations" href="validations.html" onclick="if(window.switchNav){switchNav('validations'); return false;}">
+        <span>&#10004;</span> Validations Audit
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemExaminations" href="examinations.html" onclick="if(window.switchNav){switchNav('examinations'); return false;}">
+        <span>&#128197;</span> Examinations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item active" id="navItemBookings" href="bookings.html" onclick="if(window.switchNav){switchNav('bookings'); return false;}">
+        <span>&#127970;</span> Smart Venue Bookings
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemDisruptions" href="disruptions.html" onclick="if(window.switchNav){switchNav('disruptions'); return false;}">
+        <span>&#8644;</span> Disruption &amp; Reschedule
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemNotifications" href="notifications.html" onclick="if(window.switchNav){switchNav('notifications'); return false;}">
+        <span>&#128276;</span> Notifications &amp; Alerts
+        <span class="nav-badge" id="navNotifBadge" style="background:#ef4444; color:#fff; font-weight:700; display:none; border-radius:10px; padding:2px 7px; font-size:0.7rem;">0</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="nav-section-title">Intelligence &amp; Operations</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemAiAssistant" href="ai-assistant.html" onclick="if(window.switchNav){switchNav('ai-assistant'); return false;}">
+        <span>&#10024;</span> AI Assistant
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="scrollToUtilization()">
+        <span>&#9680;</span> Room Utilization
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="switchNav('validations')">
+        <span>&#128190;</span> Dataset &amp; Validations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}">
+        <span>&#128101;</span> Login &amp; Role Management
+      </a>
+    </li>
+    <li>
+      <a href="/api/export/schedule" download="schedule.json" class="nav-item">
+        <span>&#8681;</span> Reports &amp; Exports
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="resetDemo()">
+        <span>&#9881;</span> Reset Demo Data
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="main-wrap">
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="mobileMenuToggle" onclick="toggleMobileSidebar()" title="Toggle Navigation Menu">
+        &#9776;
+      </button>
+      <div class="page-title" id="pageTitle">Smart Venue Booking & Approval Management</div>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" placeholder="Search sessions, rooms, faculty...">
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.15s;" title="Notifications">
+          <span style="font-size: 1.15rem;">&#128276;</span>
+          <span id="notifBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">0</span>
+        </button>
+
+        <!-- Notification Dropdown Menu -->
+        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden; text-align: left;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <div>
+              <strong style="font-size: 0.92rem; color: #0f172a;">Notifications</strong>
+              <span id="notifDropdownCount" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 9999px; margin-left: 6px; font-weight: 700;">0 new</span>
+            </div>
+            <button onclick="markAllNotifsRead()" style="background: none; border: none; font-size: 0.75rem; color: #2563eb; cursor: pointer; font-weight: 600;">Mark all read</button>
+          </div>
+          <div id="notifDropdownList" style="max-height: 380px; overflow-y: auto;">
+            <div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No new notifications</div>
+          </div>
+          <div style="padding: 10px 16px; border-top: 1px solid #f1f5f9; text-align: center; background: #fafafa;">
+            <a href="javascript:void(0)" onclick="switchNav('notifications'); toggleNotifDropdown();" style="font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none;">Open Notification Center &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="roleBadgeContainer">
+        <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
+      </div>
+
+      <button class="btn btn-outline btn-sm" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" style="display:flex; align-items:center; gap:6px; font-weight:700; background:#f8fafc; border-color:#cbd5e1;">
+        <span>&#128273;</span> Login / Switch User
+      </button>
+
+      <div class="user-dropdown" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" title="Switch User Role">
+        <div class="user-avatar" id="userAvatar">DA</div>
+        <div class="user-name-role">
+          <div class="user-name" id="topUserName">Dean Academics</div>
+          <div class="user-role-label" id="topUserRole">Dean's Office (Admin)</div>
+        </div>
+        <span style="font-size: 0.75rem; color: #94a3b8;">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Body -->
+  <main class="content-body">
+
+    <!-- DYNAMIC ROLE-BASED WORKSPACE BANNER -->
+    <div id="roleWorkspaceBanner" style="display:none; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.25); border: 1px solid rgba(255,255,255,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div id="roleBannerAvatar" style="width: 46px; height: 46px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+            &#128081;
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 id="roleBannerTitle" style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #fff;">Dean Academics Executive Console</h2>
+              <span id="roleBannerPill" class="badge badge-danger" style="font-size: 0.68rem; padding: 3px 8px;">ADMIN</span>
+            </div>
+            <p id="roleBannerSub" style="font-size: 0.8rem; color: #cbd5e1; margin: 3px 0 0 0;">
+              Master Optimization Solvers &bull; Disruption Sign-Offs &bull; System Health Monitoring
+            </p>
+          </div>
+        </div>
+        <div id="roleBannerActions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- Dynamically populated by applyRolePermissions -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VIEW 1: Central Operations Dashboard -->
+    
+<div id="view-bookings" class="view-panel active">
+      <!-- Header & Action Bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2 style="font-size:1.4rem; font-weight:800; color:#0f172a; margin:0 0 4px 0;">Smart Venue Booking & Approval Management</h2>
+          <p style="font-size:0.85rem; color:#64748b; margin:0;">AI-assisted natural language processing (English & Hinglish), deterministic priority validation, and explainable decisions.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" onclick="openNewBookingModal()">
+            <span>&#10024;</span> New Booking Request
+          </button>
+          <button class="btn btn-primary" onclick="runSpectraAutoDecide()" id="btnAutoDecide">
+            <span>&#9881;</span> Run Spectra Auto-Decide
+          </button>
+          <button class="btn btn-outline" onclick="loadBookingData()">
+            <span>&#8635;</span> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="overview-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 24px;">
+        <div class="card stat-card" style="border-top: 3px solid #3b82f6;">
+          <div class="stat-label">Total Requests</div>
+          <div class="stat-value" id="bkStatTotal">--</div>
+          <div class="stat-sub">Spectra & campus requests</div>
+        </div>
+        <div class="card stat-card" style="border-top: 3px solid #10b981;">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value" id="bkStatApproved" style="color:#059669;">--</div>
+          <div class="stat-sub">Zero room conflicts</div>
+        </div>
+        <div class="card stat-card" style="border-top: 3px solid #f59e0b;">
+          <div class="stat-label">Alternative Offered</div>
+          <div class="stat-value" id="bkStatAlternatives" style="color:#d97706;">--</div>
+          <div class="stat-sub">Feasible non-clashing slots</div>
+        </div>
+        <div class="card stat-card" style="border-top: 3px solid #ef4444;">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value" id="bkStatRejected" style="color:#dc2626;">--</div>
+          <div class="stat-sub">With explicit reasons</div>
+        </div>
+        <div class="card stat-card" style="border-top: 3px solid #6b7280;">
+          <div class="stat-label">Cancelled</div>
+          <div class="stat-value" id="bkStatCancelled" style="color:#4b5563;">--</div>
+          <div class="stat-sub">Freed venue seats (BR-04)</div>
+        </div>
+        <div class="card stat-card" style="border-top: 3px solid #8b5cf6;">
+          <div class="stat-label">Priority Inversions</div>
+          <div class="stat-value" id="bkStatInversions" style="color:#7c3aed;">0</div>
+          <div class="stat-sub">Strict hierarchy verified</div>
+        </div>
+        <div class="card stat-card" style="border-top: 3px solid #06b6d4;">
+          <div class="stat-label">Booking Score</div>
+          <div class="stat-value" id="bkStatScore" style="color:#0891b2;">--</div>
+          <div class="stat-sub" id="bkStatScoreMax">of 85.0 max points</div>
+        </div>
+      </div>
+
+      <!-- Section: Interactive Venue Availability Calendar (Section 13) -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 2px 0;">Interactive Venue Availability Calendar</h3>
+            <span style="font-size:0.78rem; color:#64748b;">Multi-period occupancy matrix across teaching classes, examinations, maintenance, and event bookings.</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <label style="font-size:0.8rem; font-weight:600; color:#475569;">Calendar Day:</label>
+            <select id="bkCalDayFilter" class="form-control" style="width:110px; padding:4px 8px; font-size:0.8rem;" onchange="renderVenueCalendarGrid()">
+              <option value="MON">Monday</option>
+              <option value="TUE">Tuesday</option>
+              <option value="WED">Wednesday</option>
+              <option value="THU">Thursday</option>
+              <option value="FRI">Friday</option>
+              <option value="SAT">Saturday</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div style="display:flex; gap:16px; font-size:0.75rem; margin-bottom:12px; flex-wrap:wrap;">
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:#2563eb; display:inline-block;"></span> Regular Academic Class</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:#10b981; display:inline-block;"></span> Approved Event Booking</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:#f59e0b; display:inline-block;"></span> Alternative Booking</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:#ef4444; display:inline-block;"></span> Maintenance / Down</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:#f1f5f9; border:1px solid #cbd5e1; display:inline-block;"></span> Available</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.75rem; min-width:850px;" id="bkVenueCalendarTable">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0; text-align:center;">
+                <th style="padding:8px 12px; text-align:left; width:120px;">Room</th>
+                <th style="padding:8px; width:70px;">Cap</th>
+                <th>P1<br><span style="font-weight:400; color:#94a3b8;">08:30</span></th>
+                <th>P2<br><span style="font-weight:400; color:#94a3b8;">09:30</span></th>
+                <th>P3<br><span style="font-weight:400; color:#94a3b8;">10:30</span></th>
+                <th>P4<br><span style="font-weight:400; color:#94a3b8;">11:30</span></th>
+                <th style="background:#f1f5f9; color:#64748b; font-weight:700;">Lunch</th>
+                <th>P5<br><span style="font-weight:400; color:#94a3b8;">13:30</span></th>
+                <th>P6<br><span style="font-weight:400; color:#94a3b8;">14:30</span></th>
+                <th>P7<br><span style="font-weight:400; color:#94a3b8;">15:30</span></th>
+                <th>P8<br><span style="font-weight:400; color:#94a3b8;">16:30</span></th>
+                <th>P9<br><span style="font-weight:400; color:#94a3b8;">17:30</span></th>
+                <th>P10<br><span style="font-weight:400; color:#94a3b8;">18:30</span></th>
+                <th>P11<br><span style="font-weight:400; color:#94a3b8;">19:30</span></th>
+                <th>P12<br><span style="font-weight:400; color:#94a3b8;">20:30</span></th>
+                <th>P13<br><span style="font-weight:400; color:#94a3b8;">21:30</span></th>
+              </tr>
+            </thead>
+            <tbody id="bkVenueCalendarBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section: Booking Requests Table & Filtering -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h3 style="font-size:1.05rem; font-weight:700; margin:0 0 2px 0;">Booking Requests & Approval Ledger</h3>
+            <span style="font-size:0.78rem; color:#64748b;">Inspect official requests, priorities, allocated rooms, and explainable decision rationales.</span>
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <input type="text" id="bkFilterSearch" placeholder="Search event, club, ID..." class="form-control" style="width:180px; padding:5px 10px; font-size:0.8rem;" oninput="applyBookingFilters()">
+            
+            <select id="bkFilterCategory" class="form-control" style="width:140px; padding:5px 8px; font-size:0.8rem;" onchange="applyBookingFilters()">
+              <option value="">All Categories</option>
+              <option value="institute_event">Institute Event</option>
+              <option value="guest_lecture">Guest Lecture</option>
+              <option value="department_event">Department Event</option>
+              <option value="club_event">Club Event</option>
+            </select>
+
+            <select id="bkFilterStatus" class="form-control" style="width:130px; padding:5px 8px; font-size:0.8rem;" onchange="applyBookingFilters()">
+              <option value="">All Statuses</option>
+              <option value="approved">Approved</option>
+              <option value="alternative_offered">Alternative</option>
+              <option value="rejected">Rejected</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.82rem;" id="bkRequestsTable">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0; text-align:left;">
+                <th style="padding:10px 12px; width:75px;">ID</th>
+                <th style="padding:10px 12px;">Event Title</th>
+                <th style="padding:10px 12px;">Requester</th>
+                <th style="padding:10px 12px; width:130px;">Category</th>
+                <th style="padding:10px 12px; width:120px;">Requested Time</th>
+                <th style="padding:10px 12px; width:65px;">Att.</th>
+                <th style="padding:10px 12px; width:90px;">Venue</th>
+                <th style="padding:10px 12px; width:120px;">Status</th>
+                <th style="padding:10px 12px; width:80px; text-align:center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="bkRequestsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- DISRUPTION MANAGEMENT AND RESCHEDULING ENGINE -->
+<div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" style="color:#dc2626; border-color:#fca5a5;" onclick="triggerRejectProposal()" id="btnCmpReject">
+            Reject Proposal
+          </button>
+          <button class="btn btn-primary" onclick="triggerApproveProposal()" id="btnCmpApprove">
+            <span>&#10004;</span> Approve &amp; Activate Revision
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          try {
+            loadBookingData();
+          } catch(e) {
+            console.warn('Auto-init warning for bookings.html:', e);
+          }
+        }, 100);
+      });
+    </script>
+  <script src="/dist/app.bundle.js" defer></script>
+
+<script>
+async function triggerResetDemoDataAction() {
+  if (!confirm("Are you sure you want to reset all campus demo datasets, timetables, and bookings to official baseline?")) return;
+  const btn = document.getElementById('btnHeaderResetDemo');
+  if (btn) btn.innerHTML = '<span>&#8987;</span> Resetting...';
+  try {
+    const res = await fetch('/api/admin/reset-demo', { method: 'POST' });
+    const data = await res.json();
+    alert("Campus dataset and timetable restored to official baseline!");
+    window.location.reload();
+  } catch(e) {
+    alert("Reset error: " + e.message);
+  } finally {
+    if (btn) btn.innerHTML = '<span>&#8634;</span> Reset Demo Data';
+  }
+}
+</script>
+
+</body>
+
+</html>

@@ -2,6 +2,74 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/assets/(.*)",
+      "destination": "/public/assets/$1"
+    },
+    {
+      "source": "/vendor/(.*)",
+      "destination": "/public/vendor/$1"
+    },
+    {
+      "source": "/dist/(.*)",
+      "destination": "/public/dist/$1"
+    },
+    {
+      "source": "/css/(.*)",
+      "destination": "/public/css/$1"
+    },
+    {
+      "source": "/intro",
+      "destination": "/public/intro.html"
+    },
+    {
+      "source": "/planner",
+      "destination": "/public/planner.html"
+    },
+    {
+      "source": "/landing",
+      "destination": "/public/planner.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/public/login.html"
+    },
+    {
+      "source": "/workspace",
+      "destination": "/public/index.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/public/dashboard.html"
+    },
+    {
+      "source": "/timetable",
+      "destination": "/public/timetable.html"
+    },
+    {
+      "source": "/validations",
+      "destination": "/public/validations.html"
+    },
+    {
+      "source": "/examinations",
+      "destination": "/public/examinations.html"
+    },
+    {
+      "source": "/bookings",
+      "destination": "/public/bookings.html"
+    },
+    {
+      "source": "/disruptions",
+      "destination": "/public/disruptions.html"
+    },
+    {
+      "source": "/notifications",
+      "destination": "/public/notifications.html"
+    },
+    {
+      "source": "/ai-assistant",
+      "destination": "/public/ai-assistant.html"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/index.py"
     },
@@ -18,8 +86,8 @@
       "destination": "/api/index.py"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/",
+      "destination": "/public/intro.html"
     }
   ]
 }

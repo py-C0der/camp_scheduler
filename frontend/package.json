@@ -1,0 +1,14 @@
+{
+  "name": "cit-campus-management-frontend",
+  "version": "2.0.0",
+  "description": "CIT Campus Scheduling and Venue Management Platform - Modern TypeScript Frontend",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --sourcemap --outfile=dist/app.bundle.js && tsc",
+    "bundle": "esbuild src/main.ts --bundle --sourcemap --outfile=dist/app.bundle.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "typescript": "^5.4.0"
+  }
+}

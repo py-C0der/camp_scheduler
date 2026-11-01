@@ -5,7 +5,7 @@ deterministic decision generation, approvals, alternatives, cancellations, and s
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional, Tuple
 from fastapi import HTTPException
 
@@ -99,7 +99,7 @@ class BookingService:
             "booking_score": score,
             "max_possible_score": max_score,
             "priority_inversions": inversions,
-            "last_updated": datetime.utcnow().isoformat()
+            "last_updated": datetime.now(timezone.utc).isoformat()
         }
 
     def list_bookings(
@@ -200,7 +200,7 @@ class BookingService:
         extracted = NaturalLanguageBookingExtractor.extract_fields(text, user_role=user_role)
         clarification = BookingClarificationAssistant.analyze_booking_draft(extracted, text)
 
-        draft_id = f"DRAFT-{int(datetime.utcnow().timestamp()*1000)}"
+        draft_id = f"DRAFT-{int(datetime.now(timezone.utc).timestamp()*1000)}"
 
         # Save draft in database
         conn = get_connection()
@@ -241,7 +241,7 @@ class BookingService:
         temp_req = {"role": user_role, "requested_category": norm["requested_category"]}
         eff_cat = self.priority_manager.get_effective_category(temp_req)
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         cur.execute("""
             INSERT INTO booking_requests (
@@ -435,7 +435,7 @@ class BookingService:
         )
 
         # Update database with results
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         for d in result["decisions"]:
             req_id = d["request_id"]
             st = d["status"]
@@ -543,7 +543,7 @@ class BookingService:
                 detail=f"Cannot approve: Hard constraint violation ({val_res['reason']})"
             )
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         decision_note = reason or f"Approved by {user.get('name', user_id)}"
 
         conn = get_connection()
@@ -600,7 +600,7 @@ class BookingService:
         if user_role not in ("admin", "dept_coordinator", "department_coordinator"):
             raise HTTPException(status_code=403, detail="Unauthorized to reject booking requests")
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         rejection_reason = f"Rejected by {user.get('name', user_id)}: {reason.strip()}"
 
         conn = get_connection()
@@ -695,7 +695,7 @@ class BookingService:
             conn.close()
             raise HTTPException(status_code=400, detail=f"Cannot accept alternative: {val_res['reason']}")
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         reason = f"Alternative accepted in {target_room} on {target_day} P{target_start}-P{target_end}"
 
         cur.execute("""
@@ -737,7 +737,7 @@ class BookingService:
             "role_category_cap": self.priority_manager.role_category_cap,
             "version": self.priority_manager.version,
             "updated_by": "admin",
-            "updated_at": datetime.utcnow().isoformat()
+            "updated_at": datetime.now(timezone.utc).isoformat()
         }
 
     def update_priority_configuration(self, new_order: List[str], new_caps: Optional[Dict[str, str]], user: Dict[str, Any]) -> Dict[str, Any]:

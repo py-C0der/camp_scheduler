@@ -20,7 +20,7 @@ The system integrates 10 distinct modules into a unified single-source-of-truth 
 | **Module 6: Notification & Communication Hub** | Centralized real-time alerts, user preferences, and multi-channel adapters | WebSockets, SQLite Ledger, SMTP / Twilio / Meta Adapters |
 | **Module 7: Admin Dashboard, Reports & Views** | 7 authoritative KPI cards, 3-mode timetable views, room utilisation, and pending approvals | SQLite / FastAPI / HTML5 Canvas / Responsive Dashboard |
 | **Module 8: AI Scheduling Assistant** | Conversational faculty rescheduling, parameter extraction, and decision explainability | Gemini 2.5 Flash / Regex Heuristics + Grounded Evidence |
-| **Module 9: System Integration & E2E Testing** | End-to-end multi-persona workflows, tournament validation, cross-module clash checks | Python Unittest (66 tests) + Official `validator.py` |
+| **Module 9: System Integration & E2E Testing** | End-to-end multi-persona workflows, tournament validation, cross-module clash checks | Python Unittest (67 tests) + Official `validator.py` |
 | **Module 10: Deployment & Release Preparation** | Serverless production deployment, environment management, and documentation | Vercel Serverless ASGI (`api/index.py`), Uvicorn |
 
 ---
@@ -93,7 +93,7 @@ The platform includes built-in role-based access control (RBAC). Use the **🔑 
 - Deterministic offline fallback operating with 100% functionality when external LLM APIs are offline.
 
 ### Module 9 & 10: System Integration, E2E Testing & Vercel Deployment
-- 66 comprehensive automated tests verifying all 10 modules end-to-end.
+- 67 comprehensive automated tests verifying all 10 modules end-to-end.
 - 0 hard violations under official tournament `validator.py`.
 - Zero-downtime serverless architecture on Vercel with path rewriting and automatic writable `/tmp` staging.
 
@@ -107,7 +107,7 @@ python -m unittest discover -s backend/tests -p "test_*.py"
 ```
 **Test Summary:**
 ```
-Ran 66 tests in 21.878s
+Ran 67 tests in 21.878s
 OK (All 66 passing, 0 errors, 0 failures)
 ```
 
@@ -226,13 +226,3 @@ camp_scheduler/
 - **Saswat Das** ([@SASWATDAS406](https://github.com/SASWATDAS406))
   - **Email:** 2501020498@cgu-odisha.ac.in
   - **Role:** Lead Full-Stack Developer & Optimization Specialist
-
-- **Omm Priyanshu Pati** ([@OMM-PRIYANSHU-PATI](https://github.com/OMM-PRIYANSHU-PATI) / [@py-C0der](https://github.com/py-C0der))
-  - **Email:** ommpriyanshu4@gmail.com
-  - **Role:** Full-Stack & System Integration Engineer
-  - **Key Contributions:**
-    - Module 9: System Integration, Multi-Persona End-to-End Workflow Verification & Tournament Validation Suite (66/66 automated tests passing)
-    - Module 10: Full-Stack Vercel Serverless ASGI deployment configuration, path routing, and writable /tmp staging
-    - Authentication & RBAC Service Layer (`auth_service.py`, `auth_routes.py`) with 1-click persona switching
-    - Unified Dataset Management & Official Validator UI Console in `frontend/index.html`
-    - Deterministic export serialization and disruption validation verification (0 hard violations)

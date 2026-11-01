@@ -5,7 +5,7 @@ Enforces role-based permissions and atomic schedule transitions.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from fastapi import HTTPException
@@ -32,7 +32,7 @@ class ProposalManager:
         conn = get_connection()
         cur = conn.cursor()
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         cur.execute("""
             INSERT OR REPLACE INTO rescheduling_proposals (
@@ -219,6 +219,13 @@ class ProposalManager:
         if prop["status"] == "approved":
             return {"status": "already_approved", "proposal_id": proposal_id}
 
+        # Self-approval check: Non-admin users cannot approve proposals they submitted
+        if user_role != "admin" and prop.get("created_by") and prop["created_by"] not in ("system", "system_solver") and prop["created_by"] == user_id:
+            raise HTTPException(
+                status_code=403,
+                detail="Policy Violation: Self-approval forbidden. You cannot approve a rescheduling proposal you submitted."
+            )
+
         conn = get_connection()
         cur = conn.cursor()
 
@@ -230,7 +237,7 @@ class ProposalManager:
         """, (proposal_id,))
         proposed_assignments = [dict(r) for r in cur.fetchall()]
 
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         decision_note = reason or f"Approved by {user.get('name', user_id)}"
 
         # 1. Update proposal status
@@ -315,7 +322,7 @@ class ProposalManager:
             raise HTTPException(status_code=403, detail="Unauthorized to reject proposals")
 
         prop = ProposalManager.get_proposal_by_id(proposal_id)
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         decision_note = reason or f"Rejected by {user.get('name', user_id)}"
 
         conn = get_connection()

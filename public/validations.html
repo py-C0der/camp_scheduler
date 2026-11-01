@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Constraints & Validation Audit - Chilika Institute of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- CIT Campus Platform Modular Stylesheet -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="mobileDrawerBackdrop" onclick="toggleMobileSidebar()"></div>
+
+<!-- Left Sidebar Navigation -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CIT</div>
+    <div class="brand-info">
+      <h2>Chilika Inst. of Tech.</h2>
+      <span>Campus Operations</span>
+    </div>
+  </div>
+
+  <div class="nav-section-title">Main Navigation</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemDashboard" href="dashboard.html" onclick="if(window.switchNav){switchNav('dashboard'); return false;}">
+        <span>&#9632;</span> Dashboard
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemTimetable" href="timetable.html" onclick="if(window.switchNav){switchNav('timetable'); return false;}">
+        <span>&#9776;</span> Timetable
+      </a>
+    </li>
+    <li>
+      <a class="nav-item active" id="navItemValidations" href="validations.html" onclick="if(window.switchNav){switchNav('validations'); return false;}">
+        <span>&#10004;</span> Validations Audit
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemExaminations" href="examinations.html" onclick="if(window.switchNav){switchNav('examinations'); return false;}">
+        <span>&#128197;</span> Examinations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemBookings" href="bookings.html" onclick="if(window.switchNav){switchNav('bookings'); return false;}">
+        <span>&#127970;</span> Smart Venue Bookings
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemDisruptions" href="disruptions.html" onclick="if(window.switchNav){switchNav('disruptions'); return false;}">
+        <span>&#8644;</span> Disruption &amp; Reschedule
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemNotifications" href="notifications.html" onclick="if(window.switchNav){switchNav('notifications'); return false;}">
+        <span>&#128276;</span> Notifications &amp; Alerts
+        <span class="nav-badge" id="navNotifBadge" style="background:#ef4444; color:#fff; font-weight:700; display:none; border-radius:10px; padding:2px 7px; font-size:0.7rem;">0</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="nav-section-title">Intelligence &amp; Operations</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemAiAssistant" href="ai-assistant.html" onclick="if(window.switchNav){switchNav('ai-assistant'); return false;}">
+        <span>&#10024;</span> AI Assistant
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="scrollToUtilization()">
+        <span>&#9680;</span> Room Utilization
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="switchNav('validations')">
+        <span>&#128190;</span> Dataset &amp; Validations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}">
+        <span>&#128101;</span> Login &amp; Role Management
+      </a>
+    </li>
+    <li>
+      <a href="/api/export/schedule" download="schedule.json" class="nav-item">
+        <span>&#8681;</span> Reports &amp; Exports
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="resetDemo()">
+        <span>&#9881;</span> Reset Demo Data
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="main-wrap">
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="mobileMenuToggle" onclick="toggleMobileSidebar()" title="Toggle Navigation Menu">
+        &#9776;
+      </button>
+      <div class="page-title" id="pageTitle">System Constraints & Validation Audit</div>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" placeholder="Search sessions, rooms, faculty...">
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.15s;" title="Notifications">
+          <span style="font-size: 1.15rem;">&#128276;</span>
+          <span id="notifBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">0</span>
+        </button>
+
+        <!-- Notification Dropdown Menu -->
+        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden; text-align: left;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <div>
+              <strong style="font-size: 0.92rem; color: #0f172a;">Notifications</strong>
+              <span id="notifDropdownCount" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 9999px; margin-left: 6px; font-weight: 700;">0 new</span>
+            </div>
+            <button onclick="markAllNotifsRead()" style="background: none; border: none; font-size: 0.75rem; color: #2563eb; cursor: pointer; font-weight: 600;">Mark all read</button>
+          </div>
+          <div id="notifDropdownList" style="max-height: 380px; overflow-y: auto;">
+            <div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No new notifications</div>
+          </div>
+          <div style="padding: 10px 16px; border-top: 1px solid #f1f5f9; text-align: center; background: #fafafa;">
+            <a href="javascript:void(0)" onclick="switchNav('notifications'); toggleNotifDropdown();" style="font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none;">Open Notification Center &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="roleBadgeContainer">
+        <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
+      </div>
+
+      <button class="btn btn-outline btn-sm" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" style="display:flex; align-items:center; gap:6px; font-weight:700; background:#f8fafc; border-color:#cbd5e1;">
+        <span>&#128273;</span> Login / Switch User
+      </button>
+
+      <div class="user-dropdown" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" title="Switch User Role">
+        <div class="user-avatar" id="userAvatar">DA</div>
+        <div class="user-name-role">
+          <div class="user-name" id="topUserName">Dean Academics</div>
+          <div class="user-role-label" id="topUserRole">Dean's Office (Admin)</div>
+        </div>
+        <span style="font-size: 0.75rem; color: #94a3b8;">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Body -->
+  <main class="content-body">
+
+      <!-- Tournament Validator Live Audit Card -->
+      <div class="panel-card" style="margin-bottom:24px; border-left:4px solid #1A6E48; background:#FFFFFF; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h3 style="font-size:1.15rem; font-weight:800; color:#1A6E48; margin:0; display:flex; align-items:center; gap:8px;">
+              <span>&#127942;</span> Official Tournament Validator Live Audit
+            </h3>
+            <p style="font-size:0.82rem; color:#64748b; margin:4px 0 0 0;">
+              Direct integration with <code>CrunchWeek_StarterPack/validator.py</code> verifying 0-clash guarantees.
+            </p>
+          </div>
+          <button class="btn" id="btnRunOfficialValidator" onclick="runOfficialTournamentValidatorAction()" style="background:#1A6E48; color:#FFFFFF; font-weight:700; padding:8px 18px; border-radius:6px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; font-size:13px; box-shadow:0 2px 8px rgba(26,110,72,0.25);">
+            <span>&#9889;</span> Run Official Tournament Validator
+          </button>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;" id="validatorResultsGrid">
+          <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:16px; text-align:center;">
+            <div style="font-size:0.75rem; color:#166534; font-weight:700; text-transform:uppercase;">Hard Violations</div>
+            <div style="font-size:2.2rem; font-weight:900; color:#15803D;" id="valMetricHard">0</div>
+            <div style="font-size:0.75rem; color:#166534; font-weight:600;">0 Hard Clashes Detected</div>
+          </div>
+          <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:16px; text-align:center;">
+            <div style="font-size:0.75rem; color:#1E40AF; font-weight:700; text-transform:uppercase;">Soft Penalty</div>
+            <div style="font-size:2.2rem; font-weight:900; color:#1D4ED8;" id="valMetricSoft">246</div>
+            <div style="font-size:0.75rem; color:#1E40AF; font-weight:600;">Optimal Distribution</div>
+          </div>
+          <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:16px; text-align:center;">
+            <div style="font-size:0.75rem; color:#065F46; font-weight:700; text-transform:uppercase;">Booking Score</div>
+            <div style="font-size:2.2rem; font-weight:900; color:#059669;" id="valMetricBooking">58.0</div>
+            <div style="font-size:0.75rem; color:#065F46; font-weight:600;">24/25 Bookings Handled</div>
+          </div>
+          <div style="background:#FAF5FF; border:1px solid #E9D5FF; border-radius:8px; padding:16px; text-align:center;">
+            <div style="font-size:0.75rem; color:#6B21A8; font-weight:700; text-transform:uppercase;">Exams Unscheduled</div>
+            <div style="font-size:2.2rem; font-weight:900; color:#7E22CE;" id="valMetricExams">0</div>
+            <div style="font-size:0.75rem; color:#6B21A8; font-weight:600;">100% Placed</div>
+          </div>
+        </div>
+        <div id="validatorConsoleOutput" style="display:none; margin-top:14px; background:#18181B; color:#4ADE80; font-family:'JetBrains Mono',monospace; font-size:11px; padding:12px; border-radius:6px; white-space:pre-wrap; max-height:160px; overflow-y:auto;"></div>
+      </div>
+
+
+
+    <!-- DYNAMIC ROLE-BASED WORKSPACE BANNER -->
+    <div id="roleWorkspaceBanner" style="display:none; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.25); border: 1px solid rgba(255,255,255,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div id="roleBannerAvatar" style="width: 46px; height: 46px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+            &#128081;
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 id="roleBannerTitle" style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #fff;">Dean Academics Executive Console</h2>
+              <span id="roleBannerPill" class="badge badge-danger" style="font-size: 0.68rem; padding: 3px 8px;">ADMIN</span>
+            </div>
+            <p id="roleBannerSub" style="font-size: 0.8rem; color: #cbd5e1; margin: 3px 0 0 0;">
+              Master Optimization Solvers &bull; Disruption Sign-Offs &bull; System Health Monitoring
+            </p>
+          </div>
+        </div>
+        <div id="roleBannerActions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- Dynamically populated by applyRolePermissions -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VIEW 1: Central Operations Dashboard -->
+    
+<div id="view-validations" class="view-panel active">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #0f172a;">System Constraints &amp; Validation Audit</h2>
+          <span style="font-size: 0.78rem; color: #64748b;">Comprehensive compliance engine validating academic timetable and campus operational rules</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-primary" id="btnRunValidation" onclick="runFullValidationAction()">
+            <span>&#9889;</span> Run Full Live Validation
+          </button>
+          <button class="btn btn-outline" onclick="switchNav('timetable')">
+            <span>&#9776;</span> View Timetable
+          </button>
+          <button class="btn btn-outline" onclick="switchNav('dashboard')">&larr; Back to Dashboard</button>
+        </div>
+      </div>
+
+      <!-- Top Summary Metrics for Validations -->
+      <div class="overview-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
+        <div class="card-metric" style="border-top: 4px solid #10b981;">
+          <div class="metric-head">
+            <span class="metric-label">Overall Academic Status</span>
+            <span class="metric-icon" style="color:#10b981;">&#10004;</span>
+          </div>
+          <div class="metric-val" id="valSummaryStatus" style="font-size: 1.25rem; color:#10b981;">FULLY COMPLIANT</div>
+          <div class="metric-sub" id="valSummaryHardViolations">0 Hard-Constraint Clashes</div>
+        </div>
+
+        <div class="card-metric" style="border-top: 4px solid #2563eb;">
+          <div class="metric-head">
+            <span class="metric-label">Rules Evaluated</span>
+            <span class="metric-icon" style="color:#2563eb;">&#9776;</span>
+          </div>
+          <div class="metric-val" id="valSummaryRuleCount">20 / 27</div>
+          <div class="metric-sub" id="valSummaryRuleSub">20 Active Academic Rules &bull; 7 Campus Constraints</div>
+        </div>
+
+        <div class="card-metric" style="border-top: 4px solid #f59e0b;">
+          <div class="metric-head">
+            <span class="metric-label">Student Cohort Cap (&le;6h)</span>
+            <span class="metric-icon" style="color:#f59e0b;">&#9203;</span>
+          </div>
+          <div class="metric-val" id="valSummaryS3">0 Violations</div>
+          <div class="metric-sub">S3 Overload Penalty = 0 (100% Met)</div>
+        </div>
+
+        <div class="card-metric" style="border-top: 4px solid #8b5cf6;">
+          <div class="metric-head">
+            <span class="metric-label">Official Starter Pack</span>
+            <span class="metric-icon" style="color:#8b5cf6;">&#128220;</span>
+          </div>
+          <div class="metric-val" id="valSummaryOfficial">EXIT CODE 0</div>
+          <div class="metric-sub">validator.py Output Verified</div>
+        </div>
+      </div>
+
+      
+      <!-- Institutional Dataset & Multi-CSV Ingestion Hub -->
+      <div class="panel-card" style="margin-bottom: 24px; border-left: 4px solid #6366f1; background: #ffffff;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <h3 style="font-size:1.15rem; font-weight:700; color:#0f172a; margin:0;">
+                Campus Dataset &amp; Multi-CSV Ingestion Matrix
+              </h3>
+              <span class="badge badge-info" id="activeDatasetTag">cit-public-v1 (Loaded)</span>
+            </div>
+            <p style="font-size:0.82rem; color:#64748b; margin:4px 0 0 0;">
+              Upload institutional JSON (<code style="color:#6366f1; font-weight:600;">cit_public.json</code>) or input the <strong>9 official CSV spreadsheets</strong> simultaneously. Solvers automatically decide and commit the 0-clash schedule.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-outline" onclick="document.getElementById('datasetFileInput').click()" title="Select multiple CSV files simultaneously">
+              <span>&#128194;</span> Select Multiple CSVs
+            </button>
+            <button class="btn btn-outline" onclick="loadCsvDatasetFolderAction()" title="Load all CSV spreadsheets from CrunchWeek_StarterPack/data/csv">
+              <span>&#128196;</span> Load CSV Dataset Folder
+            </button>
+            <button class="btn btn-outline" onclick="resetToOfficialStarterPackAction()" title="Restore clean cit_public.json baseline">
+              <span>&#8635;</span> Restore Baseline Dataset
+            </button>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Upload Zone -->
+        <div id="datasetDropZone" style="border: 2px dashed #6366f1; border-radius: 10px; padding: 22px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease;"
+             onclick="document.getElementById('datasetFileInput').click()"
+             ondragover="event.preventDefault(); this.style.borderColor='#4338ca'; this.style.background='#eef2ff';"
+             ondragleave="this.style.borderColor='#6366f1'; this.style.background='#f8fafc';"
+             ondrop="handleDatasetFileDrop(event)">
+          <input type="file" id="datasetFileInput" accept=".json,.csv" multiple style="display:none;" onchange="handleDatasetFileSelect(event)">
+          <div style="font-size: 2.2rem; margin-bottom: 6px;">&#128229;</div>
+          <div style="font-weight: 700; font-size: 0.98rem; color: #1e293b;">
+            Drop <code style="color:#4f46e5;">cit_public.json</code> or multiple CSV files here (all 9 CSVs supported), or <span style="color:#4f46e5; text-decoration:underline;">browse files</span>
+          </div>
+          <div style="font-size: 0.78rem; color: #64748b; margin-top: 4px;">
+            Multi-selection supported: <code>rooms.csv</code>, <code>courses.csv</code>, <code>sessions.csv</code>, <code>faculty.csv</code>, <code>student_groups.csv</code>, <code>exams.csv</code>, <code>booking_requests.csv</code>, <code>room_unavailability.csv</code>, <code>cancellations.csv</code>
+          </div>
+        </div>
+
+        <!-- 9-CSV Dataset Ingestion Matrix (3x3 Grid) -->
+        <div id="datasetMatrixContainer" style="margin-top: 18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:0.85rem; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; gap:6px;">
+              <span>&#128202;</span> 9-Spreadsheet Ingestion Matrix
+            </div>
+            <div id="matrixBatchStatusBadge" style="font-size:0.78rem; font-weight:600; color:#4338ca; background:#eef2ff; padding:3px 10px; border-radius:12px; border:1px solid #c7d2fe;">
+              Baseline Benchmark Active (9/9 Tables Ready)
+            </div>
+          </div>
+          <div class="matrix-grid" id="csvMatrixGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;">
+            <!-- Matrix cards rendered by TS/JS -->
+          </div>
+        </div>
+
+        <!-- Ingestion Actions & Solve Timetable Bar -->
+        <div id="datasetUploadPreview" style="display:none; margin-top: 16px; padding: 14px 18px; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e1;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span style="font-weight:700; color:#0f172a; font-size:0.92rem;" id="uploadFileName">Dataset Ready for Ingestion</span>
+              <span style="font-size:0.8rem; color:#64748b; margin-left:8px;" id="uploadFileSize"></span>
+              <div style="font-size:0.82rem; color:#475569; margin-top:4px;" id="uploadFileStats">Parsed: -- rooms, -- faculty, -- sessions</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-outline" id="btnValidateUpload" onclick="validateUploadedDatasetAction()">
+                <span>&#10004;</span> Validate Schema
+              </button>
+              <button class="btn btn-primary" id="btnImportAndSolve" onclick="importAndSolveDatasetAction()" style="background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border:none; box-shadow:0 2px 4px rgba(79,70,229,0.3); font-weight:600;">
+                <span>&#9889;</span> Ingest &amp; Decide Timetable
+              </button>
+              <button class="btn btn-outline" id="btnImportUpload" onclick="importUploadedDatasetAction()" style="background:#fff; color:#475569;">
+                <span>&#128190;</span> Ingest Only
+              </button>
+              <button class="btn btn-outline" onclick="cancelDatasetUploadAction()" style="border-color:#ef4444; color:#ef4444;">
+                Cancel
+              </button>
+            </div>
+          </div>
+          <div id="datasetValidationFeedback" style="margin-top:12px; font-size:0.82rem; display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs & Actions -->
+      <div class="panel-card" style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div class="filter-btn-group">
+            <button class="filter-pill active" id="pillValAll" onclick="filterValidationRules('all', this)">All Rules (27)</button>
+            <button class="filter-pill" id="pillValActive" onclick="filterValidationRules('active', this)">Active Academic Rules (20)</button>
+            <button class="filter-pill" id="pillValFuture" onclick="filterValidationRules('future', this)">Extended Constraints (7)</button>
+          </div>
+          <div style="font-size: 0.8rem; color: #64748b;">
+            Authority: <code style="background:#f1f5f9; padding:2px 6px; border-radius:4px;">CrunchWeek_StarterPack/validator.py</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validator Terminal Output Drawer (Collapsible) -->
+      <div class="panel-card" style="margin-bottom: 20px; background:#0f172a; color:#cbd5e1; border:1px solid #1e293b;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="color:#f8fafc; font-size:0.82rem; font-family:'JetBrains Mono', monospace;">
+            &gt; Official Validator Execution Log (python validator.py)
+          </strong>
+          <span class="badge badge-success" id="valTerminalBadge">RETURN CODE 0</span>
+        </div>
+        <pre id="valTerminalOutput" style="font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#86efac; overflow-x:auto; margin:0; line-height:1.45; white-space:pre-wrap;">Loading live validator log...</pre>
+      </div>
+
+      <!-- Validation Rules Container -->
+      <div id="validationRulesContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+  
+    <!-- ========================================== -->
+    <!-- EXAMINATION MANAGEMENT SYSTEM    -->
+    <!-- ========================================== -->
+<div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" style="color:#dc2626; border-color:#fca5a5;" onclick="triggerRejectProposal()" id="btnCmpReject">
+            Reject Proposal
+          </button>
+          <button class="btn btn-primary" onclick="triggerApproveProposal()" id="btnCmpApprove">
+            <span>&#10004;</span> Approve &amp; Activate Revision
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          try {
+            loadValidationsAudit(); renderCsvMatrixGrid();
+          } catch(e) {
+            console.warn('Auto-init warning for validations.html:', e);
+          }
+        }, 100);
+      });
+    </script>
+  <script src="/dist/app.bundle.js" defer></script>
+
+<script>
+async function triggerResetDemoDataAction() {
+  if (!confirm("Are you sure you want to reset all campus demo datasets, timetables, and bookings to official baseline?")) return;
+  const btn = document.getElementById('btnHeaderResetDemo');
+  if (btn) btn.innerHTML = '<span>&#8987;</span> Resetting...';
+  try {
+    const res = await fetch('/api/admin/reset-demo', { method: 'POST' });
+    const data = await res.json();
+    alert("Campus dataset and timetable restored to official baseline!");
+    window.location.reload();
+  } catch(e) {
+    alert("Reset error: " + e.message);
+  } finally {
+    if (btn) btn.innerHTML = '<span>&#8634;</span> Reset Demo Data';
+  }
+}
+</script>
+
+</body>
+
+</html>

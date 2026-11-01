@@ -84,7 +84,7 @@
       "session_id": "CS191-A-P1",
       "day": "THU",
       "start_period": 6,
-      "room_id": "CS-LAB-1"
+      "room_id": "CS-LAB-2"
     },
     {
       "session_id": "WS101-A-P1",
@@ -113,8 +113,8 @@
     {
       "session_id": "PH101-B-L1",
       "day": "THU",
-      "start_period": 1,
-      "room_id": "LH-6"
+      "start_period": 4,
+      "room_id": "CR-102"
     },
     {
       "session_id": "PH101-B-L2",
@@ -168,7 +168,7 @@
       "session_id": "HS101-B-L2",
       "day": "TUE",
       "start_period": 2,
-      "room_id": "CR-101"
+      "room_id": "LH-2"
     },
     {
       "session_id": "MA101-C-T1",
@@ -282,7 +282,7 @@
       "session_id": "CS191-D-P1",
       "day": "TUE",
       "start_period": 2,
-      "room_id": "CS-LAB-1"
+      "room_id": "CS-LAB-2"
     },
     {
       "session_id": "WS101-D-P1",
@@ -378,7 +378,7 @@
       "session_id": "CS204-L2",
       "day": "THU",
       "start_period": 2,
-      "room_id": "LH-5"
+      "room_id": "CR-203"
     },
     {
       "session_id": "CS204-L3",
@@ -526,9 +526,9 @@
     },
     {
       "session_id": "EE202-L3",
-      "day": "TUE",
-      "start_period": 1,
-      "room_id": "CR-205"
+      "day": "FRI",
+      "start_period": 8,
+      "room_id": "CR-101"
     },
     {
       "session_id": "EE203-L1",
@@ -570,7 +570,7 @@
       "session_id": "EE291-P1",
       "day": "THU",
       "start_period": 2,
-      "room_id": "ELEC-LAB-1"
+      "room_id": "ELEC-LAB-2"
     },
     {
       "session_id": "EE292-P1",
@@ -784,9 +784,9 @@
     },
     {
       "session_id": "CS301-L1",
-      "day": "WED",
-      "start_period": 1,
-      "room_id": "CR-104"
+      "day": "TUE",
+      "start_period": 3,
+      "room_id": "LH-4"
     },
     {
       "session_id": "CS301-L2",
@@ -803,8 +803,8 @@
     {
       "session_id": "CS302-L1",
       "day": "THU",
-      "start_period": 2,
-      "room_id": "CR-203"
+      "start_period": 6,
+      "room_id": "CR-104"
     },
     {
       "session_id": "CS302-L2",
@@ -816,13 +816,13 @@
       "session_id": "CS302-L3",
       "day": "TUE",
       "start_period": 4,
-      "room_id": "LH-4"
+      "room_id": "CR-203"
     },
     {
       "session_id": "CS303-L1",
-      "day": "TUE",
-      "start_period": 3,
-      "room_id": "LH-4"
+      "day": "THU",
+      "start_period": 7,
+      "room_id": "CR-203"
     },
     {
       "session_id": "CS303-L2",
@@ -838,7 +838,7 @@
     },
     {
       "session_id": "CS391-P1",
-      "day": "WED",
+      "day": "FRI",
       "start_period": 6,
       "room_id": "CS-LAB-1"
     },
@@ -862,9 +862,9 @@
     },
     {
       "session_id": "EC302-L1",
-      "day": "WED",
+      "day": "MON",
       "start_period": 1,
-      "room_id": "LH-4"
+      "room_id": "LH-6"
     },
     {
       "session_id": "EC302-L2",
@@ -898,8 +898,8 @@
     },
     {
       "session_id": "EC391-P1",
-      "day": "FRI",
-      "start_period": 2,
+      "day": "THU",
+      "start_period": 6,
       "room_id": "ELEC-LAB-2"
     },
     {
@@ -923,8 +923,8 @@
     {
       "session_id": "EE302-L1",
       "day": "WED",
-      "start_period": 3,
-      "room_id": "LH-4"
+      "start_period": 8,
+      "room_id": "LH-3"
     },
     {
       "session_id": "EE302-L2",
@@ -935,8 +935,8 @@
     {
       "session_id": "EE302-L3",
       "day": "WED",
-      "start_period": 1,
-      "room_id": "LH-5"
+      "start_period": 7,
+      "room_id": "CR-105"
     },
     {
       "session_id": "EE303-L1",
@@ -1096,9 +1096,9 @@
     },
     {
       "session_id": "OE301-L3",
-      "day": "MON",
+      "day": "THU",
       "start_period": 2,
-      "room_id": "LH-4"
+      "room_id": "LH-6"
     },
     {
       "session_id": "OE302-L1",
@@ -1110,13 +1110,13 @@
       "session_id": "OE302-L2",
       "day": "MON",
       "start_period": 3,
-      "room_id": "LH-1"
+      "room_id": "LH-4"
     },
     {
       "session_id": "OE302-L3",
-      "day": "MON",
+      "day": "THU",
       "start_period": 2,
-      "room_id": "LH-2"
+      "room_id": "LH-1"
     },
     {
       "session_id": "OE303-L1",
@@ -1128,13 +1128,13 @@
       "session_id": "OE303-L2",
       "day": "MON",
       "start_period": 3,
-      "room_id": "LH-4"
+      "room_id": "CR-201"
     },
     {
       "session_id": "OE303-L3",
-      "day": "MON",
+      "day": "THU",
       "start_period": 2,
-      "room_id": "LH-1"
+      "room_id": "LH-2"
     }
   ],
   "exams": [
@@ -1145,41 +1145,7 @@
       "rooms": [
         "AUD",
         "LH-1"
-      ],
-      "student_size": 295,
-      "total_effective_seats": 350,
-      "is_multi_room": true,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        },
-        {
-          "room_id": "LH-1",
-          "name": "Lecture Hall 1",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "CSE-3",
-        "ECE-3",
-        "EE-3",
-        "ME-3",
-        "CE-3"
-      ],
-      "course_ids": [
-        "OE301",
-        "OE302",
-        "OE303"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-HS201",
@@ -1188,39 +1154,7 @@
       "rooms": [
         "AUD",
         "SH-1"
-      ],
-      "student_size": 320,
-      "total_effective_seats": 325,
-      "is_multi_room": true,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        },
-        {
-          "room_id": "SH-1",
-          "name": "Seminar Hall 1",
-          "building": "Library Building",
-          "type": "seminar_hall",
-          "normal_capacity": 150,
-          "effective_exam_seats": 75
-        }
-      ],
-      "groups": [
-        "CSE-2",
-        "ECE-2",
-        "EE-2",
-        "ME-2",
-        "CE-2"
-      ],
-      "course_ids": [
-        "HS201"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE204",
@@ -1228,27 +1162,7 @@
       "session": "AM",
       "rooms": [
         "LH-3"
-      ],
-      "student_size": 50,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-3",
-          "name": "Lecture Hall 3",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "CE-2"
-      ],
-      "course_ids": [
-        "CE204"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS303",
@@ -1256,27 +1170,7 @@
       "session": "AM",
       "rooms": [
         "LH-1"
-      ],
-      "student_size": 75,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-1",
-          "name": "Lecture Hall 1",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "CSE-3"
-      ],
-      "course_ids": [
-        "CS303"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC204",
@@ -1284,27 +1178,7 @@
       "session": "AM",
       "rooms": [
         "SH-1"
-      ],
-      "student_size": 70,
-      "total_effective_seats": 75,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "SH-1",
-          "name": "Seminar Hall 1",
-          "building": "Library Building",
-          "type": "seminar_hall",
-          "normal_capacity": 150,
-          "effective_exam_seats": 75
-        }
-      ],
-      "groups": [
-        "ECE-2"
-      ],
-      "course_ids": [
-        "EC204"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC303",
@@ -1312,27 +1186,7 @@
       "session": "AM",
       "rooms": [
         "LH-2"
-      ],
-      "student_size": 65,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "ECE-3"
-      ],
-      "course_ids": [
-        "EC303"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE303",
@@ -1340,27 +1194,7 @@
       "session": "AM",
       "rooms": [
         "LH-4"
-      ],
-      "student_size": 55,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-4",
-          "name": "Lecture Hall 4",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "EE-3"
-      ],
-      "course_ids": [
-        "EE303"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE303",
@@ -1368,27 +1202,7 @@
       "session": "PM",
       "rooms": [
         "CR-101"
-      ],
-      "student_size": 45,
-      "total_effective_seats": 45,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "CR-101",
-          "name": "Classroom A-101",
-          "building": "Academic Block A (ground floor)",
-          "type": "classroom",
-          "normal_capacity": 90,
-          "effective_exam_seats": 45
-        }
-      ],
-      "groups": [
-        "CE-3"
-      ],
-      "course_ids": [
-        "CE303"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS101",
@@ -1398,46 +1212,7 @@
         "AUD",
         "CR-103",
         "LH-1"
-      ],
-      "student_size": 360,
-      "total_effective_seats": 390,
-      "is_multi_room": true,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        },
-        {
-          "room_id": "CR-103",
-          "name": "Classroom A-103",
-          "building": "Academic Block A (ground floor)",
-          "type": "classroom",
-          "normal_capacity": 80,
-          "effective_exam_seats": 40
-        },
-        {
-          "room_id": "LH-1",
-          "name": "Lecture Hall 1",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "Y1-A",
-        "Y1-B",
-        "Y1-C",
-        "Y1-D"
-      ],
-      "course_ids": [
-        "CS101"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE204",
@@ -1445,27 +1220,7 @@
       "session": "PM",
       "rooms": [
         "LH-5"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-5",
-          "name": "Lecture Hall 5",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "EE-2"
-      ],
-      "course_ids": [
-        "EE204"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME301",
@@ -1473,27 +1228,7 @@
       "session": "PM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 55,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "ME-3"
-      ],
-      "course_ids": [
-        "ME301"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS203",
@@ -1501,27 +1236,7 @@
       "session": "AM",
       "rooms": [
         "AUD"
-      ],
-      "student_size": 80,
-      "total_effective_seats": 250,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        }
-      ],
-      "groups": [
-        "CSE-2"
-      ],
-      "course_ids": [
-        "CS203"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS302",
@@ -1529,27 +1244,7 @@
       "session": "AM",
       "rooms": [
         "SH-1"
-      ],
-      "student_size": 75,
-      "total_effective_seats": 75,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "SH-1",
-          "name": "Seminar Hall 1",
-          "building": "Library Building",
-          "type": "seminar_hall",
-          "normal_capacity": 150,
-          "effective_exam_seats": 75
-        }
-      ],
-      "groups": [
-        "CSE-3"
-      ],
-      "course_ids": [
-        "CS302"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC203",
@@ -1557,27 +1252,7 @@
       "session": "AM",
       "rooms": [
         "LH-1"
-      ],
-      "student_size": 70,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-1",
-          "name": "Lecture Hall 1",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "ECE-2"
-      ],
-      "course_ids": [
-        "EC203"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC302",
@@ -1585,27 +1260,7 @@
       "session": "AM",
       "rooms": [
         "LH-2"
-      ],
-      "student_size": 65,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "ECE-3"
-      ],
-      "course_ids": [
-        "EC302"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE203",
@@ -1613,27 +1268,7 @@
       "session": "AM",
       "rooms": [
         "LH-4"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-4",
-          "name": "Lecture Hall 4",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "EE-2"
-      ],
-      "course_ids": [
-        "EE203"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME203",
@@ -1641,27 +1276,7 @@
       "session": "AM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "ME-2"
-      ],
-      "course_ids": [
-        "ME203"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE302",
@@ -1669,27 +1284,7 @@
       "session": "PM",
       "rooms": [
         "CR-201"
-      ],
-      "student_size": 45,
-      "total_effective_seats": 45,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "CR-201",
-          "name": "Classroom B-201",
-          "building": "Academic Block B (2nd floor, no lift)",
-          "type": "classroom",
-          "normal_capacity": 90,
-          "effective_exam_seats": 45
-        }
-      ],
-      "groups": [
-        "CE-3"
-      ],
-      "course_ids": [
-        "CE302"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-HS101",
@@ -1699,46 +1294,7 @@
         "AUD",
         "CR-102",
         "LH-2"
-      ],
-      "student_size": 360,
-      "total_effective_seats": 395,
-      "is_multi_room": true,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        },
-        {
-          "room_id": "CR-102",
-          "name": "Classroom A-102",
-          "building": "Academic Block A (ground floor)",
-          "type": "classroom",
-          "normal_capacity": 90,
-          "effective_exam_seats": 45
-        },
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "Y1-A",
-        "Y1-B",
-        "Y1-C",
-        "Y1-D"
-      ],
-      "course_ids": [
-        "HS101"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE301",
@@ -1746,27 +1302,7 @@
       "session": "AM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 45,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "CE-3"
-      ],
-      "course_ids": [
-        "CE301"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC202",
@@ -1774,27 +1310,7 @@
       "session": "AM",
       "rooms": [
         "AUD"
-      ],
-      "student_size": 70,
-      "total_effective_seats": 250,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        }
-      ],
-      "groups": [
-        "ECE-2"
-      ],
-      "course_ids": [
-        "EC202"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC301",
@@ -1802,27 +1318,7 @@
       "session": "AM",
       "rooms": [
         "SH-1"
-      ],
-      "student_size": 65,
-      "total_effective_seats": 75,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "SH-1",
-          "name": "Seminar Hall 1",
-          "building": "Library Building",
-          "type": "seminar_hall",
-          "normal_capacity": 150,
-          "effective_exam_seats": 75
-        }
-      ],
-      "groups": [
-        "ECE-3"
-      ],
-      "course_ids": [
-        "EC301"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE301",
@@ -1830,27 +1326,7 @@
       "session": "AM",
       "rooms": [
         "LH-4"
-      ],
-      "student_size": 55,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-4",
-          "name": "Lecture Hall 4",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "EE-3"
-      ],
-      "course_ids": [
-        "EE301"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME202",
@@ -1858,27 +1334,7 @@
       "session": "AM",
       "rooms": [
         "LH-2"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "ME-2"
-      ],
-      "course_ids": [
-        "ME202"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE202",
@@ -1886,27 +1342,7 @@
       "session": "PM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 50,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "CE-2"
-      ],
-      "course_ids": [
-        "CE202"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS202",
@@ -1914,27 +1350,7 @@
       "session": "PM",
       "rooms": [
         "LH-1"
-      ],
-      "student_size": 80,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-1",
-          "name": "Lecture Hall 1",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "CSE-2"
-      ],
-      "course_ids": [
-        "CS202"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-MA101",
@@ -1944,46 +1360,7 @@
         "AUD",
         "CR-205",
         "LH-2"
-      ],
-      "student_size": 360,
-      "total_effective_seats": 380,
-      "is_multi_room": true,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        },
-        {
-          "room_id": "CR-205",
-          "name": "Classroom B-205",
-          "building": "Academic Block B (2nd floor, no lift)",
-          "type": "classroom",
-          "normal_capacity": 60,
-          "effective_exam_seats": 30
-        },
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "Y1-A",
-        "Y1-B",
-        "Y1-C",
-        "Y1-D"
-      ],
-      "course_ids": [
-        "MA101"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME302",
@@ -1991,27 +1368,7 @@
       "session": "PM",
       "rooms": [
         "LH-5"
-      ],
-      "student_size": 55,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-5",
-          "name": "Lecture Hall 5",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "ME-3"
-      ],
-      "course_ids": [
-        "ME302"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE201",
@@ -2019,27 +1376,7 @@
       "session": "AM",
       "rooms": [
         "LH-3"
-      ],
-      "student_size": 50,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-3",
-          "name": "Lecture Hall 3",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "CE-2"
-      ],
-      "course_ids": [
-        "CE201"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS201",
@@ -2047,27 +1384,7 @@
       "session": "AM",
       "rooms": [
         "LH-2"
-      ],
-      "student_size": 80,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "CSE-2"
-      ],
-      "course_ids": [
-        "CS201"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EC201",
@@ -2075,27 +1392,7 @@
       "session": "AM",
       "rooms": [
         "LH-1"
-      ],
-      "student_size": 70,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-1",
-          "name": "Lecture Hall 1",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "ECE-2"
-      ],
-      "course_ids": [
-        "EC201"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE201",
@@ -2103,27 +1400,7 @@
       "session": "AM",
       "rooms": [
         "SH-1"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 75,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "SH-1",
-          "name": "Seminar Hall 1",
-          "building": "Library Building",
-          "type": "seminar_hall",
-          "normal_capacity": 150,
-          "effective_exam_seats": 75
-        }
-      ],
-      "groups": [
-        "EE-2"
-      ],
-      "course_ids": [
-        "EE201"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME201",
@@ -2131,27 +1408,7 @@
       "session": "AM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "ME-2"
-      ],
-      "course_ids": [
-        "ME201"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-PH101",
@@ -2161,46 +1418,7 @@
         "AUD",
         "LH-4",
         "SH-2"
-      ],
-      "student_size": 360,
-      "total_effective_seats": 360,
-      "is_multi_room": true,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        },
-        {
-          "room_id": "LH-4",
-          "name": "Lecture Hall 4",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        },
-        {
-          "room_id": "SH-2",
-          "name": "Seminar Hall 2",
-          "building": "Library Building (1st floor, no lift)",
-          "type": "seminar_hall",
-          "normal_capacity": 100,
-          "effective_exam_seats": 50
-        }
-      ],
-      "groups": [
-        "Y1-A",
-        "Y1-B",
-        "Y1-C",
-        "Y1-D"
-      ],
-      "course_ids": [
-        "PH101"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS301",
@@ -2208,27 +1426,7 @@
       "session": "PM",
       "rooms": [
         "AUD"
-      ],
-      "student_size": 75,
-      "total_effective_seats": 250,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        }
-      ],
-      "groups": [
-        "CSE-3"
-      ],
-      "course_ids": [
-        "CS301"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE302",
@@ -2236,27 +1434,7 @@
       "session": "PM",
       "rooms": [
         "LH-3"
-      ],
-      "student_size": 55,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-3",
-          "name": "Lecture Hall 3",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "EE-3"
-      ],
-      "course_ids": [
-        "EE302"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME303",
@@ -2264,27 +1442,7 @@
       "session": "PM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 55,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "ME-3"
-      ],
-      "course_ids": [
-        "ME303"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CE203",
@@ -2292,27 +1450,7 @@
       "session": "AM",
       "rooms": [
         "LH-4"
-      ],
-      "student_size": 50,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-4",
-          "name": "Lecture Hall 4",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "CE-2"
-      ],
-      "course_ids": [
-        "CE203"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-EE202",
@@ -2320,27 +1458,7 @@
       "session": "AM",
       "rooms": [
         "LH-2"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 100,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-2",
-          "name": "Lecture Hall 2",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 200,
-          "effective_exam_seats": 100
-        }
-      ],
-      "groups": [
-        "EE-2"
-      ],
-      "course_ids": [
-        "EE202"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-CS204",
@@ -2348,27 +1466,7 @@
       "session": "PM",
       "rooms": [
         "AUD"
-      ],
-      "student_size": 80,
-      "total_effective_seats": 250,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "AUD",
-          "name": "Main Auditorium",
-          "building": "Admin Block",
-          "type": "auditorium",
-          "normal_capacity": 500,
-          "effective_exam_seats": 250
-        }
-      ],
-      "groups": [
-        "CSE-2"
-      ],
-      "course_ids": [
-        "CS204"
-      ],
-      "duration_hours": 2
+      ]
     },
     {
       "exam_id": "EX-ME204",
@@ -2376,27 +1474,7 @@
       "session": "PM",
       "rooms": [
         "LH-6"
-      ],
-      "student_size": 60,
-      "total_effective_seats": 60,
-      "is_multi_room": false,
-      "breakdown": [
-        {
-          "room_id": "LH-6",
-          "name": "Lecture Hall 6",
-          "building": "Lecture Hall Complex",
-          "type": "lecture_hall",
-          "normal_capacity": 120,
-          "effective_exam_seats": 60
-        }
-      ],
-      "groups": [
-        "ME-2"
-      ],
-      "course_ids": [
-        "ME204"
-      ],
-      "duration_hours": 2
+      ]
     }
   ],
   "fest_week": {
@@ -2475,12 +1553,12 @@
       },
       {
         "request_id": "BR-08",
-        "status": "approved",
-        "day": "THU",
-        "start_period": 8,
-        "end_period": 8,
-        "room_id": "LH-1",
-        "reason": "Approved 'ECE alumni seminar' (department_event) in LH-1 on THU P8\u2013P8. Satisfies capacity (65 attendees), required features, and official priority hierarchy with 0 conflicts."
+        "status": "alternative_offered",
+        "day": "MON",
+        "start_period": 2,
+        "end_period": 2,
+        "room_id": "CR-105",
+        "reason": "Alternative offered for 'ECE alumni seminar' (department_event) in CR-105 on MON P2\u2013P2. Requested slot was occupied or unavailable; alternative satisfies capacity (70 seats) and required equipment without clashes."
       },
       {
         "request_id": "BR-13",
@@ -2506,8 +1584,8 @@
         "day": "THU",
         "start_period": 6,
         "end_period": 11,
-        "room_id": "CS-LAB-2",
-        "reason": "Approved 'Spectra Code Sprint (8-hour hackathon)' (club_event) in CS-LAB-2 on THU P6\u2013P11. Satisfies capacity (70 attendees), required features, and official priority hierarchy with 0 conflicts."
+        "room_id": "CS-LAB-1",
+        "reason": "Approved 'Spectra Code Sprint (8-hour hackathon)' (club_event) in CS-LAB-1 on THU P6\u2013P11. Satisfies capacity (70 attendees), required features, and official priority hierarchy with 0 conflicts."
       },
       {
         "request_id": "BR-06",

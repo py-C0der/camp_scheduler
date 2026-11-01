@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In &bull; CIT CampScheduler Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #1E2E24;
+      --bg-surface: #26382D;
+      --charcoal: #262424;
+      --graphite: #353133;
+      --emerald: #1A6E48;
+      --emerald-dark: #145738;
+      --jade-glow: #42FFB7;
+      --neon-lime: #4DFF4D;
+      --frosted-sage: #D9E5DF;
+      --cream-paper: #F6F1E7;
+      --cream-card: #FFFCF6;
+      --border-ink: #292929;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-hand: 'Caveat', cursive;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(rgba(66, 255, 183, 0.15) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 28px 28px, 84px 84px, 84px 84px;
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient atmospheric glow */
+    .glow-sphere {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26, 110, 72, 0.45) 0%, rgba(66, 255, 183, 0.1) 40%, transparent 70%);
+      top: -100px;
+      right: -100px;
+      pointer-events: none;
+      filter: blur(50px);
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 1080px;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 36px;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Left Editorial Column */
+    .login-left-story {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-right: 15px;
+    }
+
+    .login-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    .brand-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--neon-lime);
+      box-shadow: 0 0 10px var(--neon-lime);
+    }
+    .brand-name {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .headline-welcome {
+      font-family: var(--font-serif);
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+    }
+    .headline-welcome em {
+      font-style: italic;
+      color: var(--jade-glow);
+      font-weight: 400;
+      display: block;
+    }
+
+    .sub-desc {
+      font-size: 0.96rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.55;
+      max-width: 460px;
+    }
+
+    /* Live System Status Pill */
+    .system-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(66, 255, 183, 0.35);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--jade-glow);
+      width: fit-content;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--neon-lime);
+      box-shadow: 0 0 8px var(--neon-lime);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* Quick Test Account Cards */
+    .quick-roles-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      margin-top: 6px;
+    }
+    .roles-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-width: 480px;
+    }
+    .role-fast-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+      transition: all 0.18s ease;
+    }
+    .role-fast-btn:hover {
+      background: rgba(66, 255, 183, 0.15);
+      border-color: var(--jade-glow);
+      transform: translateY(-2px);
+    }
+    .role-fast-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .role-fast-email {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Right Login Glass Card */
+    .login-card {
+      background: var(--cream-card);
+      color: var(--charcoal);
+      border: 2.5px solid var(--border-ink);
+      border-radius: 12px;
+      padding: 34px 30px;
+      box-shadow: 8px 8px 0px var(--border-ink), 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    /* Washi tape on top of login card */
+    .login-card::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 24px;
+      background: rgba(217, 229, 223, 0.85);
+      border: 1px dashed rgba(41, 41, 41, 0.3);
+      border-radius: 2px;
+      z-index: 10;
+    }
+
+    .card-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #E2EBE6;
+      padding-bottom: 12px;
+    }
+    .card-header-line h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--charcoal);
+      letter-spacing: -0.01em;
+    }
+    .back-home-link {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #666;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back-home-link:hover { color: var(--emerald); }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-ink);
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      color: var(--charcoal);
+      transition: all 0.15s;
+    }
+    .input-control:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(66, 255, 183, 0.35), 2px 2px 0px var(--border-ink);
+    }
+    .pwd-toggle-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #777;
+    }
+    .pwd-toggle-btn:hover { color: var(--charcoal); }
+
+    /* Login Action Button */
+    .btn-login-submit {
+      width: 100%;
+      background: var(--emerald);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      padding: 13px;
+      border: 2px solid var(--border-ink);
+      border-radius: 6px;
+      box-shadow: 3px 3px 0px var(--border-ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.12s ease;
+      margin-top: 22px;
+    }
+    .btn-login-submit:hover {
+      background: var(--emerald-dark);
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 4.5px 4.5px 0px var(--border-ink), 0 0 12px rgba(66, 255, 183, 0.45);
+    }
+    .btn-login-submit:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--border-ink);
+    }
+
+    /* Error and Info Notices */
+    .notice-box {
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .notice-error {
+      background: #FEE2E2;
+      border: 1.5px solid #DC2626;
+      color: #991B1B;
+    }
+    .notice-success {
+      background: #D1FAE5;
+      border: 1.5px solid #059669;
+      color: #065F46;
+    }
+
+    .card-footer-note {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: #777;
+      margin-top: 18px;
+      border-top: 1px dashed #DDD;
+      padding-top: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .login-container { grid-template-columns: 1fr; }
+      .login-left-story { padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-sphere"></div>
+
+  <div class="login-container">
+    
+    <!-- Left Column: Branding, Context & Fast Role Switchers -->
+    <div class="login-left-story">
+      <a href="/" class="login-brand">
+        <span class="brand-indicator"></span>
+        <span class="brand-name">CIT CampScheduler</span>
+      </a>
+
+      <h1 class="headline-welcome">
+        Welcome back.
+        <em>Your campus is waiting.</em>
+      </h1>
+
+      <p class="sub-desc">
+        Sign in to access your synchronized scheduling workspace. Coordinate faculty, student sections, examination rosters, and venue bookings.
+      </p>
+
+      <div class="system-status-pill">
+        <span class="pulse-dot"></span>
+        <span>CIT LIVE CLUSTER &bull; 0 CONFLICTS</span>
+      </div>
+
+      <div class="quick-roles-title">QUICK ROLES (ONE-CLICK DEMO AUTH)</div>
+      <div class="roles-chips-grid">
+        <div class="role-fast-btn" onclick="fillCredentials('admin@cit.ac.in', 'cit@2026')">
+          <div class="role-fast-title">🏛️ Dean Academics</div>
+          <div class="role-fast-email">admin@cit.ac.in</div>
+        </div>
+        <div class="role-fast-btn" onclick="fillCredentials('coordinator@cit.ac.in', 'cit@2026')">
+          <div class="role-fast-title">🎓 CSE Coordinator</div>
+          <div class="role-fast-email">coordinator@cit.ac.in</div>
+        </div>
+        <div class="role-fast-btn" onclick="fillCredentials('faculty@cit.ac.in', 'cit@2026')">
+          <div class="role-fast-title">👨‍🏫 Dr. Arvind Kumar</div>
+          <div class="role-fast-email">faculty@cit.ac.in</div>
+        </div>
+        <div class="role-fast-btn" onclick="fillCredentials('club@cit.ac.in', 'cit@2026')">
+          <div class="role-fast-title">🤖 Robotics Club</div>
+          <div class="role-fast-email">club@cit.ac.in</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Frosted Glass Login Card -->
+    <div class="login-card">
+      <div class="card-header-line">
+        <h2>Command Sign In</h2>
+        <a href="/" class="back-home-link">&larr; Back to Landing</a>
+      </div>
+
+      <!-- Alert Notices -->
+      <div class="notice-box notice-error" id="errorBox"></div>
+      <div class="notice-box notice-success" id="successBox"></div>
+
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="emailInput">Institutional Email / Alias</label>
+          <div class="input-wrapper">
+            <input type="text" id="emailInput" class="input-control" placeholder="e.g. admin@cit.ac.in" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="passwordInput">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="passwordInput" class="input-control" placeholder="Enter password (default: cit@2026)" required autocomplete="current-password">
+            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login-submit" id="btnLoginSubmit">
+          <span>ENTER WORKSPACE ↗</span>
+        </button>
+      </form>
+
+      <div class="card-footer-note">
+        Single-occupant role authentication enforced by PBKDF2 &bull; HMAC SHA-256
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Quick Credential Autofill
+    function fillCredentials(email, pwd) {
+      document.getElementById('emailInput').value = email;
+      document.getElementById('passwordInput').value = pwd;
+      hideError();
+    }
+
+    // Toggle Password Visibility
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('passwordInput');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    }
+
+    function showError(msg) {
+      const box = document.getElementById('errorBox');
+      box.textContent = msg;
+      box.style.display = 'block';
+      document.getElementById('successBox').style.display = 'none';
+    }
+
+    function hideError() {
+      document.getElementById('errorBox').style.display = 'none';
+    }
+
+    function showSuccess(msg) {
+      const box = document.getElementById('successBox');
+      box.textContent = msg;
+      box.style.display = 'block';
+      document.getElementById('errorBox').style.display = 'none';
+    }
+
+    // Check if already authenticated -> auto-redirect to /workspace
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const stored = localStorage.getItem('cit_user');
+        if (stored) {
+          const u = JSON.parse(stored);
+          if (u && u.id && u.role) {
+            // Already authenticated
+            showSuccess(`Logged in as ${u.name}. Redirecting to workspace...`);
+            setTimeout(() => { window.location.href = '/workspace'; }, 500);
+          }
+        }
+      } catch(e) {}
+    });
+
+    // Handle Form Submit
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      hideError();
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+
+      const btn = document.getElementById('btnLoginSubmit');
+      btn.innerHTML = '<span>Verifying Credentials...</span>';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || data.message || 'Authentication failed');
+        }
+
+        if (data.status === 'authenticated' && data.user) {
+          // Store user and token
+          localStorage.setItem('cit_user', JSON.stringify(data.user));
+          if (data.token) localStorage.setItem('access_token', data.token);
+
+          showSuccess(`Welcome, ${data.user.name}! Opening CampScheduler Workspace...`);
+          setTimeout(() => {
+            window.location.href = '/workspace';
+          }, 450);
+        } else if (data.status === 'new_user') {
+          showError(`Account ${email} not registered. Please sign in with an authorized campus email.`);
+        } else {
+          showError(data.message || 'Invalid authentication response.');
+        }
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        btn.innerHTML = '<span>ENTER WORKSPACE ↗</span>';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

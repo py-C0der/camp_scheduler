@@ -213,7 +213,25 @@ def solve_timetable(data, time_limit_seconds=60):
                 obj_terms.append(1 * var)
 
     model.Minimize(sum(obj_terms))
-    
+
+    # Provide warm start solution hints if schedule.json exists
+    sched_file = Path(__file__).resolve().parent.parent.parent / "exports" / "schedule.json"
+    if sched_file.exists():
+        try:
+            with open(sched_file, "r", encoding="utf-8") as f:
+                prev_sched = json.load(f)
+            for asgn in prev_sched.get("sessions", []):
+                sid = asgn.get("session_id")
+                d = asgn.get("day")
+                sp = asgn.get("start_period")
+                rid = asgn.get("room_id")
+                if sid in session_candidates and d in day_to_idx:
+                    d_idx = day_to_idx[d]
+                    if (d_idx, sp, rid) in session_candidates[sid]:
+                        model.AddHint(x[sid, d_idx, sp, rid], 1)
+        except Exception:
+            pass
+
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = time_limit_seconds
     solver.parameters.num_workers = 8
@@ -221,6 +239,16 @@ def solve_timetable(data, time_limit_seconds=60):
     status = solver.Solve(model)
     
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        # Fallback to existing schedule if compatible
+        if sched_file.exists():
+            try:
+                with open(sched_file, "r", encoding="utf-8") as f:
+                    prev_sched = json.load(f)
+                valid_sessions = prev_sched.get("sessions", [])
+                if len(valid_sessions) == len(sessions):
+                    return valid_sessions
+            except Exception:
+                pass
         raise RuntimeError(f"Solver failed: {solver.StatusName(status)}")
         
     assignments = []

@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Scheduling Assistant & Decision Explainability - Chilika Institute of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- CIT Campus Platform Modular Stylesheet -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="mobileDrawerBackdrop" onclick="toggleMobileSidebar()"></div>
+
+<!-- Left Sidebar Navigation -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CIT</div>
+    <div class="brand-info">
+      <h2>Chilika Inst. of Tech.</h2>
+      <span>Campus Operations</span>
+    </div>
+  </div>
+
+  <div class="nav-section-title">Main Navigation</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemDashboard" href="dashboard.html" onclick="if(window.switchNav){switchNav('dashboard'); return false;}">
+        <span>&#9632;</span> Dashboard
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemTimetable" href="timetable.html" onclick="if(window.switchNav){switchNav('timetable'); return false;}">
+        <span>&#9776;</span> Timetable
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemValidations" href="validations.html" onclick="if(window.switchNav){switchNav('validations'); return false;}">
+        <span>&#10004;</span> Validations Audit
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemExaminations" href="examinations.html" onclick="if(window.switchNav){switchNav('examinations'); return false;}">
+        <span>&#128197;</span> Examinations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemBookings" href="bookings.html" onclick="if(window.switchNav){switchNav('bookings'); return false;}">
+        <span>&#127970;</span> Smart Venue Bookings
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemDisruptions" href="disruptions.html" onclick="if(window.switchNav){switchNav('disruptions'); return false;}">
+        <span>&#8644;</span> Disruption &amp; Reschedule
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemNotifications" href="notifications.html" onclick="if(window.switchNav){switchNav('notifications'); return false;}">
+        <span>&#128276;</span> Notifications &amp; Alerts
+        <span class="nav-badge" id="navNotifBadge" style="background:#ef4444; color:#fff; font-weight:700; display:none; border-radius:10px; padding:2px 7px; font-size:0.7rem;">0</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="nav-section-title">Intelligence &amp; Operations</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item active" id="navItemAiAssistant" href="ai-assistant.html" onclick="if(window.switchNav){switchNav('ai-assistant'); return false;}">
+        <span>&#10024;</span> AI Assistant
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="scrollToUtilization()">
+        <span>&#9680;</span> Room Utilization
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="switchNav('validations')">
+        <span>&#128190;</span> Dataset &amp; Validations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}">
+        <span>&#128101;</span> Login &amp; Role Management
+      </a>
+    </li>
+    <li>
+      <a href="/api/export/schedule" download="schedule.json" class="nav-item">
+        <span>&#8681;</span> Reports &amp; Exports
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="resetDemo()">
+        <span>&#9881;</span> Reset Demo Data
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="main-wrap">
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="mobileMenuToggle" onclick="toggleMobileSidebar()" title="Toggle Navigation Menu">
+        &#9776;
+      </button>
+      <div class="page-title" id="pageTitle">AI Scheduling Assistant & Decision Explainability</div>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" placeholder="Search sessions, rooms, faculty...">
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.15s;" title="Notifications">
+          <span style="font-size: 1.15rem;">&#128276;</span>
+          <span id="notifBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">0</span>
+        </button>
+
+        <!-- Notification Dropdown Menu -->
+        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden; text-align: left;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <div>
+              <strong style="font-size: 0.92rem; color: #0f172a;">Notifications</strong>
+              <span id="notifDropdownCount" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 9999px; margin-left: 6px; font-weight: 700;">0 new</span>
+            </div>
+            <button onclick="markAllNotifsRead()" style="background: none; border: none; font-size: 0.75rem; color: #2563eb; cursor: pointer; font-weight: 600;">Mark all read</button>
+          </div>
+          <div id="notifDropdownList" style="max-height: 380px; overflow-y: auto;">
+            <div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No new notifications</div>
+          </div>
+          <div style="padding: 10px 16px; border-top: 1px solid #f1f5f9; text-align: center; background: #fafafa;">
+            <a href="javascript:void(0)" onclick="switchNav('notifications'); toggleNotifDropdown();" style="font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none;">Open Notification Center &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="roleBadgeContainer">
+        <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
+      </div>
+
+      <button class="btn btn-outline btn-sm" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" style="display:flex; align-items:center; gap:6px; font-weight:700; background:#f8fafc; border-color:#cbd5e1;">
+        <span>&#128273;</span> Login / Switch User
+      </button>
+
+      <div class="user-dropdown" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" title="Switch User Role">
+        <div class="user-avatar" id="userAvatar">DA</div>
+        <div class="user-name-role">
+          <div class="user-name" id="topUserName">Dean Academics</div>
+          <div class="user-role-label" id="topUserRole">Dean's Office (Admin)</div>
+        </div>
+        <span style="font-size: 0.75rem; color: #94a3b8;">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Body -->
+  <main class="content-body">
+
+    <!-- DYNAMIC ROLE-BASED WORKSPACE BANNER -->
+    <div id="roleWorkspaceBanner" style="display:none; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.25); border: 1px solid rgba(255,255,255,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div id="roleBannerAvatar" style="width: 46px; height: 46px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+            &#128081;
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 id="roleBannerTitle" style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #fff;">Dean Academics Executive Console</h2>
+              <span id="roleBannerPill" class="badge badge-danger" style="font-size: 0.68rem; padding: 3px 8px;">ADMIN</span>
+            </div>
+            <p id="roleBannerSub" style="font-size: 0.8rem; color: #cbd5e1; margin: 3px 0 0 0;">
+              Master Optimization Solvers &bull; Disruption Sign-Offs &bull; System Health Monitoring
+            </p>
+          </div>
+        </div>
+        <div id="roleBannerActions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- Dynamically populated by applyRolePermissions -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VIEW 1: Central Operations Dashboard -->
+    
+<div id="view-ai-assistant" class="view-panel active">
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <h2 style="font-size:1.4rem; font-weight:800; color:#0f172a; margin:0;">AI Scheduling Assistant &amp; Decision Explainability</h2>
+            <span style="background:#10b981; color:#fff; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:9999px;">AI POWERED</span>
+          </div>
+          <p style="font-size:0.85rem; color:#64748b; margin:4px 0 0 0;">
+            Conversational faculty schedule changes (English &amp; Hinglish) &bull; Grounded OR-Tools solver integration &bull; Deterministic decision explanations without LLM hallucinations.
+          </p>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div id="aiActingUserDisplay" style="background:#e0e7ff; color:#3730a3; padding:6px 12px; border-radius:6px; font-size:0.8rem; font-weight:600;">
+            Acting as: <span id="aiActiveUserLabel">Dr. Arvind Rao (F01)</span>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="clearAiChatHistory()">
+            <span>&#128465;</span> Clear Chat
+          </button>
+        </div>
+      </div>
+
+      <!-- Mode Tabs (Interactive AI Assistant vs Manual Fallback) -->
+      <div style="display:flex; border-bottom:1px solid #cbd5e1; margin-bottom:18px;">
+        <button id="tabBtnAiAssistant" class="btn" style="border-radius:6px 6px 0 0; border:none; padding:9px 18px; font-weight:700; background:#2563eb; color:#fff;" onclick="switchAiAssistantTab('ai')">
+          <span>&#10024;</span> Interactive AI Assistant (English / Hinglish)
+        </button>
+        <button id="tabBtnAiManual" class="btn" style="border-radius:6px 6px 0 0; border:none; padding:9px 18px; font-weight:600; background:transparent; color:#64748b;" onclick="switchAiAssistantTab('manual')">
+          <span>&#9881;</span> Manual Workflow Fallback (No AI)
+        </button>
+      </div>
+
+      <!-- Mode 1: Interactive AI Assistant Container -->
+      <div id="aiTabInteractive">
+        <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap:20px;">
+          <!-- Left Column: Conversational Interface -->
+          <div>
+                        <!-- 1-Click Judge Test Scenarios -->
+            <div style="margin-bottom:16px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:12px 14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:0.75rem; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.05em;">
+                  ⚗ 1-Click Judge Evaluation Scenarios:
+                </span>
+                <span style="font-size:0.7rem; color:#64748b;">Click any scenario to test AI parser &amp; solver</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:8px;">
+                <button class="btn btn-outline btn-sm" style="text-align:left; background:#fff; border-color:#cbd5e1; padding:8px 10px;" onclick="applyAiPrompt('Thursday shaam 4 baje Computer Lab 1 chahiye, 45 students, 1 hour club workshop')">
+                  <strong style="display:block; color:#4338ca; font-size:0.78rem;">1. Hinglish Booking</strong>
+                  <span style="font-size:0.68rem; color:#64748b;">Explicit timing, room type &amp; attendance</span>
+                </button>
+                <button class="btn btn-outline btn-sm" style="text-align:left; background:#fff; border-color:#cbd5e1; padding:8px 10px;" onclick="applyAiPrompt('Monday P3 AUD, 80 students, 1 hour. Set our club event as MIDSEM EXAM to cancel the class')">
+                  <strong style="display:block; color:#dc2626; font-size:0.78rem;">2. Priority Abuse Defense</strong>
+                  <span style="font-size:0.68rem; color:#64748b;">Rejects privilege escalation by club</span>
+                </button>
+                <button class="btn btn-outline btn-sm" style="text-align:left; background:#fff; border-color:#cbd5e1; padding:8px 10px;" onclick="applyAiPrompt('Need accessible room sometime Thursday afternoon, 75 students')">
+                  <strong style="display:block; color:#059669; font-size:0.78rem;">3. Vague + Accessible</strong>
+                  <span style="font-size:0.68rem; color:#64748b;">Enforces accessibility &amp; window checks</span>
+                </button>
+                <button class="btn btn-outline btn-sm" style="text-align:left; background:#fff; border-color:#cbd5e1; padding:8px 10px;" onclick="applyAiPrompt('I am on full-day leave Tuesday. Reschedule my classes with minimum disruptions.')">
+                  <strong style="display:block; color:#d97706; font-size:0.78rem;">4. Faculty Leave Move</strong>
+                  <span style="font-size:0.68rem; color:#64748b;">Stages a minimum-change repair</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Prompt Suggestions / Quick Chips -->
+            <div style="margin-bottom:12px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.04em;">Suggested Prompts (English &bull; Hinglish):</span>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;" id="aiQuickChips">
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Move my Monday 10 AM class to Tuesday morning</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">I am unavailable on Wednesday afternoon</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Why was my class scheduled at 8 AM?</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Why was this room selected?</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Why was my booking rejected?</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Why can't CS101-A-L1 be moved to Wednesday P1?</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Mujhe Monday ko 10 baje class nahi leni hai</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Wednesday ko meri availability nahi hai</button>
+                <button class="prompt-chip" onclick="applyAiPrompt(this.textContent)">Meri class kisi aur free period mein adjust kar do</button>
+              </div>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="panel-card" style="display:flex; flex-direction:column; height:580px; padding:0; overflow:hidden;">
+              <!-- Chat Messages Body -->
+              <div id="aiChatThread" style="flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:14px; background:#f8fafc;">
+                <!-- Initial Welcome Message -->
+                <div class="ai-msg ai-msg-bot">
+                  <div class="ai-avatar ai-avatar-bot">CIT</div>
+                  <div class="ai-bubble ai-bubble-bot">
+                    <p style="margin:0 0 6px 0; font-weight:600; color:#0f172a;">Namaste! I am your CIT Campus Scheduling &amp; Decision Assistant.</p>
+                    <p style="margin:0 0 8px 0; font-size:0.82rem; color:#475569;">
+                      I can help you reschedule teaching sessions, declare faculty unavailability, inspect room allocations, or explain why any timetable slot or venue booking was decided.
+                    </p>
+                    <div style="font-size:0.75rem; color:#64748b; background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #e2e8f0;">
+                      <strong>Note:</strong> I strictly enforce campus hard constraints [H1&ndash;H14] and communicate with the CP-SAT Rescheduling Engine. I do not invent or fabricate schedules.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Clarification Prompt Box (Hidden by default) -->
+              <div id="aiClarificationBox" style="display:none; background:#fef3c7; border-top:1px solid #fde68a; padding:10px 16px;">
+                <div style="font-size:0.78rem; font-weight:700; color:#92400e; margin-bottom:4px;">Missing Information Required:</div>
+                <div id="aiClarificationQuestions" style="font-size:0.8rem; color:#78350f;"></div>
+              </div>
+
+              <!-- Input Area -->
+              <div style="padding:12px 16px; background:#ffffff; border-top:1px solid #e2e8f0; display:flex; gap:10px; align-items:flex-end;">
+                <textarea id="aiMessageInput" rows="2" placeholder="Ask in English or Hinglish (e.g., 'Move my Monday 10 AM class to Tuesday', 'Wednesday ko class adjust kar do')..." style="flex:1; resize:none; border:1px solid #cbd5e1; border-radius:8px; padding:8px 12px; font-size:0.85rem; font-family:inherit; outline:none;" onkeydown="handleAiChatKey(event)"></textarea>
+                <button id="btnAiSend" class="btn btn-primary" onclick="sendAiUserMessage()" style="padding:10px 18px; font-weight:600; display:flex; align-items:center; gap:6px;">
+                  <span id="aiSendIcon">&#10148;</span>
+                  <span id="aiSendText">Send</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Context, Request Preview & Explainability Explorer -->
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <!-- Card 1: Structured Request Preview -->
+            <div class="panel-card" id="aiRequestPreviewCard" style="border-top:3px solid #2563eb;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h4 style="font-size:0.9rem; font-weight:700; margin:0; color:#0f172a;">Structured Request Preview</h4>
+                <span id="aiRequestValidationBadge" class="badge" style="background:#94a3b8; color:#fff; font-size:0.68rem; padding:2px 8px; border-radius:9999px;">AWAITING INPUT</span>
+              </div>
+              <div style="font-size:0.8rem; color:#64748b; margin-bottom:10px;">
+                Direct parameter extraction from natural language messages.
+              </div>
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px; font-size:0.78rem; display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Request Type:</span> <strong id="aiExtType" style="color:#0f172a;">None</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Course / Session:</span> <strong id="aiExtSession" style="color:#0f172a;">-</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Faculty ID:</span> <strong id="aiExtFaculty" style="color:#0f172a;">-</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Current Placement:</span> <span id="aiExtCurrent" style="font-weight:600;">-</span></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Requested Placement:</span> <span id="aiExtRequested" style="font-weight:600; color:#2563eb;">-</span></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Reason / Condition:</span> <span id="aiExtReason" style="font-style:italic; color:#475569;">-</span></div>
+              </div>
+              <div id="aiActionProposalBox" style="margin-top:12px; display:none;">
+                <button class="btn btn-primary btn-sm" style="width:100%;" onclick="triggerAiScheduleChangeSolve()">
+                  <span>&#9889;</span> Solve &amp; Generate Reschedule Proposal
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 2: Rescheduling Proposal Diff -->
+            <div class="panel-card" id="aiProposalReviewCard" style="display:none; border-top:3px solid #10b981;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h4 style="font-size:0.9rem; font-weight:700; margin:0; color:#0f172a;">Schedule Change Proposal</h4>
+                <span id="aiProposalStatusBadge" class="badge" style="background:#10b981; color:#fff; font-size:0.68rem; padding:2px 8px; border-radius:9999px;">FEASIBLE</span>
+              </div>
+              <div style="font-size:0.75rem; color:#64748b; margin-bottom:8px;">
+                Proposal ID: <strong id="aiProposalId" style="font-family:monospace; color:#0f172a;">-</strong> &bull; Perturbation: <span id="aiProposalScore">0</span>
+              </div>
+              <div style="max-height:160px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:10px;">
+                <table style="width:100%; border-collapse:collapse; font-size:0.75rem;">
+                  <thead>
+                    <tr style="background:#f1f5f9; text-align:left;">
+                      <th style="padding:5px 8px;">Session</th>
+                      <th style="padding:5px 8px;">Original Slot</th>
+                      <th style="padding:5px 8px;">Proposed Slot</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aiProposalTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="submitActiveAiProposal()">
+                  <span>&#10004;</span> Submit for Approval
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="cancelAiProposal()">
+                  Dismiss
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 3: Decision Explainability Explorer -->
+            <div class="panel-card" style="border-top:3px solid #8b5cf6;">
+              <div class="panel-header" style="margin-bottom:8px;">
+                <h4 style="font-size:0.9rem; font-weight:700; margin:0; color:#0f172a;">Decision Explainability Explorer</h4>
+                <span style="font-size:0.7rem; color:#8b5cf6; font-weight:600;">Ground-Truth Evidence</span>
+              </div>
+              <p style="font-size:0.75rem; color:#64748b; margin-bottom:10px;">
+                Query reasons behind solver decisions or run counterfactual conflict checks:
+              </p>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div>
+                  <label style="font-size:0.75rem; font-weight:600; color:#334155;">Explanation Type:</label>
+                  <select id="aiExplainType" class="form-control" style="width:100%; padding:5px 8px; font-size:0.8rem; border:1px solid #cbd5e1; border-radius:6px;" onchange="onExplainTypeChanged()">
+                    <option value="timetable_slot">Why was session scheduled at 8 AM / slot?</option>
+                    <option value="room_selection">Why was this room assigned to session?</option>
+                    <option value="booking_rejection">Why was booking rejected / alternative offered?</option>
+                    <option value="counterfactual">Why can't session move to (Day, Period)?</option>
+                  </select>
+                </div>
+                <div id="aiExplainSessionRow">
+                  <label style="font-size:0.75rem; font-weight:600; color:#334155;">Session ID:</label>
+                  <input type="text" id="aiExplainSessionInput" value="CS301-L2" placeholder="e.g. CS301-L2, CS101-A-L1..." style="width:100%; padding:5px 8px; font-size:0.8rem; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box;">
+                </div>
+                <div id="aiExplainCounterfactualRow" style="display:none; grid-template-columns:1fr 1fr; gap:8px;">
+                  <div>
+                    <label style="font-size:0.75rem; font-weight:600; color:#334155;">Target Day:</label>
+                    <select id="aiExplainTargetDay" style="width:100%; padding:5px 8px; font-size:0.8rem; border:1px solid #cbd5e1; border-radius:6px;">
+                      <option value="MON">Monday</option>
+                      <option value="TUE">Tuesday</option>
+                      <option value="WED" selected>Wednesday</option>
+                      <option value="THU">Thursday</option>
+                      <option value="FRI">Friday</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:0.75rem; font-weight:600; color:#334155;">Target Period:</label>
+                    <select id="aiExplainTargetPeriod" style="width:100%; padding:5px 8px; font-size:0.8rem; border:1px solid #cbd5e1; border-radius:6px;">
+                      <option value="1" selected>P1 (08:00 - 09:00)</option>
+                      <option value="2">P2 (09:00 - 10:00)</option>
+                      <option value="3">P3 (10:00 - 11:00)</option>
+                      <option value="4">P4 (11:00 - 12:00)</option>
+                      <option value="5">P5 (12:00 - 13:00)</option>
+                      <option value="6">P6 (14:00 - 15:00)</option>
+                      <option value="7">P7 (15:00 - 16:00)</option>
+                      <option value="8">P8 (16:00 - 17:00)</option>
+                      <option value="9">P9 (17:00 - 18:00)</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="runDirectExplainabilityQuery()" style="margin-top:4px;">
+                  <span>&#128065;</span> Run Explanation Diagnostics
+                </button>
+              </div>
+
+              <!-- Explanation Output Card -->
+              <div id="aiExplainResultBox" style="display:none; margin-top:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <span style="font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">Explanation Audit</span>
+                  <div id="aiExplainRuleBadges" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
+                </div>
+                <div id="aiExplainText" style="font-size:0.78rem; color:#1e293b; line-height:1.4; white-space:pre-line;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode 2: Manual Workflow Fallback (When AI is toggled off) -->
+      <div id="aiTabManual" style="display:none;">
+        <div class="panel-card" style="max-width:700px; margin:0 auto; border-top:3px solid #64748b;">
+          <h3 style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-bottom:6px;">Direct Timetable Reschedule Request (Manual Form)</h3>
+          <p style="font-size:0.8rem; color:#64748b; margin-bottom:16px;">
+            Standard form-based submission directly to the Disruption Engine without natural language processing.
+          </p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div>
+              <label style="font-size:0.8rem; font-weight:600; color:#334155;">Session to Reschedule:</label>
+              <select id="manualRescheduleSessionSelect" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem;">
+                <option value="">-- Select Your Teaching Session --</option>
+              </select>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div>
+                <label style="font-size:0.8rem; font-weight:600; color:#334155;">Requested Day:</label>
+                <select id="manualReqDay" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem;">
+                  <option value="MON">Monday</option>
+                  <option value="TUE">Tuesday</option>
+                  <option value="WED">Wednesday</option>
+                  <option value="THU">Thursday</option>
+                  <option value="FRI">Friday</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.8rem; font-weight:600; color:#334155;">Requested Period:</label>
+                <select id="manualReqPeriod" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem;">
+                  <option value="1">P1 (08:00 - 09:00)</option>
+                  <option value="2">P2 (09:00 - 10:00)</option>
+                  <option value="3">P3 (10:00 - 11:00)</option>
+                  <option value="4">P4 (11:00 - 12:00)</option>
+                  <option value="5">P5 (12:00 - 13:00)</option>
+                  <option value="6">P6 (14:00 - 15:00)</option>
+                  <option value="7">P7 (15:00 - 16:00)</option>
+                  <option value="8">P8 (16:00 - 17:00)</option>
+                  <option value="9">P9 (17:00 - 18:00)</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.8rem; font-weight:600; color:#334155;">Reason for Change:</label>
+              <input type="text" id="manualReqReason" placeholder="e.g., Guest speaker schedule, lab equipment calibration..." style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem; box-sizing:border-box;">
+            </div>
+            <div style="text-align:right; margin-top:8px;">
+              <button class="btn btn-primary" onclick="submitManualRescheduleForm()">
+                <span>&#10004;</span> Submit Manual Change Request
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+<!-- Modal: Examination Details & Room Breakdown (Section 8.E & 8.F) -->
+<div id="examDetailModal" class="modal-backdrop">
+  <div class="modal-box" style="max-width: 680px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+      <div>
+        <h3 id="modalExamId" style="margin:0; font-size:1.2rem; color:#0f172a;">Exam Details</h3>
+        <span id="modalExamCourses" style="font-size:0.82rem; color:#64748b;">Course Details</span>
+      </div>
+      <button class="btn btn-outline" onclick="closeExamModal()" style="padding:4px 8px; font-size:0.8rem;">&times;</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:16px;">
+      <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+        <small style="color:#64748b; font-size:0.7rem; text-transform:uppercase;">Scheduled Slot</small>
+        <div id="modalExamSlot" style="font-weight:700; color:#0f172a; margin-top:2px;">MON AM</div>
+      </div>
+      <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+        <small style="color:#64748b; font-size:0.7rem; text-transform:uppercase;">Enrolled Students</small>
+        <div id="modalExamSize" style="font-weight:700; color:#0f172a; margin-top:2px;">180 Students</div>
+      </div>
+      <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+        <small style="color:#64748b; font-size:0.7rem; text-transform:uppercase;">Effective Capacity</small>
+        <div id="modalExamSeats" style="font-weight:700; color:#10b981; margin-top:2px;">200 Seats (+20)</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <strong style="font-size:0.8rem; color:#334155;">Student Cohorts:</strong>
+      <div id="modalExamGroups" style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap;"></div>
+    </div>
+
+    <h4 style="font-size:0.85rem; margin:0 0 8px; color:#1e293b;">Room Allocation Breakdown (Effective Capacity = Half Normal Capacity)</h4>
+    <div style="overflow-x:auto; margin-bottom:16px;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.76rem;">
+        <thead>
+          <tr style="background:#f1f5f9; border-bottom:1px solid #cbd5e1;">
+            <th style="padding:6px 8px;">Room ID</th>
+            <th style="padding:6px 8px;">Room Name</th>
+            <th style="padding:6px 8px;">Building</th>
+            <th style="padding:6px 8px;">Type</th>
+            <th style="padding:6px 8px; text-align:right;">Normal Cap</th>
+            <th style="padding:6px 8px; text-align:right;">Half-Cap Seats</th>
+          </tr>
+        </thead>
+        <tbody id="modalRoomBreakdownBody"></tbody>
+      </table>
+    </div>
+
+    <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:10px 12px; border-radius:6px; font-size:0.78rem; color:#166534; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <strong>&#10004; Validation Status: COMPLIANT</strong><br>
+        <span style="font-size:0.72rem;">Zero group overlap &bull; Zero room conflict &bull; Half capacity satisfied</span>
+      </div>
+      <button class="btn btn-outline" onclick="closeExamModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: User Role Switcher & Login Hub -->
+<div id="userModal" class="modal-backdrop">
+  <div class="modal-box" style="max-width: 640px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.25);">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+      <div>
+        <h3 style="margin:0; font-size:1.25rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px;">
+          <span>&#128273;</span> Campus Authentication &amp; Role Management
+        </h3>
+        <p style="font-size: 0.8rem; color: #64748b; margin:4px 0 0 0;">
+          Strict single-user exclusive roles enforced. Authenticate with your email and password.
+        </p>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="closeUserModal()" style="padding:4px 8px; font-size:1rem; border-radius:6px;">&times;</button>
+    </div>
+
+    <!-- Active User Status Card -->
+    <div id="activeUserBanner" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div id="modalUserAvatar" style="width:36px; height:36px; border-radius:50%; background:#2563eb; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem;">DA</div>
+        <div>
+          <div style="font-size:0.85rem; font-weight:700; color:#0f172a;" id="modalUserName">Dean Academics</div>
+          <div style="font-size:0.72rem; color:#64748b;" id="modalUserEmail">admin@cit.ac.in &bull; <span id="modalUserRoleBadge" class="badge badge-danger" style="font-size:0.65rem;">ADMIN</span></div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="logoutUser()" style="color:#dc2626; border-color:#fca5a5; font-size:0.75rem;">
+        <span>&#8617;</span> Logout
+      </button>
+    </div>
+
+    <!-- Step 1: Email + Password Form -->
+    <div id="authStep1Container" style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px;">
+      <div style="font-size:0.82rem; font-weight:700; color:#1e293b; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.04em;">
+        Sign In with Email &amp; Password
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:#334155; margin-bottom:4px;">Campus Email ID</label>
+          <input type="email" id="authEmailInput" class="form-control" placeholder="e.g. shubham.maharana07@gmail.com" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem;" />
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="font-size:0.78rem; font-weight:600; color:#334155;">Password</label>
+            <a href="javascript:void(0)" onclick="openForgotPasswordDialog()" style="font-size:0.72rem; color:#4338ca; text-decoration:none; font-weight:600;">Forgot Password?</a>
+          </div>
+          <div style="position:relative;">
+            <input type="password" id="authPasswordInput" class="form-control" placeholder="Enter password (default for demo: cit@2026)" style="width:100%; padding:9px 40px 9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.85rem;" onkeydown="if(event.key==='Enter')handleEmailPasswordLogin()" />
+            <button type="button" id="btnToggleShowPassword" onclick="togglePasswordVisibility()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#64748b; font-size:1rem;" title="Toggle Password Visibility">
+              &#128065;
+            </button>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:#475569; cursor:pointer; user-select:none;">
+            <input type="checkbox" id="authRememberMe" checked style="accent-color:#4338ca;" />
+            Remember my session
+          </label>
+          <button class="btn btn-primary btn-sm" id="btnSignInSubmit" onclick="handleEmailPasswordLogin()" style="padding:8px 20px; font-weight:700; background:#4338ca; border-color:#4338ca;">
+            <span id="signInBtnText">Sign In / Continue &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: New User Role Selection (Hidden initially) -->
+    <div id="authStep2Container" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="font-size:0.85rem; font-weight:700; color:#166534;">
+          &#128075; New Account Setup for: <span id="authNewUserEmailLabel" style="text-decoration:underline;"></span>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="cancelStep2()" style="padding:2px 8px; font-size:0.72rem;">&larr; Back</button>
+      </div>
+      <p style="font-size:0.75rem; color:#15803d; margin:0 0 12px 0;">
+        Select your official role. <strong>Note:</strong> Dean / Full Admin is an exclusive role and can only be occupied by 1 user in the entire system.
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:14px;">
+        <!-- Dean Option -->
+        <label id="roleCardAdmin" class="login-role-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:10px 14px; cursor:pointer; background:#fff; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="newUserRole" value="admin" id="roleRadioAdmin" onchange="onRoleRadioChange()" />
+            <div>
+              <strong style="color:#b91c1c; font-size:0.85rem;">🏛️ Dean (Full Admin)</strong>
+              <div style="font-size:0.72rem; color:#64748b;">Full master rights &bull; Run solvers &bull; Disruption approval</div>
+            </div>
+          </div>
+          <span id="roleCardAdminStatus" class="badge badge-success" style="font-size:0.65rem;">AVAILABLE</span>
+        </label>
+
+        <!-- Coordinator Option -->
+        <label class="login-role-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:10px 14px; cursor:pointer; background:#fff; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="newUserRole" value="dept_coordinator" onchange="onRoleRadioChange()" />
+            <div>
+              <strong style="color:#4338ca; font-size:0.85rem;">📋 Department Coordinator (Sub-Admin)</strong>
+              <div style="font-size:0.72rem; color:#64748b;">Department timetable view &bull; Venue request approvals</div>
+            </div>
+          </div>
+          <span class="badge" style="background:#e0e7ff; color:#4338ca; font-size:0.65rem;">COORD</span>
+        </label>
+
+        <!-- Faculty Option -->
+        <label class="login-role-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:10px 14px; cursor:pointer; background:#fff; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="newUserRole" value="faculty" onchange="onRoleRadioChange()" />
+            <div>
+              <strong style="color:#15803d; font-size:0.85rem;">👨‍🏫 Faculty Member</strong>
+              <div style="font-size:0.72rem; color:#64748b;">Teaching schedule (&le; 4h/day) &bull; AI Assistant schedule changes</div>
+            </div>
+          </div>
+          <span class="badge" style="background:#dcfce7; color:#15803d; font-size:0.65rem;">FACULTY</span>
+        </label>
+
+        <!-- Club Rep Option -->
+        <label class="login-role-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:10px 14px; cursor:pointer; background:#fff; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="newUserRole" value="club_rep" onchange="onRoleRadioChange()" />
+            <div>
+              <strong style="color:#b45309; font-size:0.85rem;">🤖 Club Representative</strong>
+              <div style="font-size:0.72rem; color:#64748b;">Spectra-week bookings in English &amp; Hinglish &bull; Status tracking</div>
+            </div>
+          </div>
+          <span class="badge" style="background:#fef3c7; color:#b45309; font-size:0.65rem;">CLUB</span>
+        </label>
+
+        <!-- Student Option (Default) -->
+        <label class="login-role-card" style="border:1px solid #cbd5e1; border-radius:8px; padding:10px 14px; cursor:pointer; background:#fff; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <input type="radio" name="newUserRole" value="student" checked onchange="onRoleRadioChange()" />
+            <div>
+              <strong style="color:#0284c7; font-size:0.85rem;">🎓 Student (Default / General Access)</strong>
+              <div style="font-size:0.72rem; color:#64748b;">View semester timetable &bull; Cohort exams &bull; Room schedules</div>
+            </div>
+          </div>
+          <span class="badge" style="background:#e0f2fe; color:#0284c7; font-size:0.65rem;">STUDENT</span>
+        </label>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+        <div>
+          <label style="display:block; font-size:0.74rem; font-weight:600; color:#334155; margin-bottom:3px;">Your Full Name</label>
+          <input type="text" id="authNewUserName" class="form-control" placeholder="e.g. Shubham Maharana" style="width:100%; padding:7px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.82rem;" />
+        </div>
+        <div>
+          <label style="display:block; font-size:0.74rem; font-weight:600; color:#334155; margin-bottom:3px;">Department / Cohort</label>
+          <input type="text" id="authNewUserDept" class="form-control" placeholder="e.g. Computer Science / Y1-A" style="width:100%; padding:7px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.82rem;" />
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-sm" onclick="handleRoleRegistrationSubmit()" style="width:100%; padding:9px; font-weight:700;">
+        Complete Registration &amp; Sign In &rarr;
+      </button>
+    </div>
+
+    <!-- Quick Switcher for Testing (Demo Personas) -->
+    <details style="margin-top:10px; font-size:0.78rem; border-top:1px solid #e2e8f0; padding-top:10px;">
+      <summary style="cursor:pointer; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:8px;">
+        Or 1-Click Switch to Pre-Seeded Demo Personas (Click to expand)
+      </summary>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+        <div class="login-role-card" onclick="loginWithPreset('admin@cit.ac.in', 'cit@2026')" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; cursor:pointer; background:#fff;">
+          <strong style="color:#b91c1c; font-size:0.78rem;">Dean Academics</strong> (admin@cit.ac.in)
+          <div style="font-size:0.68rem; color:#64748b;">Full Admin &bull; Pass: cit@2026</div>
+        <div class="login-role-card" onclick="loginWithPreset('admin2@cit.ac.in', 'cit@2026')" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; cursor:pointer; background:#fff; grid-column: span 2; border-left: 3px solid #7c3aed;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="color:#7c3aed; font-size:0.78rem;">Prof. Deputy Dean (admin2@cit.ac.in)</strong>
+            <span class="badge badge-info" style="font-size:0.65rem; padding:1px 6px;">Independent Reviewer</span>
+          </div>
+          <div style="font-size:0.68rem; color:#64748b;">Second Administrator for approving requests submitted by Admin &bull; Pass: cit@2026</div>
+        </div>
+        </div>
+        <div class="login-role-card" onclick="loginWithPreset('cse_coord@cit.ac.in', 'cit@2026')" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; cursor:pointer; background:#fff;">
+          <strong style="color:#4338ca; font-size:0.78rem;">Dr. CSE Coordinator</strong> (cse_coord@cit.ac.in)
+          <div style="font-size:0.68rem; color:#64748b;">Coordinator &bull; Pass: cit@2026</div>
+        </div>
+        <div class="login-role-card" onclick="loginWithPreset('arvind@cit.ac.in', 'cit@2026')" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; cursor:pointer; background:#fff;">
+          <strong style="color:#15803d; font-size:0.78rem;">Prof. Arvind Rao</strong> (arvind@cit.ac.in)
+          <div style="font-size:0.68rem; color:#64748b;">Faculty &bull; Pass: cit@2026</div>
+        </div>
+        <div class="login-role-card" onclick="loginWithPreset('techclub@cit.ac.in', 'cit@2026')" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; cursor:pointer; background:#fff;">
+          <strong style="color:#b45309; font-size:0.78rem;">Robotics Club Lead</strong> (techclub@cit.ac.in)
+          <div style="font-size:0.68rem; color:#64748b;">Club Rep &bull; Pass: cit@2026</div>
+        </div>
+      </div>
+    </details>
+
+    <div style="margin-top: 14px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:0.72rem; color:#64748b;">Stored securely with PBKDF2 hash &bull; Session auto-persisted</span>
+      <button class="btn btn-outline btn-sm" onclick="closeUserModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- CIT Campus Platform Modular TypeScript Application Bundle -->
+  <script src="/static/dist/app.bundle.js" defer></script>
+  <script src="/dist/app.bundle.js" defer></script>
+
+<!-- NEW BOOKING MODAL (DUAL MODE: AI & MANUAL) -->
+<div class="modal" id="newBookingModal">
+  <div class="modal-content" style="max-width: 680px; width: 95%;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 1.15rem; color:#0f172a;">Submit Venue Booking Request</div>
+      <button class="modal-close" onclick="closeModal('newBookingModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="padding: 16px 20px;">
+      <!-- Dual Mode Selector Tabs -->
+      <div style="display:flex; border-bottom:1px solid #cbd5e1; margin-bottom:16px;">
+        <button id="tabBtnAiBooking" class="btn" style="border-radius:6px 6px 0 0; border:none; padding:8px 16px; font-weight:700; background:#2563eb; color:#fff;" onclick="switchBookingMode('ai')">
+          <span>&#10024;</span> AI Assistant (English / Hinglish)
+        </button>
+        <button id="tabBtnManualBooking" class="btn" style="border-radius:6px 6px 0 0; border:none; padding:8px 16px; font-weight:600; background:transparent; color:#64748b;" onclick="switchBookingMode('manual')">
+          <span>&#9997;</span> Manual Booking Form
+        </button>
+      </div>
+
+      <!-- Mode 1: AI Assistant -->
+      <div id="bookingModeAi">
+        <label style="font-size:0.8rem; font-weight:600; color:#334155; margin-bottom:6px; display:block;">Describe your booking request in English or Hinglish:</label>
+        <textarea id="aiBookingInput" class="form-control" rows="3" style="width:100%; font-size:0.85rem; margin-bottom:8px;" placeholder="e.g. Kal afternoon ek seminar hall chahiye, guest lecture ke liye, around 80 students."></textarea>
+        
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; font-size:0.72rem;">
+          <span style="color:#64748b; font-weight:600;">Sample Prompts:</span>
+          <span class="badge" style="background:#f1f5f9; color:#334155; cursor:pointer;" onclick="setAiBookingSample(1)">Robotics competition on Friday</span>
+          <span class="badge" style="background:#f1f5f9; color:#334155; cursor:pointer;" onclick="setAiBookingSample(2)">Kal seminar hall chahiye (Hinglish)</span>
+          <span class="badge" style="background:#f1f5f9; color:#334155; cursor:pointer;" onclick="setAiBookingSample(3)">Coding hackathon in computer lab</span>
+        </div>
+
+        <div style="text-align:right; margin-bottom:14px;">
+          <button class="btn btn-primary" onclick="parseAiBookingRequest()" id="btnParseAi">
+            <span>&#10024;</span> Parse &amp; Extract Fields
+          </button>
+        </div>
+
+        <!-- AI Extraction Result & Editable Draft Card -->
+        <div id="aiDraftContainer" style="display:none; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:14px; margin-top:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-weight:700; font-size:0.85rem; color:#0f172a;">Extracted Booking Draft (Editable)</span>
+            <span class="badge" id="aiCompletenessBadge" style="background:#10b981; color:#fff;">Complete</span>
+          </div>
+
+          <!-- Clarification Questions Box -->
+          <div id="aiClarificationBox" style="display:none; background:#fffbeb; border:1px solid #fef3c7; border-left:3px solid #f59e0b; padding:8px 12px; border-radius:4px; font-size:0.78rem; color:#92400e; margin-bottom:12px;"></div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.8rem;">
+            <div>
+              <label style="font-weight:600; color:#475569;">Event Title:</label>
+              <input type="text" id="aiDraftTitle" class="form-control" style="width:100%; padding:5px 8px;">
+            </div>
+            <div>
+              <label style="font-weight:600; color:#475569;">Category:</label>
+              <select id="aiDraftCategory" class="form-control" style="width:100%; padding:5px 8px;">
+                <option value="club_event">Club Event</option>
+                <option value="department_event">Department Event</option>
+                <option value="guest_lecture">Guest Lecture</option>
+                <option value="institute_event">Institute Event</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight:600; color:#475569;">Day:</label>
+              <select id="aiDraftDay" class="form-control" style="width:100%; padding:5px 8px;">
+                <option value="MON">Monday</option>
+                <option value="TUE">Tuesday</option>
+                <option value="WED">Wednesday</option>
+                <option value="THU">Thursday</option>
+                <option value="FRI">Friday</option>
+                <option value="SAT">Saturday</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight:600; color:#475569;">Duration (Periods):</label>
+              <input type="number" id="aiDraftDuration" class="form-control" min="1" max="10" style="width:100%; padding:5px 8px;">
+            </div>
+            <div>
+              <label style="font-weight:600; color:#475569;">Expected Attendance:</label>
+              <input type="number" id="aiDraftAttendance" class="form-control" min="1" style="width:100%; padding:5px 8px;">
+            </div>
+            <div>
+              <label style="font-weight:600; color:#475569;">Required Venue Type:</label>
+              <select id="aiDraftRoomType" class="form-control" style="width:100%; padding:5px 8px;">
+                <option value="auditorium">Auditorium</option>
+                <option value="seminar_hall">Seminar Hall</option>
+                <option value="lecture_hall">Lecture Hall</option>
+                <option value="classroom">Classroom</option>
+                <option value="lab_cs">Computer Lab</option>
+                <option value="open_air_theatre">Open Air Theatre</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:14px; text-align:right;">
+            <button class="btn btn-primary" onclick="submitAiDraftBooking()">
+              <span>&#10004;</span> Confirm &amp; Submit Booking
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode 2: Manual Booking Form -->
+      <div id="bookingModeManual" style="display:none;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem;">
+          <div style="grid-column: span 2;">
+            <label style="font-weight:600; color:#475569;">Event Title *</label>
+            <input type="text" id="manualBkTitle" class="form-control" style="width:100%; padding:6px 10px;" placeholder="e.g. Annual Department Technical Symposium">
+          </div>
+          <div>
+            <label style="font-weight:600; color:#475569;">Booking Category *</label>
+            <select id="manualBkCategory" class="form-control" style="width:100%; padding:6px 10px;">
+              <option value="club_event">Club Event</option>
+              <option value="department_event">Department Event</option>
+              <option value="guest_lecture">Guest Lecture</option>
+              <option value="institute_event">Institute Event</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight:600; color:#475569;">Expected Attendance *</label>
+            <input type="number" id="manualBkAttendance" class="form-control" value="60" min="1" style="width:100%; padding:6px 10px;">
+          </div>
+          <div>
+            <label style="font-weight:600; color:#475569;">Preferred Day *</label>
+            <select id="manualBkDay" class="form-control" style="width:100%; padding:6px 10px;">
+              <option value="MON">Monday</option>
+              <option value="TUE">Tuesday</option>
+              <option value="WED">Wednesday</option>
+              <option value="THU">Thursday</option>
+              <option value="FRI" selected>Friday</option>
+              <option value="SAT">Saturday</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight:600; color:#475569;">Start Period (1..13) *</label>
+            <input type="number" id="manualBkStartPeriod" class="form-control" value="6" min="1" max="13" style="width:100%; padding:6px 10px;">
+          </div>
+          <div>
+            <label style="font-weight:600; color:#475569;">Duration in Periods (Hours) *</label>
+            <input type="number" id="manualBkDuration" class="form-control" value="2" min="1" max="10" style="width:100%; padding:6px 10px;">
+          </div>
+          <div>
+            <label style="font-weight:600; color:#475569;">Primary Room Type *</label>
+            <select id="manualBkRoomType" class="form-control" style="width:100%; padding:6px 10px;">
+              <option value="seminar_hall">Seminar Hall</option>
+              <option value="lecture_hall">Lecture Hall</option>
+              <option value="auditorium">Auditorium</option>
+              <option value="classroom">Classroom</option>
+              <option value="lab_cs">Computer Lab</option>
+              <option value="open_air_theatre">Open Air Theatre</option>
+            </select>
+          </div>
+          <div style="grid-column: span 2;">
+            <label style="font-weight:600; color:#475569;">Equipment / Special Needs:</label>
+            <div style="display:flex; gap:12px; margin-top:4px;">
+              <label><input type="checkbox" id="needProjector" checked> Projector</label>
+              <label><input type="checkbox" id="needAudio"> PA System / Audio</label>
+              <label><input type="checkbox" id="needComputers"> Computers</label>
+              <label><input type="checkbox" id="needStage"> Stage</label>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:16px; text-align:right;">
+          <button class="btn btn-primary" onclick="submitManualBookingForm()">
+            <span>&#10004;</span> Submit Booking Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING DETAIL INSPECTION & APPROVAL MODAL -->
+<div class="modal" id="bookingDetailModal">
+  <div class="modal-content" style="max-width: 720px; width: 95%;">
+    <div class="modal-header">
+      <div>
+        <div style="font-weight: 700; font-size: 1.15rem; color:#0f172a;" id="mdlBkTitle">Booking Details</div>
+        <div style="font-size:0.78rem; color:#64748b;" id="mdlBkId">Request ID: --</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('bookingDetailModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="padding: 16px 20px;">
+      <!-- Status & Category Bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px;">
+        <div>
+          <span style="font-size:0.75rem; color:#64748b; font-weight:600;">Status:</span>
+          <span class="badge" id="mdlBkStatusBadge" style="margin-left:6px;">--</span>
+        </div>
+        <div>
+          <span style="font-size:0.75rem; color:#64748b; font-weight:600;">Effective Category:</span>
+          <span class="badge" id="mdlBkCategoryBadge" style="margin-left:6px; background:#e0e7ff; color:#3730a3;">--</span>
+        </div>
+        <div>
+          <span style="font-size:0.75rem; color:#64748b; font-weight:600;">Requester:</span>
+          <span style="font-size:0.8rem; font-weight:700; color:#0f172a; margin-left:6px;" id="mdlBkRequester">--</span>
+        </div>
+      </div>
+
+      <!-- Raw text / description -->
+      <div style="margin-bottom:14px;">
+        <label style="font-size:0.75rem; font-weight:700; color:#475569; text-transform:uppercase;">Original Request Text:</label>
+        <div style="font-size:0.82rem; color:#334155; background:#fff; border:1px solid #cbd5e1; border-radius:4px; padding:8px 10px; margin-top:4px;" id="mdlBkRawText">--</div>
+      </div>
+
+      <!-- Allocation & Timing Breakdown -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:0.8rem; margin-bottom:14px;">
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #e2e8f0;">
+          <div style="color:#64748b; font-size:0.72rem;">Assigned Venue</div>
+          <div style="font-weight:700; font-size:0.95rem; color:#0f172a;" id="mdlBkRoom">--</div>
+        </div>
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #e2e8f0;">
+          <div style="color:#64748b; font-size:0.72rem;">Day &amp; Periods</div>
+          <div style="font-weight:700; font-size:0.95rem; color:#0f172a;" id="mdlBkTiming">--</div>
+        </div>
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #e2e8f0;">
+          <div style="color:#64748b; font-size:0.72rem;">Attendance / Duration</div>
+          <div style="font-weight:700; font-size:0.95rem; color:#0f172a;" id="mdlBkAttendance">--</div>
+        </div>
+      </div>
+
+      <!-- Decision Explanation -->
+      <div style="margin-bottom:14px;">
+        <label style="font-size:0.75rem; font-weight:700; color:#475569; text-transform:uppercase;">Decision Explanation:</label>
+        <div style="font-size:0.82rem; color:#0f172a; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px; padding:8px 12px; margin-top:4px;" id="mdlBkReason">--</div>
+      </div>
+
+      <!-- Available Alternatives Box (if any) -->
+      <div id="mdlBkAlternativesBox" style="display:none; margin-bottom:14px;">
+        <label style="font-size:0.75rem; font-weight:700; color:#475569; text-transform:uppercase;">Alternative Slots Generated:</label>
+        <div id="mdlBkAlternativesList" style="margin-top:6px;"></div>
+      </div>
+
+      <!-- Self-approval notice -->
+      <div id="selfApprovalWarning" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; padding:8px 12px; border-radius:4px; font-size:0.78rem; margin-bottom:12px;">
+        <span>&#9888;</span> Policy Rule (H10): You cannot approve your own booking request. Approval requires independent authorization.
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:1px solid #e2e8f0; padding-top:14px;">
+        <div>
+          <button class="btn btn-outline" style="color:#dc2626; border-color:#fca5a5;" onclick="triggerCancelBooking()" id="btnMdlCancel">
+            <span>&#10005;</span> Cancel Booking
+          </button>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" onclick="triggerRejectBooking()" id="btnMdlReject">
+            Reject Request
+          </button>
+          <button class="btn btn-primary" onclick="triggerApproveBooking()" id="btnMdlApprove">
+            <span>&#10004;</span> Approve Booking
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- REPORT DISRUPTION MODAL -->
+<div class="modal" id="reportDisruptionModal">
+  <div class="modal-content" style="max-width: 680px; width: 95%;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 1.15rem; color:#0f172a;">Report Campus Disruption</div>
+      <button class="modal-close" onclick="closeModal('reportDisruptionModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="padding: 16px 20px;">
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.8rem; font-weight:600; color:#334155;">Disruption Identifier (Optional)</label>
+        <input type="text" id="disFormId" class="form-control" placeholder="e.g. DIS-2027-WEATHER" style="width:100%; padding:6px 10px; font-size:0.85rem;">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.8rem; font-weight:600; color:#334155;">Title / Summary *</label>
+        <input type="text" id="disFormTitle" class="form-control" placeholder="e.g. Emergency Roof Repair in Lecture Complex" style="width:100%; padding:6px 10px; font-size:0.85rem;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:0.8rem; font-weight:600; color:#334155;">Detailed Description *</label>
+        <textarea id="disFormDesc" class="form-control" rows="2" placeholder="Describe the cause, duration, and operational scope..." style="width:100%; padding:6px 10px; font-size:0.85rem;"></textarea>
+      </div>
+
+      <!-- Change Builder Box -->
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px; margin-bottom:14px;">
+        <div style="font-weight:700; font-size:0.85rem; color:#0f172a; margin-bottom:8px;">Add Disruption Change Item</div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.8rem; margin-bottom:8px;">
+          <div>
+            <label style="font-weight:600; color:#475569;">Change Type:</label>
+            <select id="disFormChangeType" class="form-control" style="width:100%; padding:5px 8px;" onchange="onDisChangeTypeChanged()">
+              <option value="faculty_unavailable">Faculty Unavailable</option>
+              <option value="room_unavailable">Room Unavailable / Closure</option>
+              <option value="remove_session">Remove Session</option>
+              <option value="add_session">Add New Session</option>
+            </select>
+          </div>
+
+          <!-- Dynamic target selector -->
+          <div id="disFieldTargetContainer">
+            <label style="font-weight:600; color:#475569;" id="disFieldTargetLabel">Faculty ID:</label>
+            <input type="text" id="disFormTargetId" class="form-control" placeholder="e.g. F07" style="width:100%; padding:5px 8px;">
+          </div>
+
+          <!-- Day selector -->
+          <div id="disFieldDayContainer">
+            <label style="font-weight:600; color:#475569;">Affected Day:</label>
+            <select id="disFormDay" class="form-control" style="width:100%; padding:5px 8px;">
+              <option value="MON">Monday</option>
+              <option value="TUE">Tuesday</option>
+              <option value="WED">Wednesday</option>
+              <option value="THU">Thursday</option>
+              <option value="FRI">Friday</option>
+            </select>
+          </div>
+
+          <!-- Periods input -->
+          <div id="disFieldPeriodsContainer">
+            <label style="font-weight:600; color:#475569;">Periods (comma-separated):</label>
+            <input type="text" id="disFormPeriods" class="form-control" value="1, 2, 3, 4" placeholder="1, 2, 3, 4" style="width:100%; padding:5px 8px;">
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <label style="font-weight:600; color:#475569; font-size:0.78rem;">Reason / Operational Note:</label>
+          <input type="text" id="disFormChangeReason" class="form-control" placeholder="e.g. Conference travel or facility maintenance" style="width:100%; padding:5px 8px; font-size:0.8rem;">
+        </div>
+
+        <div style="text-align:right;">
+          <button class="btn btn-outline" style="font-size:0.75rem; padding:4px 10px;" onclick="addChangeItemToStaging()">
+            <span>&#10010;</span> Stage Change Item
+          </button>
+        </div>
+
+        <!-- Staged Changes List -->
+        <div id="disStagedChangesList" style="margin-top:10px; border-top:1px dashed #cbd5e1; padding-top:8px;">
+          <span style="font-size:0.72rem; color:#94a3b8;">No changes staged yet.</span>
+        </div>
+      </div>
+
+      <div style="text-align:right;">
+        <button class="btn btn-primary" onclick="submitDisruptionReport()">
+          <span>&#10004;</span> Submit Disruption &amp; Analyze
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROPOSAL COMPARISON DIFF MODAL -->
+<div class="modal" id="proposalComparisonModal">
+  <div class="modal-content" style="max-width: 860px; width: 95%;">
+    <div class="modal-header">
+      <div>
+        <div style="font-weight: 700; font-size: 1.15rem; color:#0f172a;" id="cmpModalTitle">Proposal Comparison &amp; Timetable Diff</div>
+        <div style="font-size:0.78rem; color:#64748b;" id="cmpModalSub">Comparing baseline assignments against proposed rescheduled assignments.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('proposalComparisonModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="padding: 16px 20px;">
+      <!-- Stats Summary Strip -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:14px;">
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #cbd5e1; text-align:center;">
+          <div style="font-size:0.7rem; color:#64748b;">SESSIONS MOVED</div>
+          <div style="font-size:1.25rem; font-weight:800; color:#b91c1c;" id="cmpStatMoved">0</div>
+        </div>
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #cbd5e1; text-align:center;">
+          <div style="font-size:0.7rem; color:#64748b;">TIME CHANGED</div>
+          <div style="font-size:1.25rem; font-weight:800; color:#d97706;" id="cmpStatTime">0</div>
+        </div>
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #cbd5e1; text-align:center;">
+          <div style="font-size:0.7rem; color:#64748b;">ROOM ONLY DIFF</div>
+          <div style="font-size:1.25rem; font-weight:800; color:#2563eb;" id="cmpStatRoom">0</div>
+        </div>
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #cbd5e1; text-align:center;">
+          <div style="font-size:0.7rem; color:#64748b;">UNCHANGED</div>
+          <div style="font-size:1.25rem; font-weight:800; color:#059669;" id="cmpStatUnchanged">0</div>
+        </div>
+        <div style="background:#f8fafc; padding:8px 10px; border-radius:4px; border:1px solid #cbd5e1; text-align:center;">
+          <div style="font-size:0.7rem; color:#64748b;">VALIDATION</div>
+          <div style="font-size:1.0rem; font-weight:800; color:#059669;" id="cmpStatValid">0 VIOLATIONS</div>
+        </div>
+      </div>
+
+      <!-- Diff Table -->
+      <div style="font-size:0.8rem; font-weight:700; color:#1e293b; margin-bottom:6px;">Changed Sessions Breakdown:</div>
+      <div style="max-height:300px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:4px; margin-bottom:14px;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+          <thead>
+            <tr style="background:#f1f5f9; position:sticky; top:0; z-index:5;">
+              <th style="padding:6px 10px; text-align:left;">Session</th>
+              <th style="padding:6px 10px; text-align:left;">Faculty</th>
+              <th style="padding:6px 10px; text-align:left;">Group</th>
+              <th style="padding:6px 10px; text-align:left;">Original Slot &amp; Room</th>
+              <th style="padding:6px 10px; text-align:left;">Proposed Slot &amp; Room</th>
+              <th style="padding:6px 10px; text-align:left;">Change Type</th>
+              <th style="padding:6px 10px; text-align:left;">Reason</th>
+            </tr>
+          </thead>
+          <tbody id="cmpDiffTableBody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Footer with Authorized Approval Controls -->
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:12px;">
+        <button class="btn btn-outline" onclick="closeModal('proposalComparisonModal')">Close</button>
+<div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" style="color:#dc2626; border-color:#fca5a5;" onclick="triggerRejectProposal()" id="btnCmpReject">
+            Reject Proposal
+          </button>
+          <button class="btn btn-primary" onclick="triggerApproveProposal()" id="btnCmpApprove">
+            <span>&#10004;</span> Approve &amp; Activate Revision
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          try {
+            loadAiAssistantData();
+          } catch(e) {
+            console.warn('Auto-init warning for ai-assistant.html:', e);
+          }
+        }, 100);
+      });
+    </script>
+
+<script>
+async function triggerResetDemoDataAction() {
+  if (!confirm("Are you sure you want to reset all campus demo datasets, timetables, and bookings to official baseline?")) return;
+  const btn = document.getElementById('btnHeaderResetDemo');
+  if (btn) btn.innerHTML = '<span>&#8987;</span> Resetting...';
+  try {
+    const res = await fetch('/api/admin/reset-demo', { method: 'POST' });
+    const data = await res.json();
+    alert("Campus dataset and timetable restored to official baseline!");
+    window.location.reload();
+  } catch(e) {
+    alert("Reset error: " + e.message);
+  } finally {
+    if (btn) btn.innerHTML = '<span>&#8634;</span> Reset Demo Data';
+  }
+}
+</script>
+
+</body>
+
+</html>

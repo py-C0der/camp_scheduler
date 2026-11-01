@@ -77,12 +77,12 @@
       },
       {
         "request_id": "BR-08",
-        "status": "approved",
-        "day": "THU",
-        "start_period": 8,
-        "end_period": 8,
-        "room_id": "LH-1",
-        "reason": "Approved 'ECE alumni seminar' (department_event) in LH-1 on THU P8\u2013P8. Satisfies capacity (65 attendees), required features, and official priority hierarchy with 0 conflicts."
+        "status": "alternative_offered",
+        "day": "MON",
+        "start_period": 2,
+        "end_period": 2,
+        "room_id": "CR-105",
+        "reason": "Alternative offered for 'ECE alumni seminar' (department_event) in CR-105 on MON P2\u2013P2. Requested slot was occupied or unavailable; alternative satisfies capacity (70 seats) and required equipment without clashes."
       },
       {
         "request_id": "BR-13",

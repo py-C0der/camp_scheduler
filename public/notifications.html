@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification, Alerts & Communication Management - Chilika Institute of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- CIT Campus Platform Modular Stylesheet -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="mobileDrawerBackdrop" onclick="toggleMobileSidebar()"></div>
+
+<!-- Left Sidebar Navigation -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">CIT</div>
+    <div class="brand-info">
+      <h2>Chilika Inst. of Tech.</h2>
+      <span>Campus Operations</span>
+    </div>
+  </div>
+
+  <div class="nav-section-title">Main Navigation</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemDashboard" href="dashboard.html" onclick="if(window.switchNav){switchNav('dashboard'); return false;}">
+        <span>&#9632;</span> Dashboard
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemTimetable" href="timetable.html" onclick="if(window.switchNav){switchNav('timetable'); return false;}">
+        <span>&#9776;</span> Timetable
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemValidations" href="validations.html" onclick="if(window.switchNav){switchNav('validations'); return false;}">
+        <span>&#10004;</span> Validations Audit
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemExaminations" href="examinations.html" onclick="if(window.switchNav){switchNav('examinations'); return false;}">
+        <span>&#128197;</span> Examinations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemBookings" href="bookings.html" onclick="if(window.switchNav){switchNav('bookings'); return false;}">
+        <span>&#127970;</span> Smart Venue Bookings
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" id="navItemDisruptions" href="disruptions.html" onclick="if(window.switchNav){switchNav('disruptions'); return false;}">
+        <span>&#8644;</span> Disruption &amp; Reschedule
+      </a>
+    </li>
+    <li>
+      <a class="nav-item active" id="navItemNotifications" href="notifications.html" onclick="if(window.switchNav){switchNav('notifications'); return false;}">
+        <span>&#128276;</span> Notifications &amp; Alerts
+        <span class="nav-badge" id="navNotifBadge" style="background:#ef4444; color:#fff; font-weight:700; display:none; border-radius:10px; padding:2px 7px; font-size:0.7rem;">0</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="nav-section-title">Intelligence &amp; Operations</div>
+  <ul class="nav-list">
+    <li>
+      <a class="nav-item" id="navItemAiAssistant" href="ai-assistant.html" onclick="if(window.switchNav){switchNav('ai-assistant'); return false;}">
+        <span>&#10024;</span> AI Assistant
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="scrollToUtilization()">
+        <span>&#9680;</span> Room Utilization
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="switchNav('validations')">
+        <span>&#128190;</span> Dataset &amp; Validations
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}">
+        <span>&#128101;</span> Login &amp; Role Management
+      </a>
+    </li>
+    <li>
+      <a href="/api/export/schedule" download="schedule.json" class="nav-item">
+        <span>&#8681;</span> Reports &amp; Exports
+      </a>
+    </li>
+    <li>
+      <a class="nav-item" onclick="resetDemo()">
+        <span>&#9881;</span> Reset Demo Data
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<!-- Main Wrapper -->
+<div class="main-wrap">
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="mobileMenuToggle" onclick="toggleMobileSidebar()" title="Toggle Navigation Menu">
+        &#9776;
+      </button>
+      <div class="page-title" id="pageTitle">Notification, Alerts & Communication Management</div>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" placeholder="Search sessions, rooms, faculty...">
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <!-- Notification Bell -->
+      <div style="position: relative;">
+        <button id="notifBellBtn" onclick="toggleNotifDropdown(event)" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: all 0.15s;" title="Notifications">
+          <span style="font-size: 1.15rem;">&#128276;</span>
+          <span id="notifBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">0</span>
+        </button>
+
+        <!-- Notification Dropdown Menu -->
+        <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 48px; width: 380px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden; text-align: left;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+            <div>
+              <strong style="font-size: 0.92rem; color: #0f172a;">Notifications</strong>
+              <span id="notifDropdownCount" style="font-size: 0.72rem; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 9999px; margin-left: 6px; font-weight: 700;">0 new</span>
+            </div>
+            <button onclick="markAllNotifsRead()" style="background: none; border: none; font-size: 0.75rem; color: #2563eb; cursor: pointer; font-weight: 600;">Mark all read</button>
+          </div>
+          <div id="notifDropdownList" style="max-height: 380px; overflow-y: auto;">
+            <div style="padding: 24px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No new notifications</div>
+          </div>
+          <div style="padding: 10px 16px; border-top: 1px solid #f1f5f9; text-align: center; background: #fafafa;">
+            <a href="javascript:void(0)" onclick="switchNav('notifications'); toggleNotifDropdown();" style="font-size: 0.82rem; color: #2563eb; font-weight: 600; text-decoration: none;">Open Notification Center &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="roleBadgeContainer">
+        <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
+      </div>
+
+      <button class="btn btn-outline btn-sm" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" style="display:flex; align-items:center; gap:6px; font-weight:700; background:#f8fafc; border-color:#cbd5e1;">
+        <span>&#128273;</span> Login / Switch User
+      </button>
+
+      <div class="user-dropdown" href="login.html" onclick="if(window.showUserManagementModal){showUserManagementModal(); return false;}" title="Switch User Role">
+        <div class="user-avatar" id="userAvatar">DA</div>
+        <div class="user-name-role">
+          <div class="user-name" id="topUserName">Dean Academics</div>
+          <div class="user-role-label" id="topUserRole">Dean's Office (Admin)</div>
+        </div>
+        <span style="font-size: 0.75rem; color: #94a3b8;">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content Body -->
+  <main class="content-body">
+
+    <!-- DYNAMIC ROLE-BASED WORKSPACE BANNER -->
+    <div id="roleWorkspaceBanner" style="display:none; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.25); border: 1px solid rgba(255,255,255,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div id="roleBannerAvatar" style="width: 46px; height: 46px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+            &#128081;
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 id="roleBannerTitle" style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #fff;">Dean Academics Executive Console</h2>
+              <span id="roleBannerPill" class="badge badge-danger" style="font-size: 0.68rem; padding: 3px 8px;">ADMIN</span>
+            </div>
+            <p id="roleBannerSub" style="font-size: 0.8rem; color: #cbd5e1; margin: 3px 0 0 0;">
+              Master Optimization Solvers &bull; Disruption Sign-Offs &bull; System Health Monitoring
+            </p>
+          </div>
+        </div>
+        <div id="roleBannerActions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- Dynamically populated by applyRolePermissions -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VIEW 1: Central Operations Dashboard -->
+    
+<div id="view-notifications" class="view-panel active">
+      <!-- Header -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2 style="font-size:1.4rem; font-weight:800; color:#0f172a; margin:0 0 4px 0;">Notification, Alerts &amp; Communication Management</h2>
+          <p style="font-size:0.85rem; color:#64748b; margin:0;">Centralized event-driven notification hub for timetable updates, exams, venue booking decisions, and disruptions.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" onclick="loadNotificationData()">
+            <span>&#8635;</span> Refresh
+          </button>
+          <button class="btn btn-primary" onclick="markAllNotifsRead()">
+            <span>&#10003;</span> Mark All as Read
+          </button>
+        </div>
+      </div>
+
+      <!-- Communication & Alerts Sub-Navigation Tabs -->
+      <div style="display:flex; border-bottom:1px solid #cbd5e1; margin-bottom:24px; gap:8px;">
+        <button id="tabBtnNotifInbox" class="filter-pill active" onclick="switchNotifSubTab('inbox')" style="border-bottom: 2px solid #2563eb; border-radius: 6px 6px 0 0; padding: 10px 18px; font-weight: 700;">
+          <span>&#128236;</span> Notification Inbox (<span id="inboxBadgeCount">0</span>)
+        </button>
+        <button id="tabBtnNotifPrefs" class="filter-pill" onclick="switchNotifSubTab('preferences')" style="padding: 10px 18px; font-weight: 600;">
+          <span>&#9881;</span> User Preferences
+        </button>
+        <button id="tabBtnNotifAdmin" class="filter-pill" onclick="switchNotifSubTab('admin')" style="padding: 10px 18px; font-weight: 600;">
+          <span>&#128202;</span> Admin Delivery &amp; Gateways
+        </button>
+      </div>
+
+      <!-- SUBTAB 1: Notification Inbox -->
+      <div id="notifSubtabInbox">
+        <!-- Filter Toolbar -->
+        <div class="panel-card" style="padding: 14px 18px; margin-bottom: 18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Category:</span>
+              <button class="filter-pill active" onclick="filterNotifsCategory('', this)">All</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('timetable', this)">Timetable</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('examination', this)">Examination</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('venue_booking', this)">Bookings</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('disruption', this)">Disruptions</button>
+              <button class="filter-pill" onclick="filterNotifsCategory('approval', this)">Approvals</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Status:</span>
+              <button class="filter-pill active" onclick="filterNotifsStatus('', this)">All</button>
+              <button class="filter-pill" onclick="filterNotifsStatus('unread', this)">Unread</button>
+              <button class="filter-pill" onclick="filterNotifsStatus('read', this)">Read</button>
+              <input type="text" id="notifSearchInput" oninput="searchNotifs(this.value)" placeholder="Search title or text..." style="border:1px solid #cbd5e1; border-radius:6px; padding:6px 12px; font-size:0.82rem; width:200px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification List -->
+        <div id="notifListContainer" style="display:flex; flex-direction:column; gap:12px;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- SUBTAB 2: User Preferences -->
+      <div id="notifSubtabPreferences" style="display:none;">
+        <div class="panel-card" style="max-width: 800px; margin: 0 auto;">
+          <h3 style="font-size:1.1rem; font-weight:700; color:#0f172a; margin-bottom:8px;">Communication Channels &amp; Delivery Preferences</h3>
+          <p style="font-size:0.82rem; color:#64748b; margin-bottom:20px;">Control which channels you receive notifications on and select topics of interest.</p>
+
+          <div style="border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:16px;">
+            <h4 style="font-size:0.88rem; font-weight:700; color:#334155; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.04em;">Delivery Channels</h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px;">
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefInApp" checked style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">In-App Center</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Instant bell badges and real-time popups</div>
+                </div>
+              </label>
+
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefEmail" checked style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">Email Notifications</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Official CIT branded email summaries</div>
+                </div>
+              </label>
+
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefWhatsApp" style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">WhatsApp Alerts</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Instant alerts via Meta Cloud API</div>
+                </div>
+              </label>
+
+              <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="prefSMS" style="width:18px; height:18px;">
+                <div>
+                  <strong style="font-size:0.88rem; color:#0f172a;">SMS Gateway</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">Urgent critical schedule broadcast</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div style="border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:16px;">
+            <h4 style="font-size:0.88rem; font-weight:700; color:#334155; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.04em;">Subscribed Event Categories</h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatTimetable" checked> Timetable Changes
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatExam" checked> Examination Updates
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatBooking" checked> Venue Bookings
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatDisruption" checked> Disruption Reschedules
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem;">
+                <input type="checkbox" id="prefCatApproval" checked> Approval Requests
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <h4 style="font-size:0.88rem; font-weight:700; color:#334155; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em;">Minimum Severity Threshold</h4>
+            <p style="font-size:0.78rem; color:#64748b; margin-bottom:8px;">Critical notifications always bypass category filters for safety policy compliance.</p>
+            <select id="prefMinSeverity" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 14px; font-size:0.85rem; width:220px;">
+              <option value="low">Low (Receive all notifications)</option>
+              <option value="medium">Medium (Important notices &amp; above)</option>
+              <option value="high">High (Exams and major changes)</option>
+              <option value="critical">Critical Only (Major disruptions only)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" onclick="saveNotificationPreferences()">
+            <span>&#128190;</span> Save Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- SUBTAB 3: Admin Delivery Analytics -->
+      <div id="notifSubtabAdmin" style="display:none;">
+        <!-- KPI Metrics -->
+        <div class="overview-grid" style="margin-bottom:20px;">
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Total Notifications</span><span class="metric-icon">&#128227;</span></div>
+            <div class="metric-val" id="adminMetricTotal">0</div>
+            <div class="metric-sub">Published campus events</div>
+          </div>
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Delivered Messages</span><span class="metric-icon">&#9989;</span></div>
+            <div class="metric-val" id="adminMetricDelivered" style="color:#15803d;">0</div>
+            <div class="metric-sub">Confirmed provider delivery</div>
+          </div>
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Failed Deliveries</span><span class="metric-icon">&#10060;</span></div>
+            <div class="metric-val" id="adminMetricFailed" style="color:#b91c1c;">0</div>
+            <div class="metric-sub">Network or address issues</div>
+          </div>
+          <div class="card-metric">
+            <div class="metric-head"><span class="metric-label">Adapters Status</span><span class="metric-icon">&#128268;</span></div>
+            <div class="metric-val" style="font-size:1.1rem; color:#2563eb; margin-top:12px;">In-App &bull; SMTP &bull; Twilio &bull; Meta</div>
+            <div class="metric-sub">Multi-channel adapter matrix</div>
+          </div>
+        </div>
+
+        <!-- Gateway Probe Test Tool -->
+        <div class="panel-card" style="margin-bottom:20px;">
+          <h3 style="font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:6px;">Communication Gateway Live Testing Probe</h3>
+          <p style="font-size:0.8rem; color:#64748b; margin-bottom:14px;">Verify SMTP, WhatsApp Cloud API, and Twilio SMS configuration health directly from the server.</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <select id="probeChannelSelect" style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; font-size:0.85rem;">
+              <option value="email">Email (SMTP)</option>
+              <option value="whatsapp">WhatsApp Business API</option>
+              <option value="sms">Twilio SMS Gateway</option>
+            </select>
+            <input type="text" id="probeTargetInput" placeholder="Target email or phone number (e.g. admin@cit.ac.in)..." style="border:1px solid #cbd5e1; border-radius:6px; padding:8px 12px; font-size:0.85rem; width:320px;">
+            <button class="btn btn-outline" onclick="testCommunicationGateway()">
+              <span>&#9889;</span> Send Test Probe
+            </button>
+          </div>
+          <div id="probeResultBox" style="display:none; margin-top:12px; padding:12px; border-radius:8px; font-family:'JetBrains Mono', monospace; font-size:0.8rem; background:#f8fafc; border:1px solid #e2e8f0;"></div>
+        </div>
+
+        <!-- Real Delivery Logs Table -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>Actual Communication Delivery Audit Logs</h3>
+            <button class="btn btn-outline btn-sm" onclick="loadAdminNotificationDashboard()">Refresh Logs</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Log ID</th>
+                  <th>Recipient</th>
+                  <th>Channel</th>
+                  <th>Status</th>
+                  <th>Event / Title</th>
+                  <th>Attempts</th>
+                  <th>Sent At</th>
+                  <th>Error / Response</th>
+                </tr>
+              </thead>
+              <tbody id="adminLogsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 8: AI Scheduling Assistant & Decision Explainability -->
+<div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" style="color:#dc2626; border-color:#fca5a5;" onclick="triggerRejectProposal()" id="btnCmpReject">
+            Reject Proposal
+          </button>
+          <button class="btn btn-primary" onclick="triggerApproveProposal()" id="btnCmpApprove">
+            <span>&#10004;</span> Approve &amp; Activate Revision
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          try {
+            loadNotificationData();
+          } catch(e) {
+            console.warn('Auto-init warning for notifications.html:', e);
+          }
+        }, 100);
+      });
+    </script>
+  <script src="/dist/app.bundle.js" defer></script>
+
+<script>
+async function triggerResetDemoDataAction() {
+  if (!confirm("Are you sure you want to reset all campus demo datasets, timetables, and bookings to official baseline?")) return;
+  const btn = document.getElementById('btnHeaderResetDemo');
+  if (btn) btn.innerHTML = '<span>&#8987;</span> Resetting...';
+  try {
+    const res = await fetch('/api/admin/reset-demo', { method: 'POST' });
+    const data = await res.json();
+    alert("Campus dataset and timetable restored to official baseline!");
+    window.location.reload();
+  } catch(e) {
+    alert("Reset error: " + e.message);
+  } finally {
+    if (btn) btn.innerHTML = '<span>&#8634;</span> Reset Demo Data';
+  }
+}
+</script>
+
+</body>
+
+</html>

@@ -506,6 +506,7 @@ def init_db(force_reset: bool = False):
     if cur.fetchone()[0] == 0:
         demo_users = [
             ("admin_1", "Dean Academics (Admin)", "admin@cit.ac.in", "admin", "Dean Office", None),
+            ("admin_2", "Prof. Deputy Dean (Deputy Admin)", "admin2@cit.ac.in", "admin", "Academic Affairs", None),
             ("coord_cse", "Dr. CSE Coordinator", "cse_coord@cit.ac.in", "dept_coordinator", "CSE", "F01"),
             ("fac_arvind", "Prof. Arvind Rao (Faculty)", "arvind@cit.ac.in", "faculty", "CSE", "F01"),
             ("club_tech", "Robotics Club Lead (Club Rep)", "techclub@cit.ac.in", "club_rep", "Student Affairs", None)
