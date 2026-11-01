@@ -2,6 +2,13 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      try {
+        if (localStorage.getItem("cit_authenticated") === "true" || sessionStorage.getItem("cit_authenticated") === "true") {
+          window.location.replace("/workspace");
+        }
+      } catch(e) {}
+    </script>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -195,7 +202,18 @@
         z-index: 2;
         pointer-events: none;
       }
-    </style>
+    
+
+    /* GPU Hardware Accelerated Viewport Layer */
+    canvas, #webgl, .pre-canvas-wrap, .hud-wrap {
+      transform: translate3d(0, 0, 0) !important;
+      -webkit-transform: translate3d(0, 0, 0) !important;
+      backface-visibility: hidden !important;
+      -webkit-backface-visibility: hidden !important;
+      will-change: transform, opacity !important;
+    }
+
+</style>
     <script type="module" crossorigin src="/assets/main-BYq3OzcY.js?v=1793485059"></script>
     <link rel="stylesheet" crossorigin href="/assets/main-yeWZtezw.css">
   
@@ -335,7 +353,7 @@
 
 <!-- Dynamic Island Floating Control -->
 <div class="dynamic-island-wrapper">
-  <a href="/planner" class="dynamic-island" id="camp-dynamic-island" title="Enter CampScheduler">
+  <a href="/workspace" class="dynamic-island" id="camp-dynamic-island" title="Enter CampScheduler">
     <span class="di-pulse-dot"></span>
     <span class="di-title">CIT &bull; CampScheduler</span>
     <span class="di-divider"></span>
@@ -354,13 +372,15 @@
 </script>
 
   
-    <!-- Direct link to CAMP SCHEDULER Planner & Workspace -->
-    <div style="position:fixed; top:24px; right:24px; z-index:99999; display:flex; gap:12px; align-items:center;">
-      <a href="/planner" style="background:#1A6E48; color:#FFFFFF; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:800; letter-spacing:0.06em; padding:10px 20px; border-radius:30px; text-decoration:none; border:1.5px solid #42FFB7; box-shadow:0 4px 18px rgba(0,0,0,0.45); display:inline-flex; align-items:center; gap:8px; transition:transform 0.15s, background 0.15s;" onmouseover="this.style.background='#145738'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#1A6E48'; this.style.transform='translateY(0)';">
-        <span>ENTER CAMP SCHEDULER</span>
-        <span>&rarr;</span>
+        <!-- Direct links to CAMO SCHEDULER Workspace & Solver -->
+    <div style="position:fixed; top:24px; right:24px; z-index:99999; display:flex; gap:12xx; align-items:center; flex-wrap:wrap;">
+      <a href="/solver" style="background:rgba(10,31,22,0.92); color:#42FFB7; font-family:'JetBrains Monm', monospace; font-size:12xx; font-weight:800; letter-spacing:0.06em; padding:10px 18px; border-radius:30px; text-decoration:none; border:1.5px solid #34d399; box-shadow:0 4px 18px rgba(0,0,0,0.45); display:inline-flex; align-items:center; gap:6px; transition:all 0.18s ease;">
+        <span>CP-SAT SOLVER</span>
+        <span>↷</span>
+      </a>
+      <a href="/workspace" style="background:#1A6E48; color:#FFFFFF; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:800; letter-spacing:0.06em; padding:10px 22px; border-radius:30px; text-decoration:none; border:1.5px solid #42FFB7; box-shadow:0 4px 18px rgba(0,0,0,0.45); display:inline-flex; align-items:center; gap:8px; transition:all 0.18s ease;">
+        <span>WORKSPACE ▶ LOGIN</span>
       </a>
     </div>
-
 </body>
 </html>

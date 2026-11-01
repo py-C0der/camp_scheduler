@@ -392,19 +392,19 @@
       <div class="quick-roles-title">QUICK ROLES (ONE-CLICK DEMO AUTH)</div>
       <div class="roles-chips-grid">
         <div class="role-fast-btn" onclick="fillCredentials('admin@cit.ac.in', 'cit@2026')">
-          <div class="role-fast-title">🏛️ Dean Academics</div>
+          <div class="role-fast-title">🏛️ Dean</div>
           <div class="role-fast-email">admin@cit.ac.in</div>
         </div>
         <div class="role-fast-btn" onclick="fillCredentials('coordinator@cit.ac.in', 'cit@2026')">
-          <div class="role-fast-title">🎓 CSE Coordinator</div>
+          <div class="role-fast-title">📅 Coordinator</div>
           <div class="role-fast-email">coordinator@cit.ac.in</div>
         </div>
         <div class="role-fast-btn" onclick="fillCredentials('faculty@cit.ac.in', 'cit@2026')">
-          <div class="role-fast-title">👨‍🏫 Dr. Arvind Kumar</div>
+          <div class="role-fast-title">👨‍🏫 Faculty</div>
           <div class="role-fast-email">faculty@cit.ac.in</div>
         </div>
         <div class="role-fast-btn" onclick="fillCredentials('club@cit.ac.in', 'cit@2026')">
-          <div class="role-fast-title">🤖 Robotics Club</div>
+          <div class="role-fast-title">🎟️ Clubs</div>
           <div class="role-fast-email">club@cit.ac.in</div>
         </div>
       </div>
@@ -414,7 +414,7 @@
     <div class="login-card">
       <div class="card-header-line">
         <h2>Command Sign In</h2>
-        <a href="/" class="back-home-link">&larr; Back to Landing</a>
+        <a href="/" class="back-home-link">&larr; Back to Workspace</a>
       </div>
 
       <!-- Alert Notices -->
@@ -522,6 +522,8 @@
 
         if (data.status === 'authenticated' && data.user) {
           // Store user and token
+          localStorage.setItem('cit_authenticated', 'true');
+          sessionStorage.setItem('cit_authenticated', 'true');
           localStorage.setItem('cit_user', JSON.stringify(data.user));
           if (data.token) localStorage.setItem('access_token', data.token);
 

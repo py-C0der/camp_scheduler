@@ -23,11 +23,15 @@
     },
     {
       "source": "/planner",
-      "destination": "/public/planner.html"
+      "destination": "/public/landing.html"
     },
     {
       "source": "/landing",
-      "destination": "/public/planner.html"
+      "destination": "/public/landing.html"
+    },
+    {
+      "source": "/solver",
+      "destination": "/public/solver.html"
     },
     {
       "source": "/login",
@@ -87,7 +91,7 @@
     },
     {
       "source": "/",
-      "destination": "/public/intro.html"
+      "destination": "/public/landing.html"
     }
   ]
 }

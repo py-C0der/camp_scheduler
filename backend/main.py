@@ -886,16 +886,13 @@ elif (Path(__file__).resolve().parent.parent / "public").exists():
 
 @app.get("/", response_class=HTMLResponse)
 def serve_root():
-    intro_file = FRONTEND_DIR / "intro.html"
-    if not intro_file.exists():
-        intro_file = Path(__file__).resolve().parent.parent / "public" / "intro.html"
-    if intro_file.exists():
-        return FileResponse(intro_file)
-    planner_file = FRONTEND_DIR / "planner.html"
-    if not planner_file.exists():
-        planner_file = Path(__file__).resolve().parent.parent / "public" / "planner.html"
-    if planner_file.exists():
-        return FileResponse(planner_file)
+    home_file = FRONTEND_DIR / "landing.html"
+    if not home_file.exists():
+        home_file = Path(__file__).resolve().parent.parent / "public" / "landing.html"
+    if not home_file.exists():
+        home_file = FRONTEND_DIR / "planner.html"
+    if home_file.exists():
+        return FileResponse(home_file)
     return FileResponse(FRONTEND_DIR / "index.html")
 
 @app.get("/intro", response_class=HTMLResponse)
@@ -913,13 +910,13 @@ def serve_intro():
 @app.get("/landing", response_class=HTMLResponse)
 @app.get("/landing.html", response_class=HTMLResponse)
 def serve_planner():
-    planner_file = FRONTEND_DIR / "planner.html"
-    if not planner_file.exists():
-        planner_file = FRONTEND_DIR / "landing.html"
-    if not planner_file.exists():
-        planner_file = Path(__file__).resolve().parent.parent / "public" / "planner.html"
-    if planner_file.exists():
-        return FileResponse(planner_file)
+    home_file = FRONTEND_DIR / "landing.html"
+    if not home_file.exists():
+        home_file = Path(__file__).resolve().parent.parent / "public" / "landing.html"
+    if not home_file.exists():
+        home_file = FRONTEND_DIR / "planner.html"
+    if home_file.exists():
+        return FileResponse(home_file)
     return FileResponse(FRONTEND_DIR / "index.html")
 
 @app.get("/login", response_class=HTMLResponse)
@@ -943,17 +940,15 @@ def serve_workspace():
 
 PAGE_NAMES = [
     "dashboard", "timetable", "validations", "examinations",
-    "bookings", "disruptions", "notifications", "ai-assistant", "login"
+    "bookings", "disruptions", "notifications", "ai-assistant"
 ]
 
 def _create_page_endpoint(p_name: str):
     def page_endpoint():
-        p_path = FRONTEND_DIR / f"{p_name}.html"
-        if not p_path.exists():
-            p_path = Path(__file__).resolve().parent.parent / "public" / f"{p_name}.html"
-        if p_path.exists():
-            return FileResponse(p_path)
-        return FileResponse(FRONTEND_DIR / "index.html")
+        index_file = FRONTEND_DIR / "index.html"
+        if not index_file.exists():
+            index_file = Path(__file__).resolve().parent.parent / "public" / "index.html"
+        return FileResponse(index_file)
     return page_endpoint
 
 for page_name in PAGE_NAMES:

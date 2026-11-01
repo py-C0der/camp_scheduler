@@ -244,7 +244,7 @@
       border-radius: 0 3px 3px 0;
     }
 
-    .nav-badge {
+    .nav-badge { display: none !important; 
       margin-left: auto;
       font-size: 0.68rem;
       padding: 2px 7px;
@@ -881,6 +881,7 @@
       box-sizing: border-box !important;
       margin: 0 !important;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
       transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -895,6 +896,7 @@
     @keyframes overlayFadeIn {
       0% {
         opacity: 0;
+      visibility: hidden;
         backdrop-filter: blur(0px);
         -webkit-backdrop-filter: blur(0px);
       }
@@ -942,6 +944,7 @@
     @keyframes modalPopIn {
       0% {
         opacity: 0;
+      visibility: hidden;
         transform: scale(0.92) translateY(12px);
       }
       100% {
@@ -1056,13 +1059,319 @@
         scroll-behavior: auto !important;
       }
     }
-</style>
+
+
+    /* ========================================================
+       ONE-AFTER-ANOTHER STAGGERED ENTRANCE ANIMATIONS
+       ======================================================== */
+    @keyframes staggerCardIn {
+      0% {
+        opacity: 0;
+      visibility: hidden;
+        transform: translateY(20px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .kpi-row .kpi-card:nth-child(1) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+    .kpi-row .kpi-card:nth-child(2) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+    .kpi-row .kpi-card:nth-child(3) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.19s both; }
+    .kpi-row .kpi-card:nth-child(4) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both; }
+    .kpi-row .kpi-card:nth-child(5) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.33s both; }
+    .kpi-row .kpi-card:nth-child(6) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both; }
+    .kpi-row .kpi-card:nth-child(7) { animation: staggerCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.47s both; }
+
+    .panel-card {
+      animation: staggerCardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+
+    /* --- SIDEBAR TOGGLE & COLLAPSE SYSTEM --- */
+    aside.sidebar {
+      width: 275px;
+      transition: margin-left 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.sidebar-collapsed aside.sidebar {
+      margin-left: -275px;
+      pointer-events: none;
+    }
+    .sidebar-toggle-btn {
+      background: var(--bg-pure);
+      border: 1.5px solid var(--border-ink);
+      box-shadow: 2px 2px 0px var(--border-ink);
+      color: var(--ink);
+      font-size: 1.15rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+    .sidebar-toggle-btn:hover {
+      background: var(--bg-sidebar-hover);
+      transform: translateY(-1px);
+      box-shadow: 3px 3px 0px var(--border-ink);
+    }
+    .sidebar-toggle-btn:active {
+      transform: translateY(1px);
+      box-shadow: 1px 1px 0px var(--border-ink);
+    }
+    .btn-sidebar-collapse-inside {
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--ink-secondary);
+      font-size: 0.85rem;
+      padding: 3px 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-sidebar-collapse-inside:hover {
+      background: var(--bg-sidebar-hover);
+      border-color: var(--border-ink);
+      color: var(--ink);
+    }
+
+    /* --- AUTHENTICATION GATE & 4-ROLE SELECTION MODAL --- */
+    #authGateOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(10px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-gate-window {
+      background: var(--bg-pure);
+      border: 2.5px solid var(--border-ink);
+      border-radius: 14px;
+      box-shadow: 8px 8px 0px var(--border-ink);
+      max-width: 640px;
+      width: 100%;
+      overflow: hidden;
+      animation: authPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes authPopIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .auth-header {
+      padding: 24px 28px 18px;
+      border-bottom: 2px solid var(--border-ink);
+      background: var(--bg-cloud);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .auth-header-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .auth-header-sub {
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      margin-top: 5px;
+    }
+    .auth-body {
+      padding: 24px 28px;
+    }
+    .roles-selection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .role-select-card {
+      background: var(--bg-pure);
+      border: 2px solid var(--border-ink);
+      border-radius: 10px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 3px 3px 0px var(--border-ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .role-select-card:hover {
+      background: var(--bg-cloud);
+      transform: translateY(-2px);
+      box-shadow: 5px 5px 0px var(--border-ink), 0 0 12px rgba(66, 255, 183, 0.35);
+      border-color: var(--action-emerald);
+    }
+    .role-select-icon {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    .role-select-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .role-select-desc {
+      font-size: 0.76rem;
+      color: var(--ink-muted);
+      line-height: 1.35;
+    }
+    .role-card-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-ink);
+    }
+
+  
+    /* --- CIRCULAR AVATAR & CLICK / HOVER PROFILE MENU --- */
+    .user-avatar-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .user-avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50% !important;
+      background: var(--action-emerald);
+      border: 2px solid var(--border-ink);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 2px 2px 0px var(--border-ink);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .user-avatar-circle:hover,
+    .user-avatar-wrapper.open .user-avatar-circle {
+      transform: scale(1.06);
+      box-shadow: 3px 3px 0px var(--border-ink), 0 0 12px rgba(66, 255, 183, 0.45);
+    }
+    .user-profile-tooltip {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      background: var(--bg-pure);
+      border: 2px solid var(--border-ink);
+      border-radius: 8px;
+      padding: 14px 18px;
+      box-shadow: 4px 4px 0px var(--border-ink);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+      min-width: 210px;
+      text-align: left;
+    }
+    .user-profile-tooltip::before {
+      content: '';
+      position: absolute;
+      top: -14px;
+      left: 0;
+      right: 0;
+      height: 16px;
+    }
+    .user-avatar-wrapper.open .user-profile-tooltip,
+    .user-avatar-wrapper:hover .user-profile-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .profile-tip-name {
+      font-family: var(--font-serif);
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .profile-tip-role {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+    .profile-tip-email {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--action-emerald);
+      background: var(--bg-cloud);
+      padding: 3px 7px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .profile-tip-logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      background: #fef2f2;
+      border: 1.5px solid #dc2626;
+      border-radius: 6px;
+      color: #dc2626;
+      font-size: 0.82rem;
+      font-weight: 800;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      padding: 8px 14px;
+      box-shadow: 2px 2px 0px #dc2626;
+      transition: all 0.15s ease;
+      pointer-events: auto !important;
+    }
+    .profile-tip-logout-btn:hover {
+      background: #dc2626;
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 3px 3px 0px var(--border-ink);
+    }
+    .profile-tip-logout-btn:active {
+      transform: translateY(1px);
+      box-shadow: 1px 1px 0px var(--border-ink);
+    }
+  </style>
 </head>
 <body>
 
 <!-- Physical Digital Planner Sidebar -->
 <aside class="sidebar">
   <div class="sidebar-brand">
+    <button onclick="toggleSidebarCollapse()" class="btn-sidebar-collapse-inside" title="Close / Hide Sidebar">
+      <span>&#9664;</span>
+    </button>
     <div class="brand-icon">&#128197;</div>
     <div class="brand-info">
       <h2>CIT CampScheduler</h2>
@@ -1078,7 +1387,7 @@
 
   <div class="nav-section-title">Workspace</div>
   <ul class="nav-list">
-      <li class="nav-item"><a href="/" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px; width:100%;"><span>🌐</span> <span>Public Landing ↗</span></a></li>
+      
     <li>
       <a class="nav-item active" id="navItemDashboard" onclick="switchNav('dashboard')">
         <span>&#9783;</span> Overview Board
@@ -1087,37 +1396,33 @@
     <li>
       <a class="nav-item" id="navItemTimetable" onclick="switchNav('timetable')">
         <span>&#128197;</span> Weekly Timetable
-        <span class="nav-badge" style="background:var(--note-yellow);">189h</span>
       </a>
     </li>
   </ul>
 
   <div class="nav-section-title">Scheduling</div>
   <ul class="nav-list">
-      <li class="nav-item"><a href="/" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px; width:100%;"><span>🌐</span> <span>Public Landing ↗</span></a></li>
+      
     <li>
       <a class="nav-item" id="navItemExaminations" onclick="switchNav('examinations')">
         <span>&#128221;</span> Examinations
-        <span class="nav-badge" style="background:var(--note-blue);">41</span>
       </a>
     </li>
     <li>
       <a class="nav-item" id="navItemBookings" onclick="switchNav('bookings')">
         <span>&#127915;</span> Room Booking
-        <span class="nav-badge" style="background:var(--note-green);">Spectra</span>
       </a>
     </li>
     <li>
       <a class="nav-item" id="navItemDisruptions" onclick="switchNav('disruptions')">
         <span>&#8644;</span> Disruptions
-        <span class="nav-badge" style="background:var(--note-coral); color:#fff;">Mod 5</span>
       </a>
     </li>
   </ul>
 
   <div class="nav-section-title">Insights &amp; Operations</div>
   <ul class="nav-list">
-      <li class="nav-item"><a href="/" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px; width:100%;"><span>🌐</span> <span>Public Landing ↗</span></a></li>
+      
     <li>
       <a class="nav-item" id="navItemValidations" onclick="switchNav('validations')">
         <span>&#9989;</span> Validation &amp; Audit
@@ -1131,36 +1436,29 @@
     <li>
       <a class="nav-item" id="navItemDataset" onclick="switchNav('dataset')">
         <span>&#128190;</span> Dataset &amp; Validator
-        <span class="nav-badge" style="background:var(--note-lavender);">Mod 9</span>
       </a>
     </li>
   </ul>
 
   <div class="nav-section-title">Intelligence &amp; Comms</div>
   <ul class="nav-list">
-      <li class="nav-item"><a href="/" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px; width:100%;"><span>🌐</span> <span>Public Landing ↗</span></a></li>
+      
     <li>
       <a class="nav-item" id="navItemNotifications" onclick="switchNav('notifications')">
         <span>&#128276;</span> Notifications
-        <span class="nav-badge" id="navNotifBadge" style="background:var(--note-coral); color:#fff;">0</span>
       </a>
     </li>
     <li>
       <a class="nav-item" id="navItemAiAssistant" onclick="switchNav('ai-assistant')">
         <span>&#10024;</span> AI Assistant
-        <span class="nav-badge" style="background:var(--note-green);">Hinglish</span>
       </a>
     </li>
   </ul>
 
   <div class="nav-section-title">System</div>
   <ul class="nav-list">
-      <li class="nav-item"><a href="/" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px; width:100%;"><span>🌐</span> <span>Public Landing ↗</span></a></li>
     <li>
-      <a class="nav-item" onclick="showUserManagementModal()">
-        <span>&#128101;</span> Login &amp; Role Switch
-      </a>
-    </li>
+      <a href="/" class="nav-item"><span>&#127968;</span> Home &amp; Planner Overview</a></li>
     <li>
       <a href="/api/export/schedule" download="schedule.json" class="nav-item">
         <span>&#8681;</span> Export schedule.json
@@ -1179,6 +1477,9 @@
   <!-- Top Navigation Bar -->
   <header class="topbar">
     <div class="topbar-left">
+      <button id="sidebarToggleBtn" class="sidebar-toggle-btn" onclick="toggleSidebarCollapse()" title="Open / Close Sidebar (Toggle)">
+        <span>&#9776;</span>
+      </button>
       <div class="page-title" id="pageTitle">Campus Operations Dashboard</div>
       <div class="search-box">
         <span>&#128269;</span>
@@ -1212,23 +1513,21 @@
         </div>
       </div>
 
-      <div id="roleBadgeContainer">
+      <div id="roleBadgeContainer" style="display: none;">
         <span class="role-badge role-admin" id="activeRoleBadge">Admin</span>
       </div>
 
-      <button class="btn btn-outline btn-sm" onclick="showUserManagementModal()" style="display:flex; align-items:center; gap:6px;">
-        <span>&#128273;</span> Login / Switch User
-      </button>
-
-      <div class="user-dropdown" onclick="showUserManagementModal()" title="Switch User Role">
-        <div class="user-avatar" id="userAvatar">DA</div>
-        <div class="user-name-role">
-          <div class="user-name" id="topUserName">Dean Academics</div>
-          <div class="user-role-label" id="topUserRole">Dean's Office (Admin)</div>
+            <!-- Clean Circular Profile Avatar (Name only on Hover) -->
+      <div class="user-avatar-wrapper" id="userAvatarWrapper">
+        <div class="user-avatar-circle" id="userAvatar" onclick="toggleUserProfileMenu(event)" title="Click to view profile &amp; log out">DE</div>
+        <div class="user-profile-tooltip" id="userProfileTooltip">
+          <div class="profile-tip-name" id="tipUserName">Dean</div>
+          <div class="profile-tip-role" id="tipUserRole">Dean's Office (Admin)</div>
+          <div class="profile-tip-email" id="tipUserEmail">admin@cit.ac.in</div>
+          <button type="button" class="profile-tip-logout-btn" onclick="logoutUser()">&#128682; Log Out</button>
         </div>
-        <span style="font-size: 0.75rem; color: var(--ink-secondary);">&#9662;</span>
       </div>
-    </div>
+        </div>
   </header>
 
   <!-- Content Body -->
@@ -2353,6 +2652,7 @@
             </tbody>
           </table>
         </div>
+      </div>
     </div>
 
     <!-- VIEW 7: Notification, Alerts & Communication Management -->
@@ -2838,7 +3138,7 @@
           </div>
         </div>
       </div>
-    </div>
+    
 
   
   </main>
@@ -3072,7 +3372,6 @@
       });
       document.body.style.overflow = '';
     }
-  });
   });
   let dashboardData = {};
   let rawBookings = [];
@@ -3350,62 +3649,48 @@
   }
 
   function switchNav(viewName) {
+    // Strict Role-Based View Guard
+    const userRole = (currentUser && currentUser.role ? currentUser.role : 'admin').toLowerCase();
+    if (userRole === 'club' && (viewName === 'disruptions' || viewName === 'examinations')) {
+      alert("⚠️ Access Denied: Disruptions and Examination modules require Dean or Coordinator administrative clearance.");
+      switchNav('bookings');
+      return;
+    }
+
     document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
 
     try {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch(e) {}
 
-    if (viewName === 'dashboard') {
-      document.getElementById('view-dashboard').classList.add('active');
-      const dItem = document.getElementById('navItemDashboard');
-      if (dItem) dItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "Campus Operations Dashboard";
-    } else if (viewName === 'timetable') {
-      document.getElementById('view-timetable').classList.add('active');
-      const tItem = document.getElementById('navItemTimetable');
-      if (tItem) tItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "Academic Timetable Management";
-      renderTimetableGrid();
-    } else if (viewName === 'validations') {
-      document.getElementById('view-validations').classList.add('active');
-      const valItem = document.getElementById('navItemValidations');
-      if (valItem) valItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "System Constraints & Validation Audit";
-      loadValidationsAudit();
-    } else if (viewName === 'disruptions') {
-      document.getElementById('view-disruptions').classList.add('active');
-      const disItem = document.getElementById('navItemDisruptions');
-      if (disItem) disItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "Disruption Management & Rescheduling Engine";
-      loadDisruptionModule();
-    } else if (viewName === 'bookings') {
-      document.getElementById('view-bookings').classList.add('active');
-      const bkItem = document.getElementById('navItemBookings');
-      if (bkItem) bkItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "Smart Venue Booking & Approval Management";
-      loadBookingModule();
-    } else if (viewName === 'examinations') {
-      document.getElementById('view-examinations').classList.add('active');
-      const exItem = document.getElementById('navItemExaminations');
-      if (exItem) exItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "Examination Scheduling Management";
-      loadExamModule();
-    } else if (viewName === 'notifications') {
-      document.getElementById('view-notifications').classList.add('active');
-      const notifItem = document.getElementById('navItemNotifications');
-      if (notifItem) notifItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "Notification, Alerts & Communication Management";
-      loadNotificationModule();
-    } else if (viewName === 'ai-assistant') {
-      document.getElementById('view-ai-assistant').classList.add('active');
-      const aiItem = document.getElementById('navItemAiAssistant');
-      if (aiItem) aiItem.classList.add('active');
-      document.getElementById('pageTitle').textContent = "AI Scheduling Assistant & Decision Explainability";
-      loadAiAssistantModule();
+    const viewMap = {
+      'dashboard': { panel: 'view-dashboard', btn: 'navItemDashboard', title: 'Campus Operations Dashboard' },
+      'timetable': { panel: 'view-timetable', btn: 'navItemTimetable', title: 'Academic Timetable Management', onOpen: () => typeof renderTimetableGrid === 'function' && renderTimetableGrid() },
+      'validations': { panel: 'view-validations', btn: 'navItemValidations', title: 'System Constraints & Validation Audit', onOpen: () => typeof loadValidationsAudit === 'function' && loadValidationsAudit() },
+      'dataset': { panel: 'view-validations', btn: 'navItemDataset', title: 'System Constraints & Validation Audit', onOpen: () => typeof loadValidationsAudit === 'function' && loadValidationsAudit() },
+      'disruptions': { panel: 'view-disruptions', btn: 'navItemDisruptions', title: 'Disruption Management & Rescheduling Engine', onOpen: () => typeof loadDisruptionModule === 'function' && loadDisruptionModule() },
+      'bookings': { panel: 'view-bookings', btn: 'navItemBookings', title: 'Smart Venue Booking & Approval Management', onOpen: () => typeof loadBookingModule === 'function' && loadBookingModule() },
+      'examinations': { panel: 'view-examinations', btn: 'navItemExaminations', title: 'Examination Scheduling Management', onOpen: () => typeof loadExamModule === 'function' && loadExamModule() },
+      'notifications': { panel: 'view-notifications', btn: 'navItemNotifications', title: 'Notification, Alerts & Communication Management', onOpen: () => typeof loadNotificationModule === 'function' && loadNotificationModule() },
+      'ai-assistant': { panel: 'view-ai-assistant', btn: 'navItemAiAssistant', title: 'AI Scheduling Assistant & Decision Explainability', onOpen: () => typeof loadAiAssistantModule === 'function' && loadAiAssistantModule() }
+    };
+
+    const target = viewMap[viewName] || viewMap['dashboard'];
+    const pEl = document.getElementById(target.panel);
+    if (pEl) pEl.classList.add('active');
+
+    const bEl = document.getElementById(target.btn);
+    if (bEl) bEl.classList.add('active');
+
+    const tEl = document.getElementById('pageTitle');
+    if (tEl) tEl.textContent = target.title;
+
+    if (target.onOpen) {
+      try { target.onOpen(); } catch(err) { console.warn("Panel init warning:", err); }
     }
   }
+  window.switchNav = switchNav;
 
   function showPlaceholder(moduleName) {
     alert(`${moduleName} will be implemented in its upcoming module. All core data is preserved.`);
@@ -3472,7 +3757,7 @@
     });
   }
 
-  async function showUserManagementModal() {
+  async function openAuthGateModal() {
     updateUserUI();
     document.getElementById('authStep1Container').style.display = 'block';
     document.getElementById('authStep2Container').style.display = 'none';
@@ -6835,8 +7120,404 @@ Exam soft penalty: ${data.exam_soft_penalty}`);
   </div>
 </div>
 
-</body>
-</html>
+
+<!-- ======================================================== -->
+<!-- MANDATORY 2-STAGE AUTHENTICATION GATE & ROLE SELECTION -->
+<!-- ======================================================== -->
+<div id="authGateOverlay" style="display:none;">
+  <div class="auth-gate-window">
+
+    <!-- STAGE 1: 4 PURE ROLE SELECTION -->
+    <div id="authStageRoleSelect">
+      <div class="auth-header">
+        <div>
+          <div class="auth-header-title">CIT Campus Operations</div>
+          <div class="auth-header-sub">Select your role to access the campus scheduling system:</div>
+        </div>
+        <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--action-emerald); font-weight:800; background:var(--note-green); padding:4px 8px; border-radius:4px; border:1px solid var(--border-ink);">
+          SPRING 2027
+        </div>
+      </div>
+
+      <div class="auth-body">
+        <div class="roles-selection-grid">
+          
+          <!-- Role 1: Dean -->
+          <div class="role-select-card" onclick="openRoleLogin('admin')">
+            <span class="role-card-badge" style="background:#fee2e2; color:#991b1b;">ADMIN</span>
+            <div class="role-select-icon">🏛️</div>
+            <div class="role-select-title">Dean</div>
+            <div class="role-select-desc">Master Solvers, Disruption Sign-Offs &amp; Timetable Governance</div>
+          </div>
+
+          <!-- Role 2: Coordinator -->
+          <div class="role-select-card" onclick="openRoleLogin('coordinator')">
+            <span class="role-card-badge" style="background:#e0e7ff; color:#3730a3;">COORDINATOR</span>
+            <div class="role-select-icon">📅</div>
+            <div class="role-select-title">Coordinator</div>
+            <div class="role-select-desc">Timetable Operations, Section Planning &amp; Exam Rostering</div>
+          </div>
+
+          <!-- Role 3: Faculty -->
+          <div class="role-select-card" onclick="openRoleLogin('faculty')">
+            <span class="role-card-badge" style="background:#dcfce7; color:#166534;">FACULTY</span>
+            <div class="role-select-icon">👨‍🏫</div>
+            <div class="role-select-title">Faculty</div>
+            <div class="role-select-desc">Teaching Schedules, Leaves &amp; AI Schedule Change Requests</div>
+          </div>
+
+          <!-- Role 4: Clubs -->
+          <div class="role-select-card" onclick="openRoleLogin('club')">
+            <span class="role-card-badge" style="background:#fef3c7; color:#92400e;">CLUBS</span>
+            <div class="role-select-icon">🎟️</div>
+            <div class="role-select-title">Clubs</div>
+            <div class="role-select-desc">Spectra Fest Venue Bookings, Audis &amp; Event Approvals</div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:20px; text-align:center; font-size:0.75rem; color:var(--ink-muted); font-family:var(--font-mono);">
+          Authentication required to view or modify academic schedules.
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 2: ROLE-SPECIFIC LOGIN FORM -->
+    <div id="authStageLoginForm" style="display:none;">
+      <div class="auth-header">
+        <div>
+          <button type="button" onclick="backToRoleSelect()" style="background:transparent; border:none; color:var(--action-emerald); font-weight:700; font-size:0.8rem; cursor:pointer; padding:0; margin-bottom:6px; display:flex; align-items:center; gap:4px;">
+            <span>&larr;</span> Back to Role Select
+          </button>
+          <div class="auth-header-title" id="authRoleFormTitle">Dean Login</div>
+          <div class="auth-header-sub" id="authRoleFormSub">Enter institutional credentials to access your console:</div>
+        </div>
+        <div id="authRoleBadgePill" style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800; padding:4px 10px; border-radius:4px; border:1px solid var(--border-ink); background:var(--note-yellow);">
+          DEAN
+        </div>
+      </div>
+
+      <div class="auth-body">
+        <!-- Error Notice -->
+        <div id="authGateError" style="display:none; background:#fee2e2; border:1.5px solid #dc2626; color:#991b1b; padding:10px 12px; border-radius:6px; font-size:0.82rem; font-weight:700; margin-bottom:14px;"></div>
+
+        <form id="authRoleForm" onsubmit="handleAuthGateSubmit(event)">
+          <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:0.75rem; font-weight:800; font-family:var(--font-mono); text-transform:uppercase; margin-bottom:6px; color:var(--ink);">Institutional Email</label>
+            <input type="text" id="authGateEmail" required style="width:100%; padding:10px 14px; border:1.5px solid var(--border-ink); border-radius:6px; font-family:var(--font-sans); font-size:0.9rem; color:var(--ink); background:#fff;">
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <label style="display:block; font-size:0.75rem; font-weight:800; font-family:var(--font-mono); text-transform:uppercase; margin-bottom:6px; color:var(--ink);">Password</label>
+            <div style="position:relative;">
+              <input type="password" id="authGatePassword" required style="width:100%; padding:10px 14px; border:1.5px solid var(--border-ink); border-radius:6px; font-family:var(--font-sans); font-size:0.9rem; color:var(--ink); background:#fff;">
+              <button type="button" onclick="toggleAuthGatePwd()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#777; font-size:0.9rem;">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" id="btnAuthGateSubmit" style="width:100%; padding:12px; background:var(--action-emerald); color:#fff; font-family:var(--font-mono); font-size:0.92rem; font-weight:800; border:2px solid var(--border-ink); border-radius:6px; box-shadow:3px 3px 0px var(--border-ink); cursor:pointer; transition:all 0.12s ease;">
+            <span>LOG IN TO WORKSPACE ↗</span>
+          </button>
+        </form>
+
+        <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #cbd5e1; padding-top:12px;">
+          <span style="font-size:0.72rem; color:#64748b; font-family:var(--font-mono);">Demo Mode Active</span>
+          <button type="button" onclick="autoFillDemoAuth()" style="background:#f1f5f9; border:1px solid var(--border-ink); font-size:0.75rem; font-family:var(--font-mono); font-weight:700; padding:4px 10px; border-radius:4px; cursor:pointer;">
+            Auto-Fill Credentials
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  // ========================================================
+  // GUARANTEED FOOLPROOF SIDEBAR OPEN & CLOSE (ON/OFF) SYSTEM
+  // ========================================================
+  window.toggleSidebarCollapse = function() {
+    const sidebar = document.querySelector('aside.sidebar');
+    const btn = document.getElementById('sidebarToggleBtn');
+    if (!sidebar) return;
+
+    const isCurrentlyHidden = (sidebar.style.display === 'none' || document.body.classList.contains('sidebar-collapsed'));
+
+    if (isCurrentlyHidden) {
+      // TURN SIDEBAR ON (OPEN)
+      sidebar.style.display = 'flex';
+      sidebar.style.visibility = 'visible';
+      document.body.classList.remove('sidebar-collapsed');
+      if (btn) {
+        btn.innerHTML = '<span>&#9776;</span>';
+        btn.setAttribute('title', 'Collapse / Close Sidebar');
+        btn.style.borderColor = 'var(--border-ink)';
+        btn.style.background = 'var(--bg-pure)';
+      }
+      localStorage.setItem('cit_sidebar_open', 'true');
+    } else {
+      // TURN SIDEBAR OFF (CLOSE)
+      sidebar.style.display = 'none';
+      document.body.classList.add('sidebar-collapsed');
+      if (btn) {
+        btn.innerHTML = '<span>&#9776;</span>';
+        btn.setAttribute('title', 'Open / Show Navigation Sidebar');
+        btn.style.borderColor = 'var(--border-ink)';
+        btn.style.background = 'var(--bg-pure)';
+      }
+      localStorage.setItem('cit_sidebar_open', 'false');
+    }
+  };
+
+  // Keyboard shortcut Ctrl+B to toggle sidebar
+  window.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+      e.preventDefault();
+      window.toggleSidebarCollapse();
+    }
+  });
+
+  // ========================================================
+  // Profile click-to-open menu toggle
+  window.toggleUserProfileMenu = function(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const wrap = document.getElementById('userAvatarWrapper');
+    if (!wrap) return;
+    wrap.classList.toggle('open');
+  };
+
+  // Click outside to close profile dropdown
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('userAvatarWrapper');
+    if (wrap && !wrap.contains(e.target)) {
+      wrap.classList.remove('open');
+    }
+  });
+
+  window.logoutUser = function() {
+    sessionStorage.removeItem('cit_authenticated');
+    localStorage.removeItem('cit_authenticated');
+    localStorage.removeItem('cit_user');
+    const wrap = document.getElementById('userAvatarWrapper');
+    if (wrap) wrap.classList.remove('open');
+    window.location.href = '/';
+  };
+
+  // MANDATORY 4-ROLE SELECTION & LOGIN CONTROLLER
+  // ========================================================
+  const ROLE_CONFIGS = {
+    'admin': {
+      title: 'Dean',
+      sub: 'Academic Governance & Master Optimization Console',
+      badge: 'DEAN',
+      badgeBg: '#fee2e2',
+      badgeColor: '#991b1b',
+      email: 'admin@cit.ac.in',
+      pwd: 'cit@2026',
+      avatar: 'DE',
+      userRoleLabel: "Dean's Office (Admin)",
+      defaultName: 'Dean'
+    },
+    'coordinator': {
+      title: 'Coordinator',
+      sub: 'Timetable Scheduling & Examination Operations',
+      badge: 'COORDINATOR',
+      badgeBg: '#e0e7ff',
+      badgeColor: '#3730a3',
+      email: 'coordinator@cit.ac.in',
+      pwd: 'cit@2026',
+      avatar: 'CO',
+      userRoleLabel: 'Academic Operations (Coordinator)',
+      defaultName: 'Coordinator'
+    },
+    'faculty': {
+      title: 'Faculty',
+      sub: 'Course Timetable, Leave Logging & AI Requests',
+      badge: 'FACULTY',
+      badgeBg: '#dcfce7',
+      badgeColor: '#166534',
+      email: 'faculty@cit.ac.in',
+      pwd: 'cit@2026',
+      avatar: 'FA',
+      userRoleLabel: 'Teaching Faculty',
+      defaultName: 'Faculty'
+    },
+    'club': {
+      title: 'Clubs',
+      sub: 'Venue Booking & Tech Fest Activity Coordination',
+      badge: 'CLUBS',
+      badgeBg: '#fef3c7',
+      badgeColor: '#92400e',
+      email: 'club@cit.ac.in',
+      pwd: 'cit@2026',
+      avatar: 'CL',
+      userRoleLabel: 'Student Clubs & Societies',
+      defaultName: 'Clubs'
+    }
+  };
+
+  let selectedAuthRole = 'admin';
+
+  window.openAuthGateModal = function() {
+    const overlay = document.getElementById('authGateOverlay');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      window.showAuthStage('roleSelect');
+    }
+  };
+
+  window.showAuthStage = function(stage) {
+    const s1 = document.getElementById('authStageRoleSelect');
+    const s2 = document.getElementById('authStageLoginForm');
+    if (stage === 'roleSelect') {
+      if (s1) s1.style.display = 'block';
+      if (s2) s2.style.display = 'none';
+    } else {
+      if (s1) s1.style.display = 'none';
+      if (s2) s2.style.display = 'block';
+    }
+  };
+
+  window.openRoleLogin = function(roleKey) {
+    selectedAuthRole = roleKey;
+    const cfg = ROLE_CONFIGS[roleKey] || ROLE_CONFIGS['admin'];
+    
+    const t = document.getElementById('authRoleFormTitle');
+    const s = document.getElementById('authRoleFormSub');
+    if (t) t.textContent = `${cfg.title} Login`;
+    if (s) s.textContent = `Enter credentials for ${cfg.title}:`;
+    
+    const pill = document.getElementById('authRoleBadgePill');
+    if (pill) {
+      pill.textContent = cfg.badge;
+      pill.style.background = cfg.badgeBg;
+      pill.style.color = cfg.badgeColor;
+    }
+
+    const em = document.getElementById('authGateEmail');
+    const pw = document.getElementById('authGatePassword');
+    if (em) em.value = cfg.email;
+    if (pw) pw.value = cfg.pwd;
+    
+    const errBox = document.getElementById('authGateError');
+    if (errBox) errBox.style.display = 'none';
+
+    window.showAuthStage('loginForm');
+  };
+
+  window.backToRoleSelect = function() {
+    window.showAuthStage('roleSelect');
+  };
+
+  window.toggleAuthGatePwd = function() {
+    const p = document.getElementById('authGatePassword');
+    if (p) p.type = p.type === 'password' ? 'text' : 'password';
+  };
+
+  window.autoFillDemoAuth = function() {
+    const cfg = ROLE_CONFIGS[selectedAuthRole] || ROLE_CONFIGS['admin'];
+    const em = document.getElementById('authGateEmail');
+    const pw = document.getElementById('authGatePassword');
+    if (em) em.value = cfg.email;
+    if (pw) pw.value = cfg.pwd;
+  };
+
+  window.handleAuthGateSubmit = async function(e) {
+    if (e) e.preventDefault();
+    const cfg = ROLE_CONFIGS[selectedAuthRole] || ROLE_CONFIGS['admin'];
+
+    currentUser = {
+      id: selectedAuthRole + '_1',
+      name: cfg.defaultName,
+      role: selectedAuthRole
+    };
+
+    sessionStorage.setItem('cit_authenticated', 'true');
+    localStorage.setItem('cit_authenticated', 'true');
+    localStorage.setItem('cit_user', JSON.stringify(currentUser));
+
+    const overlay = document.getElementById('authGateOverlay');
+    if (overlay) overlay.style.display = 'none';
+
+    window.applyUserRoleUI();
+    if (typeof switchNav === 'function') switchNav('dashboard');
+  };
+
+  window.applyUserRoleUI = function() {
+    const roleKey = (currentUser && currentUser.role ? currentUser.role : 'admin').toLowerCase();
+    const cfg = ROLE_CONFIGS[roleKey] || ROLE_CONFIGS['admin'];
+    
+    const topName = document.getElementById('topUserName');
+    const topRole = document.getElementById('topUserRole');
+    const avatar = document.getElementById('userAvatar');
+    const roleBadge = document.getElementById('activeRoleBadge');
+
+    if (topName) topName.textContent = cfg.defaultName;
+    const tipName = document.getElementById('tipUserName');
+    const tipRole = document.getElementById('tipUserRole');
+    const tipEmail = document.getElementById('tipUserEmail');
+    if (tipName) tipName.textContent = cfg.defaultName;
+    if (tipRole) tipRole.textContent = cfg.userRoleLabel;
+    if (tipEmail) tipEmail.textContent = cfg.email;
+    if (topRole) topRole.textContent = cfg.userRoleLabel;
+    if (avatar) avatar.textContent = cfg.avatar;
+    if (roleBadge) {
+      roleBadge.textContent = cfg.badge;
+      roleBadge.className = `role-badge role-${roleKey}`;
+    }
+
+    // Role-Based Access Control (RBAC)
+    window.enforceRoleSecurity(roleKey);
+  };
+
+  window.enforceRoleSecurity = function(role) {
+    const btnResetDemoHeader = document.getElementById('btnHeaderResetDemo');
+    const navItemDisruptions = document.getElementById('navItemDisruptions');
+    const navItemExaminations = document.getElementById('navItemExaminations');
+    const navItemDataset = document.getElementById('navItemDataset');
+    const btnAutoDecide = document.getElementById('btnAutoDecide');
+
+    if (btnResetDemoHeader) {
+      btnResetDemoHeader.style.display = (role === 'admin') ? 'inline-flex' : 'none';
+    }
+
+    if (role === 'club') {
+      if (navItemDisruptions && navItemDisruptions.parentElement) navItemDisruptions.parentElement.style.display = 'none';
+      if (navItemExaminations && navItemExaminations.parentElement) navItemExaminations.parentElement.style.display = 'none';
+      if (navItemDataset && navItemDataset.parentElement) navItemDataset.parentElement.style.display = 'none';
+      if (btnAutoDecide) btnAutoDecide.style.display = 'none';
+      document.querySelectorAll('.btn-bk-approve, .btn-bk-reject').forEach(b => b.style.display = 'none');
+    } else if (role === 'faculty') {
+      if (btnAutoDecide) btnAutoDecide.style.display = 'none';
+      if (navItemDisruptions && navItemDisruptions.parentElement) navItemDisruptions.parentElement.style.display = 'block';
+      if (navItemExaminations && navItemExaminations.parentElement) navItemExaminations.parentElement.style.display = 'block';
+    } else {
+      if (navItemDisruptions && navItemDisruptions.parentElement) navItemDisruptions.parentElement.style.display = 'block';
+      if (navItemExaminations && navItemExaminations.parentElement) navItemExaminations.parentElement.style.display = 'block';
+      if (navItemDataset && navItemDataset.parentElement) navItemDataset.parentElement.style.display = 'block';
+      if (btnAutoDecide) btnAutoDecide.style.display = 'inline-flex';
+    }
+  };
+
+  // Check auth gate on initial load
+  window.addEventListener('DOMContentLoaded', () => {
+    const isAuth = sessionStorage.getItem('cit_authenticated') || localStorage.getItem('cit_authenticated') || localStorage.getItem('cit_user');
+    const overlay = document.getElementById('authGateOverlay');
+    if (!isAuth) {
+      if (overlay) {
+        overlay.style.display = 'flex';
+        window.showAuthStage('roleSelect');
+      }
+    } else {
+      if (overlay) overlay.style.display = 'none';
+      window.applyUserRoleUI();
+    }
+  });
+</script>
 
 </body>
 </html>
